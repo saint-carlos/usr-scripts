@@ -4,17 +4,16 @@ CONFIG_FILE=config.txt
 all: build
 
 build: ${CONFIG_FILE} src tgt
+	sh -e ${CONFIG_FILE}
 	./${BUILD}/replace_params.sh ${CONFIG_FILE} src tgt
-
-${CONFIG_FILE}::
-	sh -e $@
 
 tgt:
 	mkdir tgt
 
-install:
+install: build tgt ${CONFIG_FILE}
+	./${BUILD}/install.sh ${CONFIG_FILE} tgt
 
 clean:
 	rm -rf tgt
 
-.PHONY: clean build all
+.PHONY: clean build all install
