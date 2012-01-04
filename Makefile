@@ -17,4 +17,4 @@ install:
 clean:
 	rm -rf tgt
 
-.PHONY: verify clean build all
+.PHONY: clean build all
