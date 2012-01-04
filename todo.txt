@@ -1,0 +1,4 @@
+- be able to configure terminal colors
+- find a solution to the per-user rc file problem
+- add SBIN to the path if the user is root
+
