@@ -1,5 +1,5 @@
 BUILD=build
-CONFIG_FILE=config.txt
+CONFIG_FILE=config.sh
 
 all: build
 

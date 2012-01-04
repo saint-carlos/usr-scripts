@@ -1,3 +1,4 @@
+#!/bin/sh
 ETC_PLACEHOLDER=~/etc
 BIN_PLACEHOLDER=~/bin
 SBIN_PLACEHOLDER=~/sbin
