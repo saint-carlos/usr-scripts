@@ -128,3 +128,4 @@ map! <F8> <esc>:w<cr>i
 map  <F8> :w<cr>
 map Z :set norightleft
 map z :set rightleft
+hi Normal guifg=White guibg=Black
