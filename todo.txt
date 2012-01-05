@@ -3,3 +3,4 @@
 - add SBIN to the path if the user is root
 - add 'uninstall' target
 - improve the build system to treat each script individually
+- name USER=idank install
