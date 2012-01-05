@@ -36,7 +36,9 @@ options:
 -h
 	help: show this help message and exit.
 -d device
-	device on which to mount the ramdisk.' "the default device is $DEFAULT_DEVICE."
+	device on which to mount the ramdisk.the default device is $DEFAULT_DEVICE.
+-s size
+	size (in 1KB blocks) of the file system. default is $SIZE.
 
 exit status:
 0	all OK
@@ -57,10 +59,11 @@ then
 fi
 
 DEVICE=$DEFAULT_DEVICE
-while getopts hd: option; do
+while getopts hd:s: option; do
 	case ${option} in
 		h) usage 0 ;;
 		d) DEVICE=$OPTARG ;;
+		s) SIZE=$OPTARG ;;
 		\?) usage 1 ;;
 	esac
 done
