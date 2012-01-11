@@ -12,10 +12,12 @@ backup()
 	fi
 }
 
-[ $# -eq 2 ] || exit 1
+[ $# -eq 3 ] || exit 1
 
 PARAMS_FILE="$1"
 INSTALL_SOURCE="$2"
+INSTALL_USER=$3
+
 
 . "${PARAMS_FILE}"
 
@@ -25,6 +27,10 @@ mkdir -p "$SBIN_PLACEHOLDER"
 cp tgt/etc/* $ETC_PLACEHOLDER
 cp tgt/bin/* $BIN_PLACEHOLDER
 cp tgt/sbin/* $SBIN_PLACEHOLDER
+
+if ! $INSTALL_USER; then
+	exit 0
+fi
 
 backup ~/.bashrc
 echo ". $ETC_PLACEHOLDER/bashrc" >> ~/.bashrc

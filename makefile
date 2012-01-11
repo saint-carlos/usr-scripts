@@ -11,7 +11,11 @@ tgt:
 	mkdir tgt
 
 install: build tgt ${CONFIG_FILE}
-	./${BUILD}/install.sh ${CONFIG_FILE} tgt
+	./${BUILD}/install.sh ${CONFIG_FILE} tgt true
+
+install_nouser: build tgt ${CONFIG_FILE}
+	./${BUILD}/install.sh ${CONFIG_FILE} tgt false
+
 
 clean:
 	rm -rf tgt
