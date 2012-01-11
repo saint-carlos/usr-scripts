@@ -4,7 +4,7 @@ BIN=BIN_PLACEHOLDER
 
 export PATH=$PATH:$BIN
 
-. $ETC/`id -un`.rc
+. $ETC/user.rc
 
 alias mkdir='mkdir -p'
 
