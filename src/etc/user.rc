@@ -9,6 +9,7 @@ alias tree='tree -CshF --dirsfirst'
 
 # processes
 alias psx='ps -ef | less'
+cmd_exists htop && alias top='htop'
 
 WORKSPACE=$HOME/tonian
 REPOSITORY_ROOT=$WORKSPACE/dev
