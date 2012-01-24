@@ -1,5 +1,6 @@
 BUILD=build
 CONFIG_FILE=config.sh
+export PROJECT=usr_scripts
 
 all: build
 
@@ -11,13 +12,17 @@ tgt:
 	mkdir tgt
 
 install: build tgt ${CONFIG_FILE}
-	./${BUILD}/install.sh ${CONFIG_FILE} tgt true
+	./${BUILD}/install.sh ${CONFIG_FILE} tgt
 
-install_nouser: build tgt ${CONFIG_FILE}
-	./${BUILD}/install.sh ${CONFIG_FILE} tgt false
+install_user: build tgt ${CONFIG_FILE}
+	./${BUILD}/install_user.sh ${CONFIG_FILE}
 
+install_all: install install_user
+
+uninstall: ${CONFIG_FILE}
+	./${BUILD}/uninstall.sh ${CONFIG_FILE}
 
 clean:
 	rm -rf tgt
 
-.PHONY: clean build all install
+.PHONY: clean build all install install_user install_all uninstall
