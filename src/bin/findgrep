@@ -11,7 +11,7 @@ BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp'"
 
 PROGRAM=`basename $0`
 DESCRIPTION="find text in all files in a subtree."
-PARAMS="[file-type] text"
+PARAMS="text"
 OPTIONS="[-hbcB] [-o grep-options] [-d directory] [-f filename] [-t ext]..."
 
 usage()
@@ -22,7 +22,7 @@ usage()
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
-file-expression is a file extention, used to narrow down the search space to files of that extension.
+'text' is the text to search.
 by default, all files are searched except blacklisted files. if one or more inclusions are defined, only the inclusions which are not excluded are searched.
 
 options:
@@ -81,7 +81,7 @@ if [ $? -le 1 ]
 fi
 
 if [ -n "$CRITERIA" ]; then
-	CRITERIA="'(' -inum 0 $CRITERIA  ')'" # "inum 0" is used as "false"
+	CRITERIA="'(' -inum 0 $CRITERIA ')'" # "inum 0" is used as "false"
 fi
 
 eval find $DIRECTORY -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} -n ${IGNORE_BINARIES_FLAG} "$1" /dev/null
