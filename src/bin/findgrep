@@ -12,7 +12,7 @@ BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp'"
 PROGRAM=`basename $0`
 DESCRIPTION="find text in all files in a subtree."
 PARAMS="text"
-OPTIONS="[-hbcB] [-o grep-options] [-d directory] [-f filename] [-t ext]..."
+OPTIONS="[-hbcBw] [-o grep-options] [-d directory] [-f filename] [-t ext]..."
 
 usage()
 {
@@ -34,6 +34,8 @@ options:
 	blacklist: modify the black list. the default blacklist is  "$BLACKLIST".
 -o grep-options
 	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw".
+-w
+	word: equivalent to '-o w'
 -f filename
 	file name: include 'filename' in the search. this option accepts wildcards.
 -t ext
@@ -53,11 +55,12 @@ EOF
 CRITERIA=""
 GREP_OPTIONS=""
 DIRECTORY=.
-while getopts hb:f:t:o:d:c option; do
+while getopts hb:f:t:o:d:cw option; do
 	case ${option} in
 		h) usage 0 ;;
 		b) BLACKLIST=${OPTARG} ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
+		w) GREP_OPTIONS="${GREP_OPTIONS} -w" ;;
 		d) DIRECTORY="${OPTARG}" ;;
 		f) CRITERIA="$CRITERIA -o -name ${OPTARG}" ;;
 		t) CRITERIA="$CRITERIA -o -name '*.${OPTARG}'" ;;
