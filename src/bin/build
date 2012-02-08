@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="start the build system."
 PARAMS="[make arguments]"
-OPTIONS="[-hlpr]"
+OPTIONS="[-hlprs]"
 PTS=`tty | xargs basename`
 BUILD_LOG_PREFIX=/tmp/buildlog
 ERROR_LOG_PREFIX=/tmp/errlog
@@ -26,6 +26,7 @@ options:
 -p	problems: show the problems in the log.
 -l	log: show the build log.
 -r	rebuild: clean before build.
+-s	serial: build serially, not in parallel.
 
 exit status:
 2	some arguments are bad.
@@ -37,6 +38,7 @@ EOF
 }
 
 COMMAND=build
+PARALLEL="-j `system_cpu_count`"
 CLEAN=false
 
 last_log()
@@ -71,7 +73,7 @@ build()
 	fi
 	$CLEAN && make "$@" clean
 	rm -f "$BUILD_LOG" "$ERROR_LOG"
-	time make -j `system_cpu_count` "$@" 2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | tee -a "$BUILD_LOG"
+	time make ${PARALLEL} "$@" 2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | tee -a "$BUILD_LOG"
 	PROBLEM_COUNT=`show_problems | wc -l | awk '{ print $1 }'`
 	COLORTERM="$ERROR_COLOR"
 	if [ $PROBLEM_COUNT -eq 0 ]; then
@@ -88,12 +90,13 @@ build()
 	return $RETVAL
 }
 
-while getopts hlpr option; do
+while getopts hlprs option; do
         case ${option} in
 		h) usage 0 ;;
 		l) COMMAND=show_log ;;
 		p) COMMAND=show_problems ;;
 		r) CLEAN=true ;;
+		s) PARALLEL="" ;;
 		\?) usage 2 ;;
         esac
 done
