@@ -36,7 +36,7 @@ export HISTTIMEFORMAT='%F %T '
 export HISTSIZE=20000
 export HISTFILESIZE=5000
 
-test -t 0 && tty -ctlecho
+test -t 0 && stty -ctlecho
 
 true # so that sourcing the file wont return error
 
