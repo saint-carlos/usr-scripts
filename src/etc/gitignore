@@ -2,6 +2,8 @@
 ~
 *.a
 *.o
+core
+core.*
 bin/
 tgt/
 obj/
