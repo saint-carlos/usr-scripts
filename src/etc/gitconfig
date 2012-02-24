@@ -1,0 +1,51 @@
+[user]
+	name = Idan Kedar
+	email = idank@tonian.com
+
+[core]
+	editor = vim
+	pager = less -FXR
+	excludesfile = ~/etc/gitignore
+
+[merge]
+#	tool = kdiff3
+	tool = bc3
+
+[mergetool "bc3"]
+	cmd = bcompare -automerge -reviewconflicts \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
+
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = true
+
+[color "status"]
+	added = green bold
+	changed = blue bold
+	untracked = yellow bold
+
+[color "diff"]
+	meta = yellow bold
+	frag = cyan bold
+	old = red bold
+	new = green bold	
+
+[alias]
+	last = log -1 --tags=HEAD
+	branches = branch -a
+	addpatch = add -p
+	llog = log --pretty=neat
+	gcommit = cola
+	slog = log --stat
+
+[pretty]
+	neat = %C(cyan bold)%h %C(red bold)%ci %cn %Creset%s%C(cyan bold)%d
+
+#[difftool "diffmerge"]
+#	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
+
+[diff]
+	tool = bc3
+#	tool = diffmerge
