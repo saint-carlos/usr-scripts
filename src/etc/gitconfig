@@ -49,3 +49,6 @@
 [diff]
 	tool = bc3
 #	tool = diffmerge
+[gc]
+	reflogexpire = 180
+	reflogexpireunreachable = 180
