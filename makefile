@@ -59,7 +59,7 @@ test:
 	@cat ${CONFIG_FILE}
 	@echo
 	@echo "sed commands:"
-	@echo "${SED_COMMANDS}"
+	@echo " ${SED_COMMANDS}" | tr ';' '\n'
 	@echo
 	@echo basedir: "$(call basedir,tgt/dir/test)"
 	@echo tmpdir: "$(call tmpdir,tgt/dir/test)"
