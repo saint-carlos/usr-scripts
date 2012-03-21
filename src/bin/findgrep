@@ -62,7 +62,7 @@ while getopts hb:f:t:o:d:cwixLl option; do
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
 		w|i|x|L|l) GREP_OPTIONS="${GREP_OPTIONS} -${option}" ;;
 		d) DIRECTORY="${OPTARG}" ;;
-		f) CRITERIA="$CRITERIA -o -name ${OPTARG}" ;;
+		f) CRITERIA="$CRITERIA -o -name '${OPTARG}'" ;;
 		t) CRITERIA="$CRITERIA -o -name '*.${OPTARG}'" ;;
 		c) CRITERIA="$CRITERIA -o -name '*.c' -o -name '*.h'" ;;
 		\?) usage 2 ;;
