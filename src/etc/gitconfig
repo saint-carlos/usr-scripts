@@ -36,7 +36,6 @@
 	new = green bold	
 
 [alias]
-	last = log -1 --tags=HEAD
 	branches = branch -a
 	addpatch = add -p
 	llog = log --pretty=neat
