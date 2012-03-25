@@ -25,7 +25,14 @@ alias la='ls -a'
 
 ulimit -c unlimited
 
-GLOBIGNORE=*..:*.
+chdotglob()
+{
+	if "$@"; then
+		GLOBIGNORE=*..:*.
+	else
+		unset GLOBIGNORE
+	fi
+}
 
 . $ETC/colorsrc
 if [ $UID -eq 0 ]; then
