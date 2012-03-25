@@ -2,6 +2,9 @@
 	name = USER_FULL_NAME_PLACEHOLDER
 	email = USERMAIL_PLACEHOLDER
 
+[log]
+	decorate = full
+
 [core]
 	editor = vim
 	pager = less -FXR
