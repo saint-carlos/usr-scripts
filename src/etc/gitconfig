@@ -42,6 +42,7 @@
 	gcommit = cola
 	histogram = log --stat
 	stat = show --stat
+	vomit = commit --verbose
 	indiff = diff --cached
 
 [pretty]
