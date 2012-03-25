@@ -40,7 +40,7 @@
 	addpatch = add -p
 	llog = log --pretty=neat
 	gcommit = cola
-	slog = log --stat
+	histogram = log --stat
 	stat = show --stat
 
 [pretty]
