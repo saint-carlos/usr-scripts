@@ -1,0 +1,2 @@
+#!/bin/sh
+exec xterm -fa xft:Terminus:size=12 -r -rightbar -geometry 132x56+150 -e vim ${1+"$@"}
