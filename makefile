@@ -20,6 +20,7 @@ DESKTOP_FILES :=		\
 	bin/myip		\
 	bin/permute		\
 	bin/stopwatch		\
+	bin/xvim		\
 	bin/mvspc
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
@@ -43,6 +44,7 @@ tgt/%: src/% ${BUILD}/make_sed_commands.sh ${CONFIG_FILE} ${VALID_CONFIG}
 	mv $(call tmpdir,$@)/$(notdir $@) $@
 
 ${VALID_CONFIG}: ${CONFIG_FILE}
+	rm -rf tgt tmp
 	sh -e $<
 	mkdir -p $(dir $@)
 	touch $@
