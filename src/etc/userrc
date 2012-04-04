@@ -4,7 +4,7 @@ alias ls='ls -Fh'
 alias size='du -hs'
 alias lsd='ls -d'
 alias lld='ll -d'
-alias lla='ll -a'
+alias lla='ll -A'
 alias tree='tree -CshF --dirsfirst'
 
 # processes

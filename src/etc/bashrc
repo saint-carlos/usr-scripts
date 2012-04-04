@@ -21,7 +21,7 @@ alias rm='rm -i'
 alias mv='mv -i'
 
 alias ll='ls -l'
-alias la='ls -a'
+alias la='ls -A'
 
 ulimit -c unlimited
 
