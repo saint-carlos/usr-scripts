@@ -54,6 +54,7 @@
 
 [diff]
 	tool = bc3
+	mnemonicprefix = true
 #	tool = diffmerge
 [gc]
 	reflogexpire = 180
