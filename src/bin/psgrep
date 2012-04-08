@@ -53,7 +53,7 @@ fi
 filter_processes()
 {
 	if [ $# -eq 1 ]; then
-		grep $GREP_OPTIONS $1
+		grep $GREP_OPTIONS "$1"
 	else
 		mfilter "$@"
 	fi
