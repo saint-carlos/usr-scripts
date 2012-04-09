@@ -36,4 +36,4 @@ shift `expr $OPTIND - 1`
 
 test $# -eq 1 || usage 255
 
-find . -type f -name "$1"
+find . -type f -iname "$1"
