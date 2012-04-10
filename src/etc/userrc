@@ -54,7 +54,7 @@ __git_ps1_wrapper()
 PS1='\D{%y-%m-%d %T} \u@\h:\w$(__git_ps1_wrapper)\$ '
 
 # more informative trace when debugging bash scripts
-export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO[1]}:${FUNCNAME}: '
+export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
 
 # don't check mail
 unset MAIL MAILCHECK MAILPATH
