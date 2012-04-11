@@ -35,6 +35,7 @@ set wildmode=list:longest	" bash-like file completion
 " set showbreak=+		" Show a '+' if a line is longer than the screen.
 " set laststatus=2		" When to show a statusline.
 " set autowrite			" Automatically save before :next, :make etc.
+" set autoread			" auto read when a file is changed from the outside.
 
 if has("syntax")
   syntax on
