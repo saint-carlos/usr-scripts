@@ -127,3 +127,6 @@ map  <F6> <esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO
 map! <F6> <esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<cr><esc>:set rightleft<cr>:set hk<cr>a
 map! <F8> <esc>:w<cr>i
 map  <F8> :w<cr>
+
+" tell vim to find ctags even if in a subdirectory.
+set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
