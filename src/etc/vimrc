@@ -129,6 +129,8 @@ map! <F6> <esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO
 map! <F8> <esc>:w<cr>i
 map  <F8> :w<cr>
 
+map <leader>cd :cd %:p:h<cr> " When pressing <leader>cd switch to the directory of the open buffer
+
 " tell vim to find ctags even if in a subdirectory.
 set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
 
