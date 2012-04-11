@@ -27,6 +27,8 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set magic               " Use 'magic' patterns (extended regular expressions).
 set hlsearch            " Highlight search matches.
 set bg=dark				" bright terminal colors
+set wildmenu			" display file list when browsing files to open
+set wildmode=list:longest	" bash-like file completion
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
