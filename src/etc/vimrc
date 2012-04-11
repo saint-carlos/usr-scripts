@@ -130,3 +130,72 @@ map  <F8> :w<cr>
 
 " tell vim to find ctags even if in a subdirectory.
 set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
+
+if has("cscope")
+	set cscopetag	" treat scsope tags like ctags
+	set csto=0		" boolean: should ctags be queried before cscope?
+	set cst
+	set nocsverb	" non verbose mode (when adding a database)
+
+	" add any database in current directory
+	if filereadable("cscope.out")
+		cs add cscope.out
+	" else add database pointed to by environment
+	elseif $CSCOPE_DB != ""
+		cs add $CSCOPE_DB
+	endif
+
+	if filereadable("../cscope.out")
+		cs add ../cscope.out
+	endif
+	if filereadable("../../cscope.out")
+		cs add ../../cscope.out
+	endif
+	if filereadable("../../../cscope.out")
+		cs add ../../../cscope.out
+	endif
+	if filereadable("../../../../cscope.out")
+		cs add ../../../../cscope.out
+	endif
+	if filereadable("../../../../../cscope.out")
+		cs add ../../../../../cscope.out
+	endif
+	if filereadable("../../../../../../cscope.out")
+		cs add ../../../../../../cscope.out
+	endif
+	if filereadable("../../../../../../../cscope.out")
+		cs add ../../../../../../../cscope.out
+	endif
+	if filereadable("../../../../../../../../cscope.out")
+		cs add ../../../../../../../../cscope.out
+	endif
+
+	" CScope related mappings.
+	" Original CScope commands (as issued via ':cs find <querytype>'):
+	"	0 or s: Find this C symbol
+	"	1 or g: Find this definition
+	"	2 or d: Find functions called by this function
+	"	3 or c: Find functions calling this function
+	"	4 or t: Find this text string
+	"	6 or e: Find this egrep pattern
+	"	7 or f: Find this file
+	"	8 or i: Find files #including this file
+
+	" map \cX to :cs find X
+	nmap <Leader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c0 :cs find s <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c1 :cs find g <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c2 :cs find d <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c3 :cs find c <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c4 :cs find t <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>c6 :cs find e <C-R>=expand("<cword>")<CR><CR>
+	nmap <Leader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+	nmap <Leader>c7 :cs find f <C-R>=expand("<cfile>")<CR><CR>
+	nmap <Leader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+	nmap <Leader>c8 :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+endif
