@@ -16,6 +16,7 @@ $PROGRAM $OPTIONS $PARAMS
 
 options:
 -h	help: show this help message and exit.
+-e	exact: search for exact file name.
 
 exit status:
 255	if some arguments are bad
@@ -25,10 +26,11 @@ EOF
     exit $1
 }
 
-
-while getopts h option; do
+TEST=iname DECORATION="*"
+while getopts he option; do
     case $option in
         h) usage 0 ;;
+        e) TEST=name DECORATION="" ;;
         \?) usage 255 ;;
     esac
 done
@@ -36,4 +38,4 @@ shift `expr $OPTIND - 1`
 
 test $# -eq 1 || usage 255
 
-find . -type f -iname "$1"
+find . -type f "-${TEST}" "${DECORATION}$1${DECORATION}"
