@@ -3,3 +3,4 @@ complete -W "$_SYS_COMMANDS" sys 2>/dev/null
 
 complete -F _make build
 
+complete -F _command gui

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="run a gui program without interrupting the terminal"
+PARAMS="command..."
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+redirects all standard streams to/from /dev/null and runs the program in the background
+
+options:
+-h
+	help: show this help message and exit.'
+
+exit status:
+1	arguments are bad.
+0	all OK.
+EOF
+    exit $1
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 1 ;;
+    esac
+done
+
+< /dev/null "$@" &> /dev/null &
+echo "$! $1"
