@@ -45,6 +45,7 @@
 	vomit = commit --verbose
 	indiff = diff --cached
 	hreset = reset --hard
+	amend = commit --verbose --amend -a
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ai %an %Creset%s%C(cyan bold)%d
