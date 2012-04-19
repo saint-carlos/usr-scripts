@@ -33,7 +33,7 @@ set wildmode=list:longest	" bash-like file completion
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
 " set showbreak=+		" Show a '+' if a line is longer than the screen.
-" set laststatus=2		" When to show a statusline.
+set laststatus=2		" When to show a statusline.
 " set autowrite			" Automatically save before :next, :make etc.
 " set autoread			" auto read when a file is changed from the outside.
 " set smarttab			" treat groups of spaces as tabs.
