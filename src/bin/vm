@@ -1,0 +1,91 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="ssh to a VirtualBox vm"
+PARAMS="[name]"
+OPTIONS="[-hscl]"
+FILE=$HOME/.config/VirtualBox/VirtualBox.xml
+TIMESTAMP=.vmssh
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+if "name" is a VirtualBox machine hostname, this program will ssh to that machine. if "name" is a grep pattern, it will ssh the most recent machine of that pattern.
+a perliminary setup (-s) is required for the script to work. if you are going to change the VM list (add/remove machines), perform a cleanup (-c flag) first, do the changes, and then perform the setup again.
+without any arguments, the most recent machine is ssh'd.
+
+assumptions:
+* virtual machines are described in ${FILE}.
+* all VMs are in stored in the same directory.
+* a machine name corresponds to its hostname
+
+options:
+-h	help: show this help message and exit.
+-s	setup: create the setup required for the script.
+-c	cleanup: cleanup the setup.
+-l	list: list known vms
+
+exit status:
+255	if some arguments are bad
+otherwise, it is the exit status of the ssh.
+EOF
+
+	exit $1
+}
+
+machines_by_time()
+{
+	ls -c ${MACHINES_DIR}/*/${TIMESTAMP} | sed 's:.*/\([^/]*\)/'${TIMESTAMP}':\1:'
+}
+
+connect_ssh()
+{
+	if [ -z "$NAME" ]; then
+		MACHINE=$(machines_by_time | head -1)
+	elif [ -d "${MACHINES_DIR}/${NAME}" ]; then
+		MACHINE=${NAME}
+	else
+		MACHINE=$(machines_by_time | grep "$NAME" | head -1)
+	fi
+
+	touch "${MACHINES_DIR}/${MACHINE}/${TIMESTAMP}"
+	ssh -X "root@${MACHINE}"
+}
+
+setup()
+{
+	for MACHINE_DIR in ${MACHINES_DIR}/*; do
+		touch "${MACHINE_DIR}/${TIMESTAMP}"
+	done
+}
+
+cleanup()
+{
+	rm ${MACHINES_DIR}/*/${TIMESTAMP}
+}
+
+list_vms()
+{
+	ls "${MACHINES_DIR}"
+}
+
+ACTION=connect_ssh
+while getopts hscl option; do
+	case $option in
+		h) usage 0 ;;
+		s) ACTION=setup ;;
+		c) ACTION=cleanup ;;
+		l) ACTION=list_vms ;;
+		\?) usage 255 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+NAME="$1"
+MACHINES_DIR=$(grep MachineEntry $FILE | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
+$ACTION

@@ -80,4 +80,10 @@ _root_command()
 	_command $1 $2 $3
 }
 
+_vbox()
+{
+	COMPREPLY=( $(compgen -W "$(vm -l)" $2) )
+}
+complete -F _vbox vm
+
 CONFIG_PD && source "CONFIG_ETC/bash_completion.pd"
