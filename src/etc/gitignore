@@ -2,6 +2,8 @@
 ~
 *.a
 *.o
+*.rej
+*.orig
 core
 core.*
 bin/
