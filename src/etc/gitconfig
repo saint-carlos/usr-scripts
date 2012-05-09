@@ -41,7 +41,7 @@
 	llog = log --pretty=neat
 	gcommit = cola
 	histogram = log --stat
-	stat = show --stat
+	stat = show --stat --summary
 	vomit = commit --verbose
 	indiff = diff --cached
 	hreset = reset --hard
