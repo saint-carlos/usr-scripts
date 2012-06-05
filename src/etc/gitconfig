@@ -42,7 +42,7 @@
 	gcommit = cola
 	histogram = log --stat
 	stat = show --stat --summary
-	vomit = commit --verbose
+	vomit = commit --verbose -s
 	indiff = diff --cached
 	hreset = reset --hard
 	amend = commit --verbose --amend -a
