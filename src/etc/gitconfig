@@ -61,3 +61,5 @@
 [gc]
 	reflogexpire = 180
 	reflogexpireunreachable = 180
+[branch]
+	autosetuprebase = always
