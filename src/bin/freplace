@@ -34,7 +34,7 @@ replace()
     REPLACEMENT="$1"
     shift
     for S in '/' ':' '|' ','; do
-        echo "${REGEX}" | grep "$S" >/dev/null 2>/dev/null
+        echo "${REGEX}${REPLACEMENT}" | grep "$S" >/dev/null 2>/dev/null
         if [ $? -ne 0 ]; then # the SEPARATOR is not in the regex
             SEPARATOR=$S
             break;
