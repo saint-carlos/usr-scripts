@@ -11,8 +11,9 @@ BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp'"
 
 PROGRAM=`basename $0`
 DESCRIPTION="find text in all files in a subtree."
-PARAMS="text"
-OPTIONS="[-hbcBwi] [-o grep-options]... [-d directory] [-f filename] [-t ext]..."
+PARAMS="text [directory]..."
+OPTIONS="[-hbcBwi] [-o grep-options]... [-f filename] [-t ext]..."
+SEARCHDIRS=.
 
 usage()
 {
@@ -24,12 +25,11 @@ usage:
 $PROGRAM $OPTIONS $PARAMS
 'text' is the text to search.
 by default, all files are searched except blacklisted files. if one or more inclusions are defined, only the inclusions which are not excluded are searched.
+'directory' is the directory subtree(s) to search within. the default is '$SEARCHDIRS'.
 
 options:
 -h
 	help: show this help message and exit.
--d directory
-	directory: directory to search in the default is the current working directory.
 -b
 	blacklist: modify the black list. the default blacklist is  "$BLACKLIST".
 -o grep-options
@@ -61,7 +61,6 @@ while getopts hb:f:t:o:d:cwixLl option; do
 		b) BLACKLIST=${OPTARG} ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
 		w|i|x|L|l) GREP_OPTIONS="${GREP_OPTIONS} -${option}" ;;
-		d) DIRECTORY="${OPTARG}" ;;
 		f) CRITERIA="$CRITERIA -o -name '${OPTARG}'" ;;
 		t) CRITERIA="$CRITERIA -o -name '*.${OPTARG}'" ;;
 		c) CRITERIA="$CRITERIA -o -name '*.c' -o -name '*.h'" ;;
@@ -70,8 +69,16 @@ while getopts hb:f:t:o:d:cwixLl option; do
 done
 shift `expr $OPTIND - 1`
 
-if [ $# -ne 1 ]; then
+if [ $# -lt 1 ]; then
 	usage 2
+fi
+
+TEXT="$1"
+shift
+
+# SEARCHDIRS=${$*:-$SEARCHDIRS} # handle spaces in dirnames
+if [ $# -gt 0 ]; then
+	SEARCHDIRS="$@"
 fi
 
 BLACKLIST_FILTER="mfilter -v ${BLACKLIST}"
@@ -84,5 +91,5 @@ if [ -n "$CRITERIA" ]; then
 	CRITERIA="'(' -inum 0 $CRITERIA ')'" # "inum 0" is used as "false"
 fi
 
-eval find $DIRECTORY -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} ${BUILTIN_GREP_FLAGS} "$1" /dev/null
+eval find "$SEARCHDIRS" -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} ${BUILTIN_GREP_FLAGS} "$TEXT" /dev/null
 
