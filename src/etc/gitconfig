@@ -38,7 +38,7 @@
 [alias]
 	brav = branch -avv
 	addpatch = add -p
-	llog = log --pretty=neat
+	llog = log --pretty=neat --date=short
 	gcommit = cola
 	histogram = log --stat
 	stat = show --stat --summary
@@ -48,7 +48,7 @@
 	amend = commit --verbose --amend -a
 
 [pretty]
-	neat = %C(cyan bold)%h %C(red bold)%ai %an %Creset%s%C(cyan bold)%d
+	neat = %C(cyan bold)%h %C(red bold)%ad %an %Creset%s%C(cyan bold)%d
 
 #[difftool "diffmerge"]
 #	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
