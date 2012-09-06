@@ -40,7 +40,7 @@
 	addpatch = add -p
 	llog = log --pretty=neat --date=short
 	gcommit = cola
-	histogram = log --stat
+	histogram = log --stat --summary
 	stat = show --stat --summary
 	vomit = commit --verbose -s
 	indiff = diff --cached
