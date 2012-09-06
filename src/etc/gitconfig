@@ -46,6 +46,7 @@
 	indiff = diff --cached
 	hreset = reset --hard
 	amend = commit --verbose --amend -a
+	review = show --patch-with-stat --summary -U50
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %an %Creset%s%C(cyan bold)%d
