@@ -64,3 +64,5 @@
 	reflogexpireunreachable = 180
 [branch]
 	autosetuprebase = always
+[rebase]
+	autosquash = true
