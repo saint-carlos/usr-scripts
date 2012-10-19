@@ -46,6 +46,7 @@
 	indiff = diff --cached
 	hreset = reset --hard
 	amend = commit --verbose --amend -a
+	inspect = log --reverse --patch-with-stat --summary -U50
 	review = show --patch-with-stat --summary -U50
 
 [pretty]
