@@ -1,0 +1,84 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="dump the stack(s) trace of a process"
+PARAMS="pid"
+OPTIONS="[-h]"
+GDB=${GDB:-/usr/bin/gdb}
+
+usage()
+{
+        [ $1 -ne 0 ] && exec >&2
+
+        cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h      help: show this help message and exit.
+
+exit status:
+0	process found
+1	process not found
+2	usage error
+EOF
+
+    exit $1
+}
+
+count_tasks()
+{
+	ls /proc/$1/task | wc -l 2>/dev/null
+}
+
+uses_pthreads()
+{
+	grep -e libpthread /proc/$1/maps &> /dev/null
+}
+
+run_gdb()
+{
+	if supported $GDB --readnever -nx --quiet --batch; then
+		READNEVER=--readnever
+	else
+		READNEVER=""
+	fi
+
+	$GDB --quiet $READNEVER -nx /proc/$1/exe -p $1 2>&1 <<EOF
+set width 0
+set height 0
+set pagination no
+$2
+EOF
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+TARGET_PID=$1
+if [ -z "$TARGET_PID" ]; then
+	usage 2
+fi
+if [ ! -r /proc/$TARGET_PID ]; then
+	echo "Process $TARGET_PID not found." >&2
+	usage 1
+fi
+
+# GDB doesn't allow "thread apply all bt" when the process isn't
+# threaded; need to peek at the process to determine if that or the
+# simpler "bt" should be used.
+BACKTRACE_CMD="bt"
+if [ -d /proc/$TARGET_PID/task ] && [ "$(count_tasks $TARGET_PID)" -gt 1 ]; then
+	BACKTRACE_CMD="thread apply all bt"
+elif [ -f /proc/$TARGET_PID/maps ] && uses_pthreads $TARGET_PID ; then
+	BACKTRACE_CMD="thread apply all bt"
+fi
+
+run_gdb $TARGET_PID "$BACKTRACE_CMD" | sed -n -e 's/^\((gdb) \)*//' -e '/^#/p' -e '/^Thread/p'
+exit 0
