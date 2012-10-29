@@ -1,0 +1,50 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="test if an option to a program is supported"
+PARAMS="program options arg..."
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+'options' are the command line options to check. 'arg' is any argument required to the program's normal run.
+note that this program actually executes 'program' with the given switches and arguments, so don't use it for comannds which modify the system.
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	option is supported
+1	option is not supported
+2	no such command
+3	bad arguments
+EOF
+
+    exit $1
+}
+
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 3 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+test $# -ge 2 || usage 3
+if cmd_exists "$1"; then
+	if < /dev/null "$@" &>/dev/null; then
+		exit 0
+	else
+		exit 1
+	fi
+else
+	exit 2
+fi
