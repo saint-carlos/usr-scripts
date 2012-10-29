@@ -14,32 +14,34 @@ alias tree='tree -CshF --dirsfirst'
 alias psx='ps -ef | less'
 cmd_exists htop && alias top='htop'
 
-export WORKSPACE=$HOME/workspace
-REPOSITORY_ROOT=$WORKSPACE/dev
-PROJECT_SUBDIR=subdir
-PROJECT_ROOT=$REPOSITORY_ROOT/$PROJECT_SUBDIR
-export WORKSPACE REPOSITORY_ROOT PROJECT_ROOT
-
-mount_idank()
-{
-	:
-}
+WORKSPACE=WORKSPACE_PLACEHOLDER
+for REPO_ROOT in "$WORKSPACE" REPO_ROOT_LIST_PLACEHOLDER; do
+	if [ -d "$REPO_ROOT" ]; then
+		REPOSITORY_ROOTS="$REPOSITORY_ROOTS $REPO_ROOT"
+	fi
+done
+export REPOSITORY_ROOTS
 
 __get_working_copy()
 {
 	if [ $# -eq 0 ]; then
-		echo "$REPOSITORY_ROOT"
-		return
-	elif [ $# -eq 1 ] && [ -d "$REPOSITORY_ROOT/$1" ]; then
-		echo "$REPOSITORY_ROOT/$1/$PROJECT_SUBDIR"
 		return
 	fi
-	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'`
-	LIST=`\ls -ut $REPOSITORY_ROOT`
-	for ITEM in $@; do
-		LIST=`echo "$LIST" | tr ' ' '\n' | grep -i $ITEM`
+	if [ $# -ne 1 ]; then
+		for REPO_ROOT in $REPOSITORY_ROOTS; do
+			if [ -d "$REPO_ROOT/$1" ]; then
+				echo "$REPO_ROOT/$1"
+				return
+			fi
+		done
+	fi
+	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'` # shorthand: a1b -> a 1 b
+	REPOS=`echo "$REPOSITORY_ROOTS " | sed 's|^ *||; s| |/* |g'` # append /* to repos
+	LIST=`\ls -u1d $REPOS` # list by access time from most recent
+	for ITEM in "$@"; do
+		LIST=`echo "$LIST" | \grep -i /[^/]*$ITEM[^/]*$` # grep the basename
 	done
-	printf "$REPOSITORY_ROOT/%s/$PROJECT_SUBDIR\n" "`echo  "$LIST" | tr ' ' '\n' | sed 1q`"
+	echo "$LIST" | sed 1q
 }
 
 __jump_working_copy()
@@ -48,7 +50,7 @@ __jump_working_copy()
 }
 
 # 'j' jumps around the user's working directoy using short mnemonics
-alias j="mount_idank && __jump_working_copy"
+alias j="__jump_working_copy"
 
 __git_ps1_wrapper()
 {
