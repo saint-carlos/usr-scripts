@@ -39,6 +39,7 @@ set wildmode=list:longest	" bash-like file completion
 " set smarttab			" treat groups of spaces as tabs.
 
 autocmd! bufwritepost vimrc source ~/.vimrc " reload .vimrc if edited
+autocmd! bufwritepost vimrc source ETC_PLACEHOLDER/vimrc " reload vimrc if edited
 
 if has("syntax")
   syntax on
