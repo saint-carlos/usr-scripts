@@ -1,0 +1,42 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="grep for a block in a file"
+PARAMS="expression [file...]"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+$PROGRAM is most useful for configuration file which have sections.
+a block is defined as a series of consecutive nonempty lines, i.e. a file is a set of blocks separated by a blank line.
+$PROGRAM prints all blocks which start with a line containing 'expression' and last until the next blank line. try looking a name of a section in a config file and see the result.
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	if all arguments are OK
+1	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 1 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+BLOCK="`echo "$1" | sed 's|/|\\\\/|g'`"
+shift
+awk "/${BLOCK}/,/^$/" $@
