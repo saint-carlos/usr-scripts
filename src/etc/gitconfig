@@ -67,6 +67,14 @@
 [gc]
 	reflogexpire = 180
 	reflogexpireunreachable = 180
+
+[sendemail]
+	from = CONFIG_USER_FULL_NAME <CONFIG_USER_EMAIL>
+	suppresscc = all
+	suppressfrom = yes
+	signedoffbycc = no
+	chainreplyto = no
+
 [branch]
 	autosetuprebase = always
 [rebase]
