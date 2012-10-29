@@ -3,7 +3,7 @@
 backup()
 {
 	FILE="$1"
-	BACKUP_FILE="${FILE}.bak.${PROJECT}"
+	BACKUP_FILE=`make_backup_file $FILE`
 	if [ -f "$BACKUP_FILE" ]; then
 		echo "cannot backup ${FILE}" >&2
 		exit 2
@@ -22,8 +22,9 @@ rmbackup()
 
 [ $# -eq 1 ] || exit 1
 
-PARAMS_FILE="$1"
+. "$(dirname $BASH_SOURCE)/common.sh"
 
+PARAMS_FILE="$1"
 . "${PARAMS_FILE}"
 test -d $ETC_PLACEHOLDER || exit 1
 

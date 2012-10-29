@@ -4,7 +4,7 @@ remove_line()
 {
 	SEARCH_TERM="$1"
 	FILE="$2"
-	TMP_FILE="${FILE}.tmp.${PROJECT}"
+	TMP_FILE=`make_temp_file $FILE`
 	test -f "$FILE" || return 0
 	if grep -v "$SEARCH_TERM" "$FILE" > "$TMP_FILE"; then
 		mv "$TMP_FILE" "$FILE"
@@ -15,8 +15,9 @@ remove_line()
 
 [ $# -eq 1 ] || exit 1
 
-PARAMS_FILE="$1"
+. "$(dirname $BASH_SOURCE)/common.sh"
 
+PARAMS_FILE="$1"
 . "${PARAMS_FILE}"
 
 test -d "$ETC_PLACEHOLDER" && rm -r "$ETC_PLACEHOLDER"
