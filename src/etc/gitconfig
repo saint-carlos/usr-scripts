@@ -39,6 +39,7 @@
 	llog = log --pretty=neat
 	gcommit = cola
 	slog = log --stat
+	stat = show --stat
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ci %cn %Creset%s%C(cyan bold)%d
