@@ -11,7 +11,7 @@ alias tree='tree -CshF --dirsfirst'
 alias psx='ps -ef | less'
 cmd_exists htop && alias top='htop'
 
-WORKSPACE=$HOME/tonian
+export WORKSPACE=$HOME/workspace
 REPOSITORY_ROOT=$WORKSPACE/dev
 PROJECT_SUBDIR=subdir
 PROJECT_ROOT=$REPOSITORY_ROOT/$PROJECT_SUBDIR
