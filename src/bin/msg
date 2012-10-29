@@ -34,6 +34,6 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
-less /var/log/messages
+less +F /var/log/messages
 
 
