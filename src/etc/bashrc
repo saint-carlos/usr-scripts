@@ -39,6 +39,7 @@ PS1=`printf "\[${!PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
 export PAGER=less
 
 export HISTTIMEFORMAT='%F %T '
+# export HISTCONTROL=ignoredups # don't ignore dups, it might be usefult when printing history with timestamps
 export HISTSIZE=20000
 export HISTFILESIZE=5000
 
