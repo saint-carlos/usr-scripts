@@ -46,12 +46,12 @@ PS1=`printf "\[${!PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
 export PAGER=less
 
 export HISTTIMEFORMAT='%F %T '
-# export HISTCONTROL=ignoredups # don't ignore dups, it might be usefult when printing history with timestamps
+# export HISTCONTROL=ignoredups # don't ignore dups, it might be useful when printing history with timestamps
 export HISTSIZE=20000
 export HISTFILESIZE=5000
 
 test -t 0 && stty -ctlecho
 
 unset ETC BIN SBIN USER_PROMPT_COLOR ROOT_PROMPT_COLOR
-true # so that sourcing the file wont return error
+true # so that sourcing the file won't return error
 
