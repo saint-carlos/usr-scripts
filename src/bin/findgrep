@@ -75,17 +75,14 @@ if [ $# -lt 1 ]; then
 fi
 
 BLACKLIST_FILTER="mfilter -v ${BLACKLIST}"
-	
-# use -I option if exists
-grep -I . /dev/null >/dev/null 2>/dev/null
-if [ $? -le 1 ]
-	then IGNORE_BINARIES_FLAG="-I"
-	else IGNORE_BINARIES_FLAG=""
-fi
+BUILTIN_GREP_FLAGS="-n"
+for FLAG in "-I"; do
+	supported -m 1 grep "$FLAG" . && BUILTIN_GREP_FLAGS="$BUILTIN_GREP_FLAGS $FLAG"
+done
 
 if [ -n "$CRITERIA" ]; then
 	CRITERIA="'(' -inum 0 $CRITERIA ')'" # "inum 0" is used as "false"
 fi
 
-eval find $DIRECTORY -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} -n ${IGNORE_BINARIES_FLAG} "$1" /dev/null
+eval find $DIRECTORY -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} -n ${BUILTIN_GREP_FLAGS} "$1" /dev/null
 
