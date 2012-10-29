@@ -47,7 +47,11 @@ __jump_working_copy()
 # 'j' jumps around the user's working directoy using short mnemonics
 alias j="mount_idank && __jump_working_copy"
 
-PS1='\D{%y-%m-%d %T} \u@\h:\w\$ '
+__git_ps1_wrapper()
+{
+	__git_ps1 "[%s]" 2>/dev/null
+}
+PS1='\D{%y-%m-%d %T} \u@\h:\w$(__git_ps1_wrapper)\$ '
 
 # more informative trace when debugging bash scripts
 export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO[1]}:${FUNCNAME}: '
