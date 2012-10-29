@@ -46,7 +46,7 @@
 	indiff = diff --cached
 
 [pretty]
-	neat = %C(cyan bold)%h %C(red bold)%ci %cn %Creset%s%C(cyan bold)%d
+	neat = %C(cyan bold)%h %C(red bold)%ai %an %Creset%s%C(cyan bold)%d
 
 #[difftool "diffmerge"]
 #	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
