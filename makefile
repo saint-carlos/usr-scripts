@@ -45,6 +45,9 @@ uninstall: ${CONFIG_FILE}
 clean:
 	rm -rf tgt tmp
 
+mrproper: clean
+	rm -f config.sh
+
 help:
 	@echo TODO
 
@@ -61,4 +64,4 @@ test:
 	@echo basedir: "$(call basedir,tgt/dir/test)"
 	@echo tmpdir: "$(call tmpdir,tgt/dir/test)"
 
-.PHONY: clean build all install install_user install_all uninstall tgt help test config
+.PHONY: clean build all install install_user install_all uninstall tgt help test config mrproper
