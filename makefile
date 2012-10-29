@@ -12,7 +12,7 @@ all: build
 
 build: $(addprefix tgt/,${FILES})
 
-${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE}
+${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE} .gitignore
 	test -f $@ || cp $< $@
 
 config: ${VALID_CONFIG}
@@ -31,6 +31,9 @@ ${VALID_CONFIG}: ${CONFIG_FILE}
 	mkdir -p $(dir $@)
 	touch $@
 
+.gitignore:
+	echo ${CONFIG_FILE} > $@
+
 install: build tgt ${CONFIG_FILE}
 	./${BUILD}/install.sh ${CONFIG_FILE} tgt
 
@@ -48,7 +51,7 @@ clean:
 	rm -rf tgt tmp
 
 mrproper: clean
-	rm -f config.sh
+	rm -f config.sh .gitignore
 
 help:
 	@echo TODO
