@@ -2,20 +2,30 @@
 
 PROGRAM=`basename $0`
 DESCRIPTION="show the system log"
+PARAMS=""
 OPTIONS="[-h]"
 
 usage()
 {
-    echo "$PROGRAM - $DESCRIPTION"
-    echo "usage:"
-    echo "$PROGRAM $OPTIONS"
-    echo
-    echo $'-h\thelp: show this help message and exit.'
-    echo
-    echo "exit status is 0 if all arguments are OK, 1 if some arguments are bad."
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	if all arguments are OK
+1	if some arguments are bad
+EOF
 
     exit $1
 }
+
+
 while getopts h option; do
     case $option in
         h) usage 0 ;;
