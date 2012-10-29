@@ -4,7 +4,7 @@ BIN=BIN_PLACEHOLDER
 
 export PATH=$PATH:$BIN
 
-. $ETC/complete
+. $ETC/bash_completion
 . $ETC/userrc
 
 alias mkdir='mkdir -p'
