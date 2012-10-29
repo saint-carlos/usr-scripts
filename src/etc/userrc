@@ -13,6 +13,7 @@ alias tree='tree -CshF --dirsfirst'
 # processes
 alias psx='ps -ef | less'
 cmd_exists htop && alias top='htop'
+cmd_exists vim && alias vi='vim'
 
 WORKSPACE=WORKSPACE_PLACEHOLDER
 for REPO_ROOT in "$WORKSPACE" REPO_ROOT_LIST_PLACEHOLDER; do
