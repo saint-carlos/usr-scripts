@@ -1,8 +1,12 @@
 #!/bin/bash
 ETC=ETC_PLACEHOLDER
 BIN=BIN_PLACEHOLDER
+SBIN=SBIN_PLACEHOLDER
 
 export PATH=$PATH:$BIN
+if [ $UID -eq 0 ]; then
+	export PATH=$PATH:$SBIN
+fi
 
 . $ETC/bash_completion
 . $ETC/userrc
