@@ -5,7 +5,7 @@
 [core]
 	editor = vim
 	pager = less -FXR
-	excludesfile = ~/etc/gitignore
+	excludesfile = ETC_PLACEHOLDER/gitignore
 
 [merge]
 #	tool = kdiff3
