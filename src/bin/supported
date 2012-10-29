@@ -17,7 +17,10 @@ $PROGRAM $OPTIONS $PARAMS
 note that this program actually executes 'program' with the given switches and arguments, so don't use it for comannds which modify the system.
 
 options:
--h	help: show this help message and exit.
+-h	
+	help: show this help message and exit.
+-m	retcode
+	max retcode: the highest exit code of 'program' which is considered 'not error'. the default is 0.
 
 exit status:
 0	option is supported
@@ -29,10 +32,11 @@ EOF
     exit $1
 }
 
-
-while getopts h option; do
+MAX_RETCODE=0
+while getopts hm: option; do
     case $option in
         h) usage 0 ;;
+		m) MAX_RETCODE="$OPTARG" ;;
         \?) usage 3 ;;
     esac
 done
@@ -40,7 +44,8 @@ shift `expr $OPTIND - 1`
 
 test $# -ge 2 || usage 3
 if cmd_exists "$1"; then
-	if < /dev/null "$@" &>/dev/null; then
+	< /dev/null "$@" &>/dev/null
+	if [ $? -le "$MAX_RETCODE" ]; then
 		exit 0
 	else
 		exit 1
