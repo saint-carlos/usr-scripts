@@ -14,6 +14,17 @@ FILES := $(patsubst src/%, %, $(wildcard \
 	src/lib/vim/*/*			\
 ))
 
+DESKTOP_FILES :=		\
+	bin/dlookup		\
+	bin/icat		\
+	bin/myip		\
+	bin/permute		\
+	bin/stopwatch		\
+	bin/mvspc
+ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
+	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
+endif
+
 SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build

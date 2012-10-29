@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="test whether or not a word is in the dictionary"
+PARAMS="word"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+	0 if word is in the dictionary
+	1 if word is not in the dictionary
+	2 if arguments are bad
+EOF
+	exit $1
+}
+
+while getopts h option; do
+	case ${option} in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ne 1 ]; then
+	usage 2
+fi
+
+look "$1" | grep -q "$1\$"

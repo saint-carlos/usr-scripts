@@ -1,0 +1,54 @@
+#!/bin/bash
+
+# AUTHOR:	(c) idank
+# VERSION:	1.0
+# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
+# REQUIRES: curl
+# NAME:		MyIP
+# DESCRIPTION:	returns your public ip address.
+
+PROGRAM=$(basename $0)
+DESCRIPTION="return my external IP"
+PARAMS=""
+OPTIONS="[-h]"
+
+# sites to use (this may require changing the greps):
+# readonly SITE="myip.dk"
+# readonly SITE="whatsmyip.org"
+readonly SITE="formyip.com"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+1	no IP received from site
+2	argument are bad
+otherwise, it is the exit status from curl
+EOF
+
+	exit $1
+}
+
+while getopts h option; do
+	case ${option} in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+TEMPFILE=/tmp/${PROGRAM}-$$.tmp
+curl -s "${SITE}" > "$TEMPFILE" || exit $?
+grep -i '<title>' "$TEMPFILE" | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || exit 1
+rm $TEMPFILE
+exit 0
