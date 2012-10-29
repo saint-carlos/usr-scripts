@@ -42,6 +42,8 @@ install_all: install install_user
 uninstall: ${CONFIG_FILE}
 	./${BUILD}/uninstall.sh ${CONFIG_FILE}
 
+update: uninstall install_all
+
 clean:
 	rm -rf tgt tmp
 
