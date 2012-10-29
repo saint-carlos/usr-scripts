@@ -44,5 +44,6 @@ export HISTFILESIZE=5000
 
 test -t 0 && stty -ctlecho
 
+unset ETC BIN SBIN USER_PROMPT_COLOR ROOT_PROMPT_COLOR
 true # so that sourcing the file wont return error
 
