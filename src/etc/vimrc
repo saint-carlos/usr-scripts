@@ -125,6 +125,7 @@ iab Recrusive  Recursive
 
 
 filetype plugin indent on
+au FileType make setlocal noexpandtab  "'tab' means 'tab' in makefiles
 
 " F5: left to right
 " F6: right to left.
