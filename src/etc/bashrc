@@ -16,12 +16,13 @@ fi
 alias mkdir='mkdir -p'
 
 # careful
-alias cp='cp -i'
-alias rm='rm -i'
-alias mv='mv -i'
+alias cp="cp -i $__COREUTILS_FLAGS"
+alias rm="rm -i $__COREUTILS_FLAGS"
+alias mv="mv -i $__COREUTILS_FLAGS"
 
-alias ll='ls -l'
-alias la='ls -A'
+alias ls="ls $__LS_FLAGS"
+alias ll="ls -l $__LS_FLAGS"
+alias la="ls -A $__LS_FLAGS"
 
 ulimit -c unlimited
 
