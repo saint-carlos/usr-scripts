@@ -29,11 +29,11 @@ EOF
 while getopts h option; do
     case $option in
         h) usage 0 ;;
-        \?) usage 1 ;;
+        \?) usage 255 ;;
     esac
 done
 shift `expr $OPTIND - 1`
 
-test $# -eq 1 || usage 1
+test $# -eq 1 || usage 255
 
 find . -type f -name "$1"
