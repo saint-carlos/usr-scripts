@@ -47,3 +47,4 @@ __jump_working_copy()
 alias j="mount_idank && __jump_working_copy"
 
 PS1='\D{%y-%m-%d %T} \u@\h:\w\$ '
+export PS4='+ ${BASH_SOURCE}:${BASH_LINENO[1]}:${FUNCNAME}: '
