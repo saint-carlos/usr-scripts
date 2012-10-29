@@ -1,4 +1,3 @@
-- fix script permissions
 - variable convention
 - install_user for gitignore and gitconfig
 - rename backup + uninstall deletes backup
