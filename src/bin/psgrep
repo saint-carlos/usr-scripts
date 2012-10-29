@@ -42,6 +42,10 @@ while getopts hno: option; do
 done
 shift `expr $OPTIND - 1`
 
+if supported -m 1 grep "--color=auto" .; then
+	GREP_OPTIONS="$GREP_OPTIONS --color=auto"
+fi
+
 if [ $# -eq 0 ]; then
 	usage 1
 fi
