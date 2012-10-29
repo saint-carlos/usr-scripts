@@ -4,11 +4,12 @@ remove_line()
 {
 	SEARCH_TERM="$1"
 	FILE="$2"
+	TMP_FILE="${FILE}.tmp.${PROJECT}"
 	test -f "$FILE" || return 0
-	if grep -v "$SEARCH_TERM" "$FILE" > "${FILE}.tmp"; then
-		mv "$FILE.tmp" "$FILE"
+	if grep -v "$SEARCH_TERM" "$FILE" > "$TMP_FILE"; then
+		mv "$TMP_FILE" "$FILE"
 	else
-		rm -f "$FILE" "${FILE}.tmp"
+		rm -f "$FILE" "$TMP_FILE"
 	fi
 }
 
