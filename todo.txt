@@ -1,6 +1,5 @@
 - variable convention
 - install_user for gitignore and gitconfig
-- rename backup + uninstall deletes backup
 - be able to configure terminal colors
 - add SBIN to the path if the user is root
 - name USER=idank install
