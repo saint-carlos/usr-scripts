@@ -1,1 +1,5 @@
+- move config to vroot
+- more usable userrc
+- better config system (kconfig? something simpler?)
+- feature to update from current installation (e.g. edit `which findgrep` and port the changes to src/bin/findgrep)
 - name USER=idank install
