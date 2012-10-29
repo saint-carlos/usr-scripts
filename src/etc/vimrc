@@ -124,7 +124,7 @@ iab recrusive  recursive
 iab Recrusive  Recursive
 
 
-filetype plugin on
+filetype plugin indent on
 
 " F5: left to right
 " F6: right to left.
