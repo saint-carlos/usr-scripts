@@ -76,7 +76,7 @@ fi
 
 BLACKLIST_FILTER="mfilter -v ${BLACKLIST}"
 BUILTIN_GREP_FLAGS="-n"
-for FLAG in "-I"; do
+for FLAG in "-I" "--color=auto"; do
 	supported -m 1 grep "$FLAG" . && BUILTIN_GREP_FLAGS="$BUILTIN_GREP_FLAGS $FLAG"
 done
 
