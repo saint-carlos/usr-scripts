@@ -1,0 +1,51 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="print the name of the user (the computer from which the user logged in to the local machine)"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+the environtment variable SYSTEM_USER can be used to manually setting the user, which my happen if there is a problem with hostname resolving.
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+1	bad arguments
+EOF
+
+    exit $1
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 1 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+if [ -n "$SYSTEM_USER" ]; then
+	echo "$SYSTEM_USER"
+	exit
+fi
+
+get_login_line()
+{
+	if [ -x "`which get_login_line.sh 2>/dev/null`" ]; then
+		get_login_line.sh
+	else
+		who am i
+	fi
+}
+get_login_line | awk '{ print $NF }' | tr -d '()' | cut -d. -f1
+

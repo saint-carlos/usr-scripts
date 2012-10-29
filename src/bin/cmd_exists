@@ -1,0 +1,38 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="detect if a command exists"
+PARAMS="[command...]"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+2	some options are bad
+1	some command does not exist
+0	all commands exist
+EOF
+
+    exit $1
+}
+
+while getopts h option; do
+	case $option in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+type "$@" >/dev/null 2>/dev/null
+

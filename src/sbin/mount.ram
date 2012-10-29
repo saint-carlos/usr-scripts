@@ -1,0 +1,78 @@
+#!/bin/bash
+# ramdisk.sh
+
+#  A "ramdisk" is a segment of system RAM memory
+#+ which acts as if it were a filesystem.
+#  Its advantage is very fast access (read/write time).
+#  Disadvantages: volatility, loss of data on reboot or powerdown.
+#+                less RAM available to system.
+#
+#  Of what use is a ramdisk?
+#  Keeping a large dataset, such as a table or dictionary on ramdisk,
+#+ speeds up data lookup, since memory access is much faster than disk access.
+
+PROGRAM=`basename $0`
+DESCRIPTION="mount a ramdisk"
+PARAMS="[mount-point]"
+OPTIONS="[-h] [-s size] [-d device]"
+E_NON_ROOT_USER=70             # Must run as root.
+
+DEFAULT_MOUNT_POINT=/mnt/ramdisk
+SIZE=2000
+BLOCKSIZE=1024                 # 1K (1024 byte) block size
+DEFAULT_DEVICE=/dev/ram0       # First ram device
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+the default mount point is $DEFAULT_MOUNT_POINT
+
+options:
+-h
+	help: show this help message and exit.
+-d device
+	device on which to mount the ramdisk.' "the default device is $DEFAULT_DEVICE."
+
+exit status:
+0	all OK
+1	arguments are bad
+2	cannot zero device
+3	cannot format device
+4	cannot mount device
+5	cannot chmod mount point
+EOF
+
+	exit $1
+}
+
+if [ "$UID" -ne 0 ]
+then
+  echo "Must be root to run \"`basename $0`\"."
+  exit $E_NON_ROOT_USER
+fi
+
+DEVICE=$DEFAULT_DEVICE
+while getopts hd: option; do
+	case ${option} in
+		h) usage 0 ;;
+		d) DEVICE=$OPTARG ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+MOUNTPT=${1:-$DEFAULT_MOUNT_POINT}
+mkdir -p $MOUNTPT
+
+dd if=/dev/zero of=$DEVICE count=$SIZE bs=$BLOCKSIZE || exit 2 
+mke2fs $DEVICE || exit 3
+mount $DEVICE $MOUNTPT || exit 4
+chmod 777 $MOUNTPT || exit 5
+
+echo "\"$MOUNTPT\" now available for use."
+exit 0

@@ -1,0 +1,63 @@
+#!/bin/bash
+
+die()
+{
+	echo "$*"
+	exit 98
+}
+
+PROGRAM=`basename $0`
+DESCRIPTION="get info about the system."
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM -h: show this help message and exit.
+$PROGRAM ip: machine IP
+$PROGRAM hostname: machine hostname
+$PROGRAM bits: word width (32bit/64bit)
+$PROGRAM cpus: amount of logical CPUs
+$PROGRAM os: operating system name
+$PROGRAM version: operating system version
+$PROGRAM arch: architecture
+$PROGRAM platform: platform name or main feature (e.g. T1000, hugemem)
+
+exit status:
+98  bad arguments
+otherwise it is the same as that of the command to execute.
+EOF
+
+    exit $1
+}
+
+while getopts h option; do
+	case ${option} in
+		h) usage 0 ;;
+		\?) usage 98 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+[ -n "$1" ] || die "no action"
+
+execute()
+{
+	test -n "$1" || die "unable to execute $1"
+	test -x "`which $1 2>/dev/null`" || die "unable to execute $1"
+	"$@"
+}
+
+case $1 in
+	hostname) execute hostname ;;
+	cpus) execute system_cpu_count ;;
+	os) uname -s | sed 's:SunOS:Solaris:g' ;;
+	*)
+		cmd=$1
+		shift
+		execute system_${cmd} $@
+esac
+

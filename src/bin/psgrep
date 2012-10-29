@@ -1,0 +1,61 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="get process info by part of its name."
+PARAMS="string ..."
+OPTIONS="[-hn] [-o options]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h
+	help: show this help message and exit.
+-n
+	no header: do not show the table header.
+-o options
+	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw". if more than one string is given, this option is ignored.
+
+exit status:
+0	all OK
+1	arguments are bad
+EOF
+
+    exit $1
+}
+
+SHOW_HEADER=true
+GREP_OPTIONS=""
+while getopts hno: option; do
+	case ${option} in
+		h) usage 0 ;;
+		n) SHOW_HEADER=false ;;
+		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
+		\?) usage 1 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+if [ $# -eq 0 ]; then
+	usage 1
+fi
+
+filter_processes()
+{
+	if [ $# -eq 1 ]; then
+		grep $GREP_OPTIONS $1
+	else
+		mfilter "$@"
+	fi
+}
+
+$SHOW_HEADER && ps -ef | sed '1q'
+PROCESSES=`ps -ef | grep -v " $$ "`
+echo "$PROCESSES" | sed 1d | filter_processes "$@"
+exit 0

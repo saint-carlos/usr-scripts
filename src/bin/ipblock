@@ -1,0 +1,54 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="block or unblock an IP"
+PARAMS="IP..."
+OPTIONS="[-hu] [-i | -o]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-u	unblock: unblock instead of blocking
+-o	output: block outgoing traffic only
+-i	input: block incoming traffic only
+
+exit status:
+1	options are bad
+otherwise it is the return value of iptables
+EOF
+
+	exit $1
+}
+
+FLAGS=-A
+BLOCK_INBOUND=true
+BLOCK_OUTBOUND=true
+ACTION_NAME="blocking"
+while getopts hiou option; do
+	case $option in
+		h) usage 0 ;;
+		u) FLAGS=-D ; ACTION_NAME="unblocking" ;;
+		o) BLOCK_INBOUND=false ;;
+		i) BLOCK_OUTBOUND=false ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+if ! $BLOCK_INBOUND && ! $BLOCK_OUTBOUND; then
+	echo "$PROGRAM: nothing to do" >&2
+	usage 1
+fi
+
+for IP in "$@"; do
+	$BLOCK_INBOUND && echo "$ACTION_NAME $IP for inbound traffic" && iptables -t filter $FLAGS INPUT -s $IP -j DROP &&
+	$BLOCK_OUTBOUND && echo "$ACTION_NAME $IP for outbound traffic" &&  iptables -t filter $FLAGS OUTPUT -s $IP -j DROP
+done
+

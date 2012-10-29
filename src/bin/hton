@@ -1,0 +1,95 @@
+#!/bin/bash
+
+# AUTHOR:	(c) idank
+# VERSION:	1.0
+# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
+# REQUIRES: base
+# NAME:		Host to Network
+# DESCRIPTION:	convert a number to an IP address
+
+PROGRAM=`basename $0`
+DESCRIPTION="convert a number from host order to network order"
+PARAMS="number..."
+OPTIONS="[-ha]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+perform hton (host-to-network) function on all input. input is assumed to be on the smallest size in which it fits. the script is built on shell arithmetics, so 64 bit numbers may not work, and even 32 bit numbers if the shell sucks.
+
+options:
+-h	help: show this help message and exit.
+-a	arch dependent: perform a real conversion: if the host order equals to the network order, no conversion is performed.
+-<n>	bytes: assume the inputs is <n> bytes wide. <n> can be 1, 2, 4, 8.
+
+exit status:
+0	if all arguments are OK
+1	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+arch_differs_net_order()
+{
+	if [ "`system_arch`" = x86 ]; then
+		return 1
+	else
+		return 0
+	fi
+}
+
+get_byte()
+{
+	NUM=$1
+	BYTE=$2
+	echo $(( (NUM >> (BYTE * 8)) & 0xff ))
+}
+
+number_width()
+{
+	NUM=$1
+	for w in 1 2 4; do
+		if test "$(( $NUM >> (w * 8) ))" -eq 0; then
+			echo "$w"
+			return 0
+		fi
+	done
+	return 1
+}
+
+ARCH_DEP=false
+WIDTH=0
+while getopts ah1248 option; do
+	case $option in
+		h) usage 0 ;;
+		a) ARCH_DEP=true ;;
+		1|2|4|8) WIDTH=$option ;;
+		\?) usage 1 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+if $ARCH_DEP && arch_differs_net_order; then
+	echo "$@"
+	exit
+fi
+
+NUM="$1"
+RESULT=0
+NUM_WIDTH="$WIDTH"
+if [ "$NUM_WIDTH" -eq 0 ]; then
+	NUM_WIDTH=`number_width "$NUM"`
+fi
+i=0
+while [ "$i" -lt "$NUM_WIDTH" ]; do
+	PART=`get_byte "$NUM" "$i"`
+	RESULT=$(( (RESULT << 8) | PART ))
+	i=`expr "$i" + 1`
+done
+echo "$RESULT"

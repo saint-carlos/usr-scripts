@@ -1,0 +1,49 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="prints platform-specific information."
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+1	bad arguments
+EOF
+
+    exit $1
+}
+
+while getopts h option; do
+        case $option in
+                h) usage 0 ;;
+                \?) usage 1 ;;
+        esac
+done
+shift `expr $OPTIND - 1`
+
+have_feature()
+{
+	uname -rv | grep -i "$1" > /dev/null 
+}
+
+for f in PAE hugemem largesmp smp; do
+	if have_feature "$f"; then
+		echo "$f"
+		exit
+	fi
+done
+
+echo plain
+

@@ -1,0 +1,88 @@
+#!/bin/bash
+
+# AUTHOR:	(c) idank
+# VERSION:	3.1
+# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
+# REQUIRES: nothing
+# NAME:		Find Grep
+# DESCRIPTION:	find text in all files in a subtree
+
+BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp'"
+
+PROGRAM=`basename $0`
+DESCRIPTION="find text in all files in a subtree."
+PARAMS="[file-type] text"
+OPTIONS="[-hbcB] [-o grep-options] [-d directory] [-f filename] [-t ext]..."
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+file-expression is a file extention, used to narrow down the search space to files of that extension.
+by default, all files are searched except blacklisted files. if one or more inclusions are defined, only the inclusions which are not excluded are searched.
+
+options:
+-h
+	help: show this help message and exit.
+-d directory
+	directory: directory to search in the default is the current working directory.
+-b
+	blacklist: modify the black list. the default blacklist is  "$BLACKLIST".
+-o grep-options
+	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw".
+-f filename
+	file name: include 'filename' in the search. this option accepts wildcards.
+-t ext
+	type: include files with the extensions 'ext' in the search.
+-c
+	c code: equivalent to '-t c -t h'
+
+exit status:
+2	arguments are bad
+1	no text found
+0	some text found
+EOF
+
+	exit $1
+}
+
+CRITERIA=""
+GREP_OPTIONS=""
+DIRECTORY=.
+while getopts hb:f:t:o:d:c option; do
+	case ${option} in
+		h) usage 0 ;;
+		b) BLACKLIST=${OPTARG} ;;
+		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
+		d) DIRECTORY="${OPTARG}" ;;
+		f) CRITERIA="$CRITERIA -o -name ${OPTARG}" ;;
+		t) CRITERIA="$CRITERIA -o -name '*.${OPTARG}'" ;;
+		c) CRITERIA="$CRITERIA -o -name '*.c' -o -name '*.h'" ;;
+		\?) usage 2 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+if [ $# -lt 1 ]; then
+	usage 2
+fi
+
+BLACKLIST_FILTER="mfilter -v ${BLACKLIST}"
+	
+# use -I option if exists
+grep -I . /dev/null >/dev/null 2>/dev/null
+if [ $? -le 1 ]
+	then IGNORE_BINARIES_FLAG="-I"
+	else IGNORE_BINARIES_FLAG=""
+fi
+
+if [ -n "$CRITERIA" ]; then
+	CRITERIA="'(' -inum 0 $CRITERIA  ')'" # "inum 0" is used as "false"
+fi
+
+eval find $DIRECTORY -type f $CRITERIA | eval $BLACKLIST_FILTER | awk '{ print "\"" $0 "\"" }' | xargs grep ${GREP_OPTIONS} -n ${IGNORE_BINARIES_FLAG} "$1" /dev/null
+

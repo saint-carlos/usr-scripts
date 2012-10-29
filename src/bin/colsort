@@ -1,0 +1,60 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="sort files by a certain column"
+PARAMS="column file..."
+OPTIONS="[-h] [-o sort-options] [-s separator]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+column is a number (starting from 1) to sort by. 0 means the last column. a negative number means sort from last column (e.g. if there are 6 columns than -1 will sort by the fifth).
+when no file is given, stdin is used.
+
+options:
+-h
+	help: show this help message and exit.'
+-o sort-options
+	options: pass options to sort. for example: "$PROGRAM -o n" will call "sort -n".'
+-s separator
+	separator: indicate a different column separator (default: any whitespace group, as in awk)'
+
+exit status:
+2	options are bad.
+1	arguments are bad.
+0	all OK.
+EOF
+    exit $1
+}
+
+SORT_OPTIONS=""
+SEPARATOR=" \t\n"
+while getopts ho:s: option; do
+    case $option in
+        h) usage 0 ;;
+        o) SORT_OPTIONS="$SORT_OPTIONS -$OPTARG" ;;
+        s) SEPARATOR="$OPTARG" ;;
+        \?) usage 2 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+COLUMN=$1
+shift
+if [ -z "$COLUMN" -o -n "`echo $COLUMN | tr -d '0-9-'`" ]; then
+	usage 1
+fi
+if [ $COLUMN -eq 0 ]; then
+	COLUMN="NF"
+elif [ $COLUMN -le 0 ]; then
+	COLUMN="(NF$COLUMN)"
+fi
+OUTPUT_SEPARATOR="`echo "$SEPARATOR" | cut -c1`"
+
+awk "-F[${SEPARATOR}]*" "{ print \$${COLUMN} \"${OUTPUT_SEPARATOR}\" \$0 }" "$@" | sort $SORT_OPTIONS | cut "-d$OUTPUT_SEPARATOR" -f2-
+exit 0

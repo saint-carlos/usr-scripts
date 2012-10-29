@@ -1,0 +1,48 @@
+#!/bin/bash
+##########################################################################
+# Shellscript:	allfiles - apply command to all files in all subdirectories
+# Author     :	Heiner Steven <heiner.steven@odn.de>
+# Date       :	1994-04-19
+# Category   :	File Utilities
+# SCCS-Id.   :	@(#) allfiles	1.2 04/02/18
+##########################################################################
+# Description:
+#
+##########################################################################
+
+PROGRAM=`basename $0`
+DESCRIPTION="apply command to all files in all subdirectories"
+PARAMS="command [args...]"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+1	arguments are missing
+2	some options are bad
+otherwise, it is the exit status of the last executed command
+EOF
+    exit $1
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+[ $# -lt 1 ] && usage 1
+
+find . -type f -print | xargs "$@"

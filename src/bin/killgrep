@@ -1,0 +1,53 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="kill a process by grepping its properties."
+PARAMS="text"
+OPTIONS="[-9h] [-s sigspec]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h
+	help: show this help message and exit.
+-s sigspec
+	sigspec: send the specified signal name instead of the default.
+-9
+	kill: same as "-s KILL"
+
+exit status:
+2	arguments are bad
+1	no process killed
+0	at least one process killed
+EOF
+    exit $1
+}
+
+KILLFLAGS=""
+while getopts hs:9 option; do
+	case ${option} in
+		h) usage 0 ;;
+		s) KILLFLAGS="-s $OPTARG" ;;
+		9) KILLFLAGS="-s KILL" ;;
+		\?) usage 2 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+RES=1
+for TARGET in "$@"; do
+	psgrep -n "$TARGET" | grep -v $$ | awk '{ print $2 }' | tr '\n' ' ' | xargs kill $KILLFLAGS
+	TEMP=$?
+	psgrep -n "$TARGET" | grep -v $$
+	if [ "$TEMP" -eq 0 ]; then
+		RES=0
+	fi
+done
+exit $RES

@@ -1,0 +1,48 @@
+#!/bin/bash
+
+alias ls='ls -Fh'
+alias size='du -hs'
+alias lsd='ls -d'
+alias lld='ll -d'
+alias lla='ll -a'
+alias tree='tree -CshF --dirsfirst'
+
+# processes
+alias psx='ps -ef | less'
+
+WORKSPACE=$HOME/tonian
+REPOSITORY_ROOT=$WORKSPACE/dev
+PROJECT_SUBDIR=subdir
+PROJECT_ROOT=$REPOSITORY_ROOT/$PROJECT_SUBDIR
+export WORKSPACE REPOSITORY_ROOT PROJECT_ROOT
+
+mount_idank()
+{
+	:
+}
+
+__get_working_copy()
+{
+	if [ $# -eq 0 ]; then
+		echo "$REPOSITORY_ROOT"
+		return
+	elif [ $# -eq 1 ] && [ -d "$REPOSITORY_ROOT/$1" ]; then
+		echo "$REPOSITORY_ROOT/$1/$PROJECT_SUBDIR"
+		return
+	fi
+	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'`
+	LIST=`\ls -ut $REPOSITORY_ROOT`
+	for ITEM in $@; do
+		LIST=`echo "$LIST" | tr ' ' '\n' | grep -i $ITEM`
+	done
+	printf "$REPOSITORY_ROOT/%s/$PROJECT_SUBDIR\n" "`echo  "$LIST" | tr ' ' '\n' | sed 1q`"
+}
+
+__jump_working_copy()
+{
+	cd `__get_working_copy $@`
+}
+
+alias j="mount_idank && __jump_working_copy"
+
+PS1='\D{%y-%m-%d %T} \u@\h:\w\\$ '

@@ -1,0 +1,101 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="start the build system."
+PARAMS="[make arguments]"
+OPTIONS="[-hlpr]"
+PTS=`tty | xargs basename`
+BUILD_LOG_PREFIX=/tmp/buildlog
+ERROR_LOG_PREFIX=/tmp/errlog
+BUILD_LOG="${BUILD_LOG_PREFIX}-pts-${PTS}"
+ERROR_LOG="${ERROR_LOG_PREFIX}-pts-${PTS}"
+STDERR=/proc/$PPID/fd/2
+ERROR_COLOR=red
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-p	problems: show the problems in the log.
+-l	log: show the build log.
+-r	rebuild: clean before build.
+
+exit status:
+2	some arguments are bad.
+1	there were build errors for building and showing problems or if 'make' returned an error.
+it is the return value from 'less' for showing the log.
+otherwise it is 0.
+EOF
+    exit $1
+}
+
+COMMAND=build
+CLEAN=false
+
+last_log()
+{
+	echo "$BUILD_LOG"
+}
+
+show_log()
+{
+	less `last_log`
+}
+
+show_problems()
+{
+	cat "$ERROR_LOG"
+}
+
+beep()
+{
+	tput bel
+	sleep 1
+	tput bel
+	sleep 1
+	tput bel
+}
+
+build()
+{
+	RETVAL=1
+	update_clock.sh
+	$CLEAN && make "$@" clean
+	rm -f "$BUILD_LOG" "$ERROR_LOG"
+	time make -j `system_cpu_count` "$@" 2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | tee -a "$BUILD_LOG"
+	PROBLEM_COUNT=`show_problems | wc -l | awk '{ print $1 }'`
+	COLORTERM="$ERROR_COLOR"
+	if [ $PROBLEM_COUNT -eq 0 ]; then
+		PROBLEM_COUNT=no
+		COLORTERM=normal
+		RETVAL=0
+	fi
+	color_echo -n "$COLORTERM" "there were ${PROBLEM_COUNT} errors/warnings."
+	echo " log file: $BUILD_LOG. error log: $ERROR_LOG."
+	beep &
+	if grep 'make returned error' $BUILD_LOG >/dev/null; then
+		RETVAL=`grep 'make returned error' $BUILD_LOG | awk '{print $NF }'`
+	fi
+	return $RETVAL
+}
+
+while getopts hlpr option; do
+        case ${option} in
+		h) usage 0 ;;
+		l) COMMAND=show_log ;;
+		p) COMMAND=show_problems ;;
+		r) CLEAN=true ;;
+		\?) usage 2 ;;
+        esac
+done
+shift `expr $OPTIND - 1`
+
+$COMMAND "$@"
+

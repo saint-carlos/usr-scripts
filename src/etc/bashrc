@@ -1,0 +1,41 @@
+#!/bin/bash
+ETC=ETC_PLACEHOLDER
+BIN=BIN_PLACEHOLDER
+
+export PATH=$PATH:$BIN
+
+. $ETC/`id -un`.rc
+
+alias mkdir='mkdir -p'
+
+# careful
+alias cp='cp -i'
+alias rm='rm -i'
+alias mv='mv -i'
+
+alias ll='ls -l'
+alias la='ls -a'
+
+ulimit -c unlimited
+
+GLOBIGNORE=*..:*.
+
+. $ETC/colorsrc
+if [ $UID -ne 0 ]; then
+	PROMPT_COLOR=__GREEN
+else
+	PROMPT_COLOR=__YELLOW
+fi
+PS1=`printf "\[${!PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
+
+
+export PAGER=less
+
+HISTCONTROL=ignoredups
+HISTSIZE=20000
+HISTFILESIZE=5000
+
+stty -ctlecho
+
+true # so that sourcing the file wont return error
+

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="multi filter: logical OR between greps"
+PARAMS="expression..."
+OPTIONS="[-voah]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+search for any of 'expression' and print out the line the expression is in. input is taken from standard input.
+
+options:
+-h	help: show this help message and exit.
+-o	or: print the input line if it contains any of the expressions (default).
+-a	and: print the input line if it contains all of the expressions.
+-v	inverse: print out lines not confirming to the search terms.
+
+exit status:
+1	arguments are bad
+otherwise, it is return value from 'awk' if the search expression is illegal
+EOF
+
+    exit $1
+}
+
+make_junctions()
+{
+	printf "\$0 ~ /$1/"
+	shift
+	for x in "$@"; do
+		printf " ${JUNCTION_OPERATOR} \$0 ~ /$x/"
+	done
+}
+
+CRITERIA_OPERATOR=""
+JUNCTION_OPERATOR="||"
+while getopts voah option; do
+	case $option in
+		h) usage 0 ;;
+		o) JUNCTION_OPERATOR="||" ;;
+		a) JUNCTION_OPERATOR="&&" ;;
+		v) CRITERIA_OPERATOR="!" ;;
+		\?) usage 1 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+if [ $# -eq 0 ]; then
+	cat
+else
+	AWK_SCRIPT="{ if ( $CRITERIA_OPERATOR ( `make_junctions "$@"` ) ) print }"
+	awk "$AWK_SCRIPT"
+fi
+

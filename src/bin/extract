@@ -1,0 +1,66 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="generic extract from archive."
+PARAMS="file-name"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+1	unrecognized archive
+2	bad arguments
+3	file does not exist
+EOF
+
+    exit $1
+}
+
+extractFile()
+{
+	case "$1" in
+		*.tar.bz2)	tar xvjf "$1" ;;
+		*.tar.gz)	tar xvzf "$1" ;;
+		*.bz2)		bunzip2 "$1" ;;
+		*.rar)		unrar x "$1" ;;
+		*.gz)		gunzip "$1" ;;
+		*.tar)		tar xvf "$1" ;;
+		*.tbz2)		tar xvjf "$1" ;;
+		*.tgz)		tar xvzf "$1" ;;
+		*.zip)		unzip "$1" ;;
+		*.Z)		uncompress "$1" ;;
+		*.7z)		7z x "$1" ;;
+		*)			echo "$PROGRAM: '$1': extraction tool not found" ; return 1 ;;
+	esac
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+if [ $# -eq 0 ]; then
+	usage 2
+fi
+
+if [ ! -f "$1" ]; then
+	echo "$PROGRAM: $1 does not exist"
+	exit 3
+fi
+
+extractFile "$1"
+

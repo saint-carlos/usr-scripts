@@ -1,0 +1,143 @@
+#!/bin/bash
+##########################################################################
+# Title      :	base.sh - print number to different bases
+# Author     :	Heiner Steven (stv). Improved by idank.
+# Date       :	1995-03-07
+# Requires   :	bc
+# Category   :	Desktop
+# SCCS-Id.   :	@(#) base.sh	1.3 04/02/18
+##########################################################################
+# Description
+#
+# Changes
+# 21-03-95 stv	fixed error occuring with 0xb as input (0.2)
+##########################################################################
+
+VER='1.4'
+PROGRAM=`basename $0`
+DESCRIPTION="print number to different bases, $VER (stv '95)"
+PARAMS="[number...]"
+OPTIONS="[-bodxh] [-f|-p]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+If no number is given, the numbers are read from standard input.
+A number may be
+binary (base 2)		starting with 0b (i.e. 0b1100)
+octal (base 8)		starting with 0  (i.e. 014)
+hexadecimal (base 16)	starting with 0x (i.e. 0xc)
+decimal			otherwise (i.e. 12)
+
+options:
+-b	binary: print the number in binary.
+-o	octal: print the number in octal.
+-d	decimal: print the number in decimal.
+-x	hexadecimal: print the number in hexadecimal.
+any combination of bases can be used. if no base is given at all, all bases are printed.
+-p	no prefix: do not print prefixes.
+-f	format: format the output numbers as the input numbers are formatted (0xF5, 030, 0b11 etc.) rather than naming the base in the output (bin=101 dec=5 etc.) which is the default.
+-h	help: show this help message and exit.
+
+exit status:
+0	all arguments are OK
+1	some arguments are bad
+EOF
+
+    exit $1
+}
+
+PROGRAM=`basename "$0"`			# program name
+
+Msg () {
+    for i
+    do echo "$PROGRAM: $i" >&2
+    done
+}
+
+Fatal () { Msg "$@"; exit 1; }
+
+PrintOne () {
+	BASE=$1
+	NAME=$2
+	DEC_INPUT=$3
+	PREFIX=$4
+	[ "$PREFIX_FORMAT" = long ] && PREFIX="${NAME}="
+	[ "$PREFIX_FORMAT" = none ] && PREFIX=""
+	echo "obase=$BASE; \"$PREFIX\"; $DEC_INPUT" | bc | sed -e 's: :	:g' | tr '\n' ' '
+}
+
+out_base () {
+	echo "$BASES" | grep -w "$1" > /dev/null
+}
+
+PrintBases () {
+    # Determine base of the number
+    for i
+    do
+		case "$i" in
+		    0b*)		ibase=2;;	# binary
+	    	0x*|[a-f]*|[A-F]*)	ibase=16;;	# hexadecimal
+		    0*)			ibase=8;;	# octal
+		    [1-9]*)		ibase=10;;	# decimal
+	    	*)
+			Msg "illegal number $i - ignored"
+			continue;;
+		esac
+
+		# Remove prefix, convert hex digits to uppercase (bc needs this)
+		number=`echo "$i" | sed -e 's:^0[bBxX]::' | tr 'a-f' 'A-F'`
+
+		# Convert number to decimal
+		dec=`echo "ibase=$ibase; $number" | bc`
+		case "$dec" in
+		    [0-9]*)	;;			# number ok
+	    	*)		continue;;		# error: ignore
+		esac
+
+		out_base 16 && PrintOne 16 hex $dec 0x
+		out_base 10 && PrintOne 10 dec $dec
+		out_base 8 && PrintOne 8 oct $dec 0
+		out_base 2 && PrintOne 2 bin $dec 0b
+		echo
+	done
+}
+
+BASES="2 8 10 16"
+OPTION_BASES=""
+PREFIX_FORMAT=long
+while getopts hbodxfp option; do
+	case ${option} in
+		h) usage 0 ;;
+		b) OPTION_BASES="$OPTION_BASES 2" ;;
+		o) OPTION_BASES="$OPTION_BASES 8" ;;
+		d) OPTION_BASES="$OPTION_BASES 10" ;;
+		x) OPTION_BASES="$OPTION_BASES 16" ;;
+		f) PREFIX_FORMAT=C ;;
+		p) PREFIX_FORMAT=none ;;
+		\?) usage 1 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+if [ -n "$OPTION_BASES" ]; then
+	BASES=$OPTION_BASES
+fi
+
+
+if [ $# -gt 0 ]
+then
+    PrintBases "$@"
+else					# read from stdin
+    while read line
+    do
+        PrintBases $line
+    done
+fi
+
+exit 0

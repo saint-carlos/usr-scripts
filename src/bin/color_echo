@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# AUTHOR:	(c) idank
+# VERSION:	1.0
+# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
+# REQUIRES: nothing
+# NAME:		color_echo
+# DESCRIPTION:	print a line in a given color
+
+PROGRAM=`basename $0`
+DESCRIPTION="print a line in a color."
+PARAMS="color line"
+OPTIONS="[-hn]"
+ETC=ETC_PLACEHOLDER
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-n	newline: do not print a newline after the line.
+
+exit status:
+0	if all arguments are OK
+1	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+EOL='\n'
+while getopts nh option; do
+	case $option in
+		h) usage 0 ;;
+		n) EOL="" ;;
+		\?) usage 1 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+. $ETC/colorsrc
+COLOR_VAR_NAME="__`echo $1 | tr a-z A-Z`"
+COLOR=${!COLOR_VAR_NAME}
+shift
+TEXT="$*"
+printf "${COLOR}%s${__NORMAL}${EOL}" "$TEXT"
+

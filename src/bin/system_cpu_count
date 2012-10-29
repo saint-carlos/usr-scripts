@@ -1,0 +1,36 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="prints the amount of cpus on the machine."
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+1	bad arguments
+EOF
+
+    exit $1
+}
+
+while getopts h option; do
+        case $option in
+                h) usage 0 ;;
+                \?) usage 1 ;;
+        esac
+done
+shift `expr $OPTIND - 1`
+
+grep -c processor /proc/cpuinfo
