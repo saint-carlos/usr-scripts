@@ -4,7 +4,7 @@ remove_line()
 {
 	SEARCH_TERM="$1"
 	FILE="$2"
-	TMP_FILE=`make_temp_file $FILE`
+	TMP_FILE=$(make_temp_file $FILE)
 	test -f "$FILE" || return 0
 	if grep -v "$SEARCH_TERM" "$FILE" > "$TMP_FILE"; then
 		mv "$TMP_FILE" "$FILE"
@@ -16,7 +16,7 @@ remove_line()
 restore_backup()
 {
 	FILE=$1
-	BACKUP_FILE=`make_backup_file $FILE`
+	BACKUP_FILE=$(make_backup_file $FILE)
 	rm -f "$FILE"
 	if [ -f "$BACKUP_FILE" ]; then
 		mv "$BACKUP_FILE" "$FILE"
