@@ -1,2 +1,34 @@
-#!/bin/sh
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="launch vim in xterm"
+PARAMS="[file...]"
+OPTIONS="[-h] [vim-options]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h
+	help: show this help message and exit.'
+
+exit status:
+1	arguments are bad.
+0	all OK.
+EOF
+    exit $1
+}
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+    esac
+done
+
 exec xterm -fa xft:Terminus:size=12 -r -rightbar -geometry 132x56+150 -e vim ${1+"$@"}
