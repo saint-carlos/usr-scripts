@@ -34,10 +34,8 @@ options:
 	blacklist: modify the black list. the default blacklist is  "$BLACKLIST".
 -o grep-options
 	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw".
--w
-	word: equivalent to '-o w'
--i
-	ignore case: equivalent to '-o i'
+-w, -i, -x, -l, -L
+	short options to pass to 'grep', equivalent respectively to -o w, -o i, -o x -o l, -o L
 -f filename
 	file name: include 'filename' in the search. this option accepts wildcards.
 -t ext
@@ -57,13 +55,12 @@ EOF
 CRITERIA=""
 GREP_OPTIONS=""
 DIRECTORY=.
-while getopts hb:f:t:o:d:cwi option; do
+while getopts hb:f:t:o:d:cwixLl option; do
 	case ${option} in
 		h) usage 0 ;;
 		b) BLACKLIST=${OPTARG} ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
-		w) GREP_OPTIONS="${GREP_OPTIONS} -w" ;;
-		i) GREP_OPTIONS="${GREP_OPTIONS} -i" ;;
+		w|i|x|L|l) GREP_OPTIONS="${GREP_OPTIONS} -${option}" ;;
 		d) DIRECTORY="${OPTARG}" ;;
 		f) CRITERIA="$CRITERIA -o -name ${OPTARG}" ;;
 		t) CRITERIA="$CRITERIA -o -name '*.${OPTARG}'" ;;
