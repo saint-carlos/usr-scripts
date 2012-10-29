@@ -1,6 +1,6 @@
 [user]
-	name = Idan Kedar
-	email = idank@tonian.com
+	name = USER_FULL_NAME_PLACEHOLDER
+	email = USERMAIL_PLACEHOLDER
 
 [core]
 	editor = vim
