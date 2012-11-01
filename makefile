@@ -30,6 +30,7 @@ ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 endif
 
 PD_FILES :=			\
+	bin/git-check-patchset	\
 	etc/bash_completion.pd
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_PD))
 	FILES := $(filter-out ${PD_FILES},${FILES})
