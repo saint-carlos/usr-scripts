@@ -27,6 +27,13 @@ EOF
     exit $1
 }
 
+unrpm()
+{
+	RPM=$(readlink -f "$1")
+	DEST_DIR=$(basename ${RPM%.rpm})
+	mkdir "$DEST_DIR" && cd "$DEST_DIR" && rpm2cpio $RPM | cpio -idmv
+}
+
 extractFile()
 {
 	case "$1" in
@@ -43,6 +50,7 @@ extractFile()
 		*.Z)		uncompress "$1" ;;
 		*.7z)		7z x "$1" ;;
 		*.xz)		xz -d "$1" ;;
+		*.rpm)		unrpm "$1" ;;
 		*)			echo "$PROGRAM: '$1': extraction tool not found" ; return 1 ;;
 	esac
 }
