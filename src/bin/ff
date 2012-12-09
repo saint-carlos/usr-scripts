@@ -2,7 +2,7 @@
 
 PROGRAM=`basename $0`
 DESCRIPTION="find a file by name pattern"
-PARAMS="name-pattern"
+PARAMS="name-pattern [where...]"
 OPTIONS="[-he]"
 
 usage()
@@ -36,6 +36,10 @@ while getopts he option; do
 done
 shift `expr $OPTIND - 1`
 
-test $# -eq 1 || usage 255
+WHAT="$1"
+shift
+if [ $# -eq 0 ]; then
+	set .
+fi
 
-find . -type f "-${TEST}" "${DECORATION}$1${DECORATION}"
+find "$@" -type f "-${TEST}" "${DECORATION}${WHAT}${DECORATION}"
