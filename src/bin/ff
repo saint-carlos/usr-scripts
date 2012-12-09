@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="find a file by name pattern"
 PARAMS="name-pattern"
-OPTIONS="[-h]"
+OPTIONS="[-he]"
 
 usage()
 {
