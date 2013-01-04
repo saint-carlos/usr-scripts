@@ -37,13 +37,13 @@ chdotglob()
 	fi
 }
 
-. $ETC/colorsrc
 if [ $UID -eq 0 ]; then
 	PROMPT_COLOR=__${ROOT_PROMPT_COLOR}
 else
 	PROMPT_COLOR=__${USER_PROMPT_COLOR}
 fi
-PS1=`printf "\[${!PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
+PROMPT_COLOR=${!PROMPT_COLOR}
+PS1=`printf "\[${PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
 
 
 export PAGER=less
