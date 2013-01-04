@@ -67,7 +67,7 @@ __set_prompt()
 	fi
 }
 PROMPT_COMMAND=__set_prompt
-PS1='\D{%y-%m-%d %T} \u@\h:${GIT_LOCATION:-\w}\$ '
+PS1='\! \D{%y-%m-%d %T} \u@\h:${GIT_LOCATION:-\w}\$ '
 
 # more informative trace when debugging bash scripts
 export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
