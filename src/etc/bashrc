@@ -11,6 +11,7 @@ if [ $UID -eq 0 ]; then
 fi
 
 . $ETC/bash_completion
+. $ETC/colorsrc
 . $ETC/userrc
 
 alias mkdir='mkdir -p'
