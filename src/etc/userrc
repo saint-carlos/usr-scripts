@@ -57,6 +57,8 @@ alias j="__jump_working_copy"
 
 __set_prompt()
 {
+	STATUS=$? # must be first line ever of this function
+
 	GIT_LOCATION=""
 	GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
 	if [ -n "$GIT_REPO" ]; then
@@ -65,9 +67,26 @@ __set_prompt()
 		GIT_PREFIX=$(git rev-parse --show-prefix)
 		GIT_LOCATION="${GIT_REPO}[${GIT_BRANCH}]/${GIT_PREFIX}"
 	fi
+
+	STATUS_COLOR="${!PROMPT_COLOR}"
+	case $STATUS in
+		0) STATUS_DESC="" ;;
+		130) STATUS_DESC="INT" ;;
+		131) STATUS_DESC="QUIT" ;;
+		141) STATUS_DESC="PIPE" ;;
+		148) STATUS_DESC="STP" ;;
+		*) STATUS_DESC="${STATUS}"; STATUS_COLOR=${__RED} ;;
+	esac
+	if [ -n "$STATUS_DESC" ]; then
+		STATUS_DESC=$(printf " ${STATUS_COLOR}(${STATUS_DESC})${PROMPT_COLOR}")
+	fi
+
+	# my shell ignores the return value of this function rather than
+	# put it in $?, but i don't know about other shells
+	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1='\! \D{%y-%m-%d %T} \u@\h:${GIT_LOCATION:-\w}\$ '
+PS1='\! \D{%y-%m-%d %T} \u@\h:${GIT_LOCATION:-\w}${STATUS_DESC}\$ '
 
 # more informative trace when debugging bash scripts
 export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
