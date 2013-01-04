@@ -55,11 +55,19 @@ __jump_working_copy()
 # 'j' jumps around the user's working directoy using short mnemonics
 alias j="__jump_working_copy"
 
-__git_ps1_wrapper()
+__set_prompt()
 {
-	__git_ps1 "[%s]" 2>/dev/null
+	GIT_LOCATION=""
+	GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
+	if [ -n "$GIT_REPO" ]; then
+		GIT_REPO=$(basename $GIT_REPO)
+		GIT_BRANCH=$(__git_ps1 "%s" 2>/dev/null)
+		GIT_PREFIX=$(git rev-parse --show-prefix)
+		GIT_LOCATION="${GIT_REPO}[${GIT_BRANCH}]/${GIT_PREFIX}"
+	fi
 }
-PS1='\D{%y-%m-%d %T} \u@\h:\w$(__git_ps1_wrapper)\$ '
+PROMPT_COMMAND=__set_prompt
+PS1='\D{%y-%m-%d %T} \u@\h:${GIT_LOCATION:-\w}\$ '
 
 # more informative trace when debugging bash scripts
 export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
