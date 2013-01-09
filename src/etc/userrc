@@ -30,7 +30,7 @@ __get_working_copy()
 	if [ $# -eq 0 ]; then
 		return
 	fi
-	if [ $# -ne 1 ]; then
+	if [ $# -eq 1 ]; then
 		for REPO_ROOT in $REPOSITORY_ROOTS; do
 			if [ -d "$REPO_ROOT/$1" ]; then
 				echo "$REPO_ROOT/$1"
