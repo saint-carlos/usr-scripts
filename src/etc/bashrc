@@ -12,6 +12,15 @@ fi
 
 . $ETC/bash_completion
 . $ETC/colorsrc
+
+if [ $UID -eq 0 ]; then
+	PROMPT_COLOR=_${ROOT_PROMPT_COLOR}
+else
+	PROMPT_COLOR=_${USER_PROMPT_COLOR}
+fi
+PROMPT_COLOR=${!PROMPT_COLOR}
+PS1="\[\033${PROMPT_COLOR}\]\u@\h:\w\\\$\[\033${_NORMAL}\] "
+
 . $ETC/userrc
 
 alias mkdir='mkdir -p'
@@ -36,15 +45,6 @@ chdotglob()
 		unset GLOBIGNORE
 	fi
 }
-
-if [ $UID -eq 0 ]; then
-	PROMPT_COLOR=__${ROOT_PROMPT_COLOR}
-else
-	PROMPT_COLOR=__${USER_PROMPT_COLOR}
-fi
-PROMPT_COLOR=${!PROMPT_COLOR}
-PS1=`printf "\[${PROMPT_COLOR}\]%s\[${__NORMAL}\]" "$PS1"`
-
 
 export PAGER=less
 
