@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="use 'vim' as if it were 'less'"
+PARAMS="[file...]"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+255	if some arguments are bad
+otherwise it is the same as vim.
+EOF
+
+    exit $1
+}
+
+
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 255 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+if test $# = 0; then
+	set -- -
+fi
+vim --cmd 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim' -
