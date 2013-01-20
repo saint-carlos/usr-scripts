@@ -34,6 +34,9 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
+if [ ! -t 1 ]; then
+	exec cat "$@"
+fi
 if [ $# -eq 0 ]; then
 	set -- -
 fi
