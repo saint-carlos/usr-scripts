@@ -34,7 +34,7 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
-if test $# = 0; then
+if [ $# -eq 0 ]; then
 	set -- -
 fi
-vim --cmd 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim' -
+vim --cmd 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim' "$@"
