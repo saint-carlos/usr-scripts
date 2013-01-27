@@ -37,6 +37,7 @@ set laststatus=2		" When to show a statusline.
 " set autowrite			" Automatically save before :next, :make etc.
 " set autoread			" auto read when a file is changed from the outside.
 " set smarttab			" treat groups of spaces as tabs.
+set mouse=a
 
 autocmd! bufwritepost vimrc source ~/.vimrc " reload .vimrc if edited
 autocmd! bufwritepost vimrc source ETC_PLACEHOLDER/vimrc " reload vimrc if edited
