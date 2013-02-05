@@ -55,6 +55,11 @@ __jump_working_copy()
 # 'j' jumps around the user's working directoy using short mnemonics
 alias j="__jump_working_copy"
 
+case $TERM in
+	xterm*) __TITLEBAR="\[\e]0;\h:\${GIT_LOCATION:-\W}\007\]" ;;
+	*) __TITLEBAR="" ;;
+esac
+
 __set_prompt()
 {
 	STATUS=$? # must be first line ever of this function
@@ -86,7 +91,7 @@ __set_prompt()
 	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${GIT_LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${GIT_LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 # more informative trace when debugging bash scripts
 export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
