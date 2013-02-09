@@ -16,6 +16,7 @@ cmd_exists htop && alias top='htop'
 cmd_exists vim && alias vi='vim'
 
 export LESS="-MR" # default LESS configuration
+export GREP_COLORS="fn=35;1" # grep filename color is brighter
 
 WORKSPACE=WORKSPACE_PLACEHOLDER
 for REPO_ROOT in "$WORKSPACE" REPO_ROOT_LIST_PLACEHOLDER; do
