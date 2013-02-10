@@ -48,6 +48,7 @@
 	amend = commit --verbose --amend -a
 	inspect = log --reverse --patch-with-stat --summary -U50
 	review = show --patch-with-stat --summary -U50
+	cmessage = log -1 --format="%s%n%n%b"
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %an %Creset%s%C(cyan bold)%d
