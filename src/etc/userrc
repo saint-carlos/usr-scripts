@@ -15,7 +15,7 @@ alias psx='ps -ef | less'
 cmd_exists htop && alias top='htop'
 cmd_exists vim && alias vi='vim'
 
-export LESS="-MR" # default LESS configuration
+export LESS="-MRi -z-4" # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
 
 WORKSPACE=WORKSPACE_PLACEHOLDER
