@@ -57,7 +57,7 @@ __jump_working_copy()
 alias j="__jump_working_copy"
 
 case $TERM in
-	xterm*) __TITLEBAR="\[\e]0;\h:\${GIT_LOCATION:-\W}\007\]" ;;
+	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${GIT_LOCATION:-\W}\007\]" ;;
 	*) __TITLEBAR="" ;;
 esac
 
