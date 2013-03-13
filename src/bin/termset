@@ -1,0 +1,31 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="set the title of the terminal"
+PARAMS="terminal-name"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+EOF
+
+    exit $1
+}
+while getopts h option; do
+    case $option in
+        h) usage 0 ;;
+        \?) usage 1 ;;
+    esac
+done
+shift `expr $OPTIND - 1`
+
+echo -en "\033]0;$*\007"
