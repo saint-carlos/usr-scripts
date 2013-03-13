@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="prints the machines IP in the LAN."
 PARAMS=""
-OPTIONS="[-h]"
+OPTIONS="[-ha]"
 
 usage()
 {
@@ -16,6 +16,7 @@ $PROGRAM $OPTIONS $PARAMS
 
 options:
 -h	help: show this help message and exit.
+-a	all: show all IPs, not just the first
 
 exit status:
 0	all OK
@@ -25,12 +26,14 @@ EOF
     exit $1
 }
 
-while getopts h option; do
+FILTER='head -1'
+while getopts ha option; do
         case $option in
                 h) usage 0 ;;
+		a) FILTER=cat ;;
                 \?) usage 1 ;;
         esac
 done
 shift `expr $OPTIND - 1`
 
-hostname -I | tr ' ' '\n' | head -1
+hostname -I | tr ' ' '\n' | $FILTER
