@@ -44,11 +44,14 @@ uninstall: ${CONFIG_FILE}
 
 update: uninstall install_all
 
+tags::
+	ctags -R --language-force=sh .
+
 clean:
 	rm -rf tgt tmp
 
 mrproper: clean
-	rm -f config.sh
+	rm -f config.sh tags
 
 help:
 	@echo TODO
