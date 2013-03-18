@@ -42,6 +42,7 @@ extractFile()
 		*.tar.gz)	tar xvzf "$1" ;;
 		*.bz2)		bunzip2 "$1" ;;
 		*.rar)		unrar x "$1" ;;
+		*.ace)		unace x "$1" ;;
 		*.gz)		gunzip "$1" ;;
 		*.tar)		tar xvf "$1" ;;
 		*.tbz2)		tar xvjf "$1" ;;
