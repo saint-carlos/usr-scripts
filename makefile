@@ -21,6 +21,7 @@ DESKTOP_FILES :=		\
 	bin/permute		\
 	bin/stopwatch		\
 	bin/xvim		\
+	etc/xdefaults		\
 	bin/mvspc
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
