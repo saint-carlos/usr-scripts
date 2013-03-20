@@ -33,7 +33,7 @@
 	meta = yellow bold
 	frag = cyan bold
 	old = red bold
-	new = green bold	
+	new = green bold
 
 [alias]
 	brav = branch -avv
