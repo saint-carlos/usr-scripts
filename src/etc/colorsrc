@@ -1,3 +1,5 @@
+#!/bin/sh
+
 export __NORMAL='\E[0m'
 export __GRAY='\E[90m'
 export __RED='\E[91m'

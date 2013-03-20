@@ -1,3 +1,5 @@
+#!/bin/bash
+
 _SYS_COMMANDS=`sys -h | sed 1,3d | grep -w sys | cut -s -d: -f1 | cut '-d ' -f2 | tr '\n' ' '`
 complete -W "$_SYS_COMMANDS" sys 2>/dev/null
 

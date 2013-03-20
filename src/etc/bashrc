@@ -1,4 +1,5 @@
 #!/bin/bash
+
 ETC=ETC_PLACEHOLDER
 BIN=BIN_PLACEHOLDER
 SBIN=SBIN_PLACEHOLDER
@@ -57,4 +58,3 @@ test -t 0 && stty -ctlecho
 
 unset ETC BIN SBIN USER_PROMPT_COLOR ROOT_PROMPT_COLOR
 true # so that sourcing the file won't return error
-
