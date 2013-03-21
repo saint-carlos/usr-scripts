@@ -72,5 +72,6 @@
 ! PERL
 
 *URxvt*perl-lib:	CONFIG_LIB/urxvt
-*URxvt*perl-ext:	default,clipboard
+*URxvt*perl-ext:	default,clipboard,keyboard-select
+*URxvt*keysym*M-s:	perl:keyboard-select:activate
 *URxvt*clipboard*autocopy:		true
