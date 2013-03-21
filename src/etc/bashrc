@@ -12,6 +12,9 @@ if [ $UID -eq 0 ]; then
 fi
 
 . $ETC/bash_completion
+shopt -s no_empty_cmd_completion
+shopt -s hostcomplete
+
 . $ETC/colorsrc
 
 if [ $UID -eq 0 ]; then
