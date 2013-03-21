@@ -5,7 +5,8 @@
 PARAM_FILE=$1
 
 . "$PARAM_FILE"
+. "$(dirname $BASH_SOURCE)/common.sh"
 
-for VAR in `grep -v '# *ignore' "$PARAM_FILE" | cut -s -d= -f1`; do
+for VAR in `grep -v '# *ignore' "$PARAM_FILE" | grep '_PLACEHOLDER=' | cut -s -d= -f1`; do
 	echo "s|\<${VAR}\>|${!VAR}|g;"
 done
