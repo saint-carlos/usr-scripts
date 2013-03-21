@@ -68,3 +68,8 @@
 *URxvt*saveLines:	500000
 *URxvt*print-pipe:	cat > /tmp/urxvt-$PPID
 *URxvt*searchable-scrollback:		M-f
+
+! PERL
+
+*URxvt*perl-lib:	CONFIG_LIB/urxvt
+*URxvt*perl-ext:	default
