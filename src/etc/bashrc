@@ -41,7 +41,6 @@ alias la="ls -A $__LS_FLAGS"
 
 ulimit -c unlimited
 
-
 export PAGER=less
 
 export HISTTIMEFORMAT='%F %T '
@@ -50,6 +49,7 @@ export HISTSIZE=20000
 export HISTFILESIZE=5000
 export HISTIGNORE="exit:logout:reboot:shutdown:poweroff:return:clear:history:bg:fg:jobs:pwd:ls:ll:la:cd:ps:[ \t]*"
 
+stty -ixon # disable ^S/^Q
 test -t 0 && stty -ctlecho
 
 unset ETC BIN SBIN USER_PROMPT_COLOR ROOT_PROMPT_COLOR
