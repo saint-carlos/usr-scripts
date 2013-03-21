@@ -40,3 +40,14 @@
 *URxvt*geometry:	104x60
 *URxvt*buffered:	false
 *URxvt*selection*pattern-0:		([[:word:]-,./?%&#:_=+@~]+)
+
+! RENDERING & FONT
+
+! *URxvt*font:		xft:Monospace:pixelsize=14:antialias=false
+*URxvt*font:		xft:DejaVu Sans Mono:pixelsize=14:antialias=false
+! *URxvt*font:		xft:Ubuntu Mono:pixelsize=15:antialias=false
+! *URxvt*font:		xft:Arundina Sans Mono:pixelsize=14:antialias=false
+! *URxvt*font:		xft:Droid Sans Mono:pixelsize=14:antialias=false
+! *URxvt*boldFont:	xft:<<<<your font here>>>>:pixelsize=14:antialias=false
+*URxvt*depth:		24
+*URxvt*letterSpace:	-1
