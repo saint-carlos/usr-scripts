@@ -51,3 +51,13 @@
 ! *URxvt*boldFont:	xft:<<<<your font here>>>>:pixelsize=14:antialias=false
 *URxvt*depth:		24
 *URxvt*letterSpace:	-1
+
+! SCROLLING
+
+*URxvt*scrollstyle:		plain
+*URxvt*scrollBar_right:		true
+*URxvt*scrollBar_floating:	false
+*URxvt*scrollTtyOutput:		false
+*URxvt*scrollTtyKeypress:	true
+*URxvt*scrollColor:		#D3D7Cf
+*URxvt*thickness:		10
