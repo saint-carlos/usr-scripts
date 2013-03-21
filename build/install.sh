@@ -24,4 +24,3 @@ install_dir bin 0755 "$BIN_PLACEHOLDER"
 if [ $UID -eq 0 ]; then
 	install_dir sbin 0755 "$SBIN_PLACEHOLDER"
 fi
-
