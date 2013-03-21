@@ -28,3 +28,15 @@
 ! white
 *color7:	#D3D7CF
 *color15:	#EEEEEC
+
+! =============
+! URxvt
+! =============
+
+! GENERAL
+
+*URxvt*background:	#000000
+*URxvt*foreground:	#ffffff
+*URxvt*geometry:	104x60
+*URxvt*buffered:	false
+*URxvt*selection*pattern-0:		([[:word:]-,./?%&#:_=+@~]+)
