@@ -38,14 +38,6 @@ alias la="ls -A $__LS_FLAGS"
 
 ulimit -c unlimited
 
-chdotglob()
-{
-	if "$@"; then
-		GLOBIGNORE=*..:*.
-	else
-		unset GLOBIGNORE
-	fi
-}
 
 export PAGER=less
 
