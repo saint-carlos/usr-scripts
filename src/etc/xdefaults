@@ -72,4 +72,5 @@
 ! PERL
 
 *URxvt*perl-lib:	CONFIG_LIB/urxvt
-*URxvt*perl-ext:	default
+*URxvt*perl-ext:	default,clipboard
+*URxvt*clipboard*autocopy:		true
