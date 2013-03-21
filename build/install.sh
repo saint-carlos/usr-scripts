@@ -17,6 +17,7 @@ PARAMS_FILE="$1"
 INSTALL_SOURCE="$2"
 
 . "$PARAMS_FILE"
+. "$(dirname $BASH_SOURCE)/common.sh"
 
 install_dir etc 0644 "$ETC_PLACEHOLDER"
 install_dir bin 0755 "$BIN_PLACEHOLDER"

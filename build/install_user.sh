@@ -22,10 +22,9 @@ rmbackup()
 
 [ $# -eq 1 ] || exit 1
 
-. "$(dirname $BASH_SOURCE)/common.sh"
-
 PARAMS_FILE="$1"
 . "$PARAMS_FILE"
+. "$(dirname $BASH_SOURCE)/common.sh"
 test -d "$ETC_PLACEHOLDER" || exit 1
 
 backup ~/.bashrc

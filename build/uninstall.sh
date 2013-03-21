@@ -26,10 +26,9 @@ restore_backup()
 
 [ $# -eq 1 ] || exit 1
 
-. "$(dirname $BASH_SOURCE)/common.sh"
-
 PARAMS_FILE="$1"
 . "${PARAMS_FILE}"
+. "$(dirname $BASH_SOURCE)/common.sh"
 
 test -d "$ETC_PLACEHOLDER" && rm -r "$ETC_PLACEHOLDER"
 test -d "$BIN_PLACEHOLDER" && rm -r "$BIN_PLACEHOLDER"
