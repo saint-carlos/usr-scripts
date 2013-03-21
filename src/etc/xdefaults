@@ -62,3 +62,9 @@
 *URxvt*scrollTtyKeypress:	true
 *URxvt*scrollColor:		#D3D7Cf
 *URxvt*thickness:		10
+
+! BUFFER
+
+*URxvt*saveLines:	500000
+*URxvt*print-pipe:	cat > /tmp/urxvt-$PPID
+*URxvt*searchable-scrollback:		M-f
