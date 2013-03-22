@@ -6,6 +6,7 @@ __COREUTILS_FLAGS="-v"
 alias du='du -hs'
 alias df='df -h'
 alias lsd='ls -d'
+alias llx='ll -X'
 alias lld='ll -d'
 alias lla='ll -A'
 alias tree='tree -CshF --dirsfirst'
