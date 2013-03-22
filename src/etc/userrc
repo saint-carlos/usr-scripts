@@ -3,7 +3,7 @@
 __LS_FLAGS="-Fh"
 __COREUTILS_FLAGS="-v"
 
-alias size='du -hs'
+alias du='du -hs'
 alias df='df -h'
 alias lsd='ls -d'
 alias lld='ll -d'
