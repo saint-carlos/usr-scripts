@@ -39,5 +39,5 @@ backup ~/.gitconfig
 ln -sf "$ETC_PLACEHOLDER/gitconfig" ~/.gitconfig
 
 if [ -n "$(ls -A $LIB_PLACEHOLDER/vim/doc)" ]; then
-	vim --cmd "helptags $LIB_PLACEHOLDER/vim/doc" --cmd 'q' # generate doc tags
+	vim_exec helptags "$LIB_PLACEHOLDER/vim/doc" # generate doc tags
 fi

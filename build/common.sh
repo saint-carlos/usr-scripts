@@ -15,3 +15,7 @@ make_backup_file()
 	echo "${1}.bak.${PROJECT}"
 }
 
+vim_exec()
+{
+	vim --cmd "$*" --cmd q
+}
