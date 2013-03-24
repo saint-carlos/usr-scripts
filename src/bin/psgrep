@@ -46,17 +46,13 @@ if supported -m 1 grep "--color=auto" .; then
 	GREP_OPTIONS="$GREP_OPTIONS --color=auto"
 fi
 
-if [ $# -eq 0 ]; then
-	usage 1
-fi
-
 filter_processes()
 {
-	if [ $# -eq 1 ]; then
-		grep $GREP_OPTIONS "$1"
-	else
-		mfilter "$@"
-	fi
+	case $# in
+		0) cat;;
+		1) grep $GREP_OPTIONS "$1";;
+		*) mfilter "$@";;
+	esac
 }
 
 PS_COMMAND='ps -e -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww'
