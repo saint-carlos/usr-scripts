@@ -11,7 +11,7 @@ alias lla='ll -A'
 alias tree='tree -CshF --dirsfirst'
 
 # processes
-alias psx='ps -ef | less'
+alias psx='ps -e -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww | less'
 cmd_exists htop && alias top='htop'
 cmd_exists vim && alias vi='vim'
 
