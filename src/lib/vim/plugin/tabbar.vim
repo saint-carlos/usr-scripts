@@ -27,6 +27,9 @@ else
       let Tb_loaded= 1
 endif "%%
 
+if exists("g:V_DirDiffRunning")
+    finish
+endif
 
 " Debug Level ~~
 "   0 = no logging
