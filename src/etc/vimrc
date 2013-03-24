@@ -252,3 +252,7 @@ endif
 
 " For TabBar plugin: allow single-click tab switching
 let g:Tb_UseSingleClick = 1
+
+" FSwitch
+let g:fsnonewfiles = 1
+map <c-h> :FSHere<cr>
