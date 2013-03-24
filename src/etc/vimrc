@@ -1,3 +1,5 @@
+set runtimepath^=LIB_PLACEHOLDER/vim
+
 set autoindent
 set smartindent
 set shiftwidth=8

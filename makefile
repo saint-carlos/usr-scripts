@@ -8,6 +8,7 @@ FILES=$(patsubst src/%, %, $(wildcard	\
 	src/bin/*			\
 	src/sbin/*			\
 	src/etc/*			\
+	src/lib/vim/*/*			\
 ))
 
 SED_COMMANDS=$(shell ./${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
