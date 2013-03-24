@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="get process info by part of its name."
 PARAMS="string ..."
-OPTIONS="[-hn] [-o options]"
+OPTIONS="[-hnd] [-o options]"
 
 usage()
 {
@@ -21,6 +21,8 @@ options:
 	no header: do not show the table header.
 -o options
 	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw". if more than one string is given, this option is ignored.
+-d
+	D state: list processes in state D (uninterruptible sleep)
 
 exit status:
 0	all OK
@@ -32,11 +34,13 @@ EOF
 
 SHOW_HEADER=true
 GREP_OPTIONS=""
-while getopts hno: option; do
+DSTATE=false
+while getopts hno:d option; do
 	case ${option} in
 		h) usage 0 ;;
 		n) SHOW_HEADER=false ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
+		d) DSTATE=true ;;
 		\?) usage 1 ;;
 	esac
 done
@@ -44,6 +48,13 @@ shift `expr $OPTIND - 1`
 
 if supported -m 1 grep "--color=auto" .; then
 	GREP_OPTIONS="$GREP_OPTIONS --color=auto"
+fi
+
+if $DSTATE; then
+	AWKCMD='{ if ($5 ~ ".*D.*") print }'
+	DSTATE_FILTER="| awk '$AWKCMD'"
+else
+	DSTATE_FILTER=""
 fi
 
 filter_processes()
@@ -59,5 +70,5 @@ PS_COMMAND='ps -e -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww'
 
 $SHOW_HEADER && $PS_COMMAND | sed '1q'
 PROCESSES=`$PS_COMMAND | grep -v " $$ "`
-echo "$PROCESSES" | sed 1d | filter_processes "$@"
+echo "$PROCESSES" | eval sed 1d "$DSTATE_FILTER" | filter_processes "$@"
 exit 0
