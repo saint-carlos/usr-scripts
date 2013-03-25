@@ -37,4 +37,12 @@ if [ $# != 1 ]; then # what to hightlight?
     usage 2
 fi
 
-sed -r "s/$1/`tput smso`&`tput rmso`/g"
+SEPARATOR=/
+for S in '/' ':' '|' ','; do
+	if echo "$1" | grep "$S" >/dev/null 2>/dev/null; then
+		continue;
+	fi
+	SEPARATOR=$S
+	break
+done
+sed -r "s${SEPARATOR}${1}${SEPARATOR}`tput smso`&`tput rmso`${SEPARATOR}g"
