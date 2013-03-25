@@ -96,7 +96,7 @@ PROMPT_COMMAND=__set_prompt
 PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${GIT_LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 # more informative trace when debugging bash scripts
-export PS4='+ $$:${BASH_SOURCE}:${BASH_LINENO}:${FUNCNAME}: '
+export PS4='+ $$:$(basename ${BASH_SOURCE}):${BASH_LINENO}:${FUNCNAME}: '
 
 # don't check mail
 unset MAIL MAILCHECK MAILPATH
