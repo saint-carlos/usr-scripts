@@ -22,19 +22,19 @@ exit status:
 otherwise it is the exit status of sed
 EOF
 
-    exit $1
+	exit $1
 }
 
 while getopts h option; do
-    case $option in
-        h) usage 0 ;;
-        \?) usage 2 ;;
-    esac
+	case $option in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
 done
 shift `expr $OPTIND - 1`
 
 if [ $# != 1 ]; then # what to hightlight?
-    usage 2
+	usage 2
 fi
 
 SEPARATOR=/
