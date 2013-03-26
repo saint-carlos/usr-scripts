@@ -64,9 +64,26 @@ filetype plugin indent on
 
 autocmd FileType make setlocal noexpandtab "'tab' means 'tab' in makefiles
 
+" editing
+" =======
+
 set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
+set backspace=indent,eol,start " Allow backspacing over everything in insert mode.
+
+autocmd! BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
+
+" F5: left to right
+" F6: right to left.
+map <F5> %s/\s\+$//
+map  <F5> <Esc>:set guifont=FreeSans<CR>:set norightleft<CR>:set nohk<CR>i
+map! <F5> <Esc>:set guifont=FreeSans<CR><Esc>:set norightleft<CR>:set nohk<CR>a
+map  <F6> <Esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<CR><Esc>:set rightleft<CR>:set hk<CR>i
+map! <F6> <Esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<CR><Esc>:set rightleft<CR>:set hk<CR>a
+map! <F8> <Esc>:w<CR>i
+map  <F8> :w<CR>
+
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
@@ -75,15 +92,10 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 " set autoread			" auto read when a file is changed from the outside.
 " set smarttab			" treat groups of spaces as tabs.
 
-autocmd! bufwritepost vimrc source ~/.vimrc " reload .vimrc if edited
-autocmd! bufwritepost vimrc source ETC_PLACEHOLDER/vimrc " reload vimrc if edited
-
 " flag problematic whitespace (trailing and spaces before tabs). Note you get the same by doing let c_space_errors=1 but this rule really applys to everything.
 hi RedundantSpaces term=standout ctermbg=red guibg=red
 " match RedundantSpaces /\s\+$\| \+\ze\t/	"\ze sets end of match so only spaces highlighted
 " use :set list! to toggle visible whitespace on/off
-
-set backspace=indent,eol,start			" Allow backspacing over everything in insert mode.
 
 " Enable this if you mistype :w as :W or :q as :Q.
 " nmap :W :w
@@ -149,17 +161,6 @@ iab obnsolete  obsolete
 iab flase      false
 iab recrusive  recursive
 iab Recrusive  Recursive
-
-
-" F5: left to right
-" F6: right to left.
-map <F5> %s/\s\+$//
-map  <F5> <esc>:set guifont=FreeSans<cr>:set norightleft<cr>:set nohk<cr>i
-map! <F5> <esc>:set guifont=FreeSans<cr><esc>:set norightleft<cr>:set nohk<cr>a
-map  <F6> <esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<cr><esc>:set rightleft<cr>:set hk<cr>i
-map! <F6> <esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<cr><esc>:set rightleft<cr>:set hk<cr>a
-map! <F8> <esc>:w<cr>i
-map  <F8> :w<cr>
 
 map <leader>cd :cd %:p:h<cr> " When pressing <leader>cd switch to the directory of the open buffer
 
