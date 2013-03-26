@@ -46,12 +46,18 @@ set statusline+=%-16.(%l/%L(%p%%),\ %c%V%)     " location of cursor in file - li
 set tabstop=8		" tab width
 set linebreak		" wrap on words, not characters
 set showmatch           " Show matching brackets.
-set listchars=tab:>-,trail:.,extends:> " how to display whitespace when asked
+set matchpairs+=<:>	" '<' and '>' are considered matching brackets
+set listchars=tab:>-,trail:$,extends:> " how to display whitespace when asked
 set whichwrap=b,s,<,>,[,] " keys which can move the cursor to another line
+set diffopt+=context:20	" 20 context lines in diff
 
 if has("syntax")
 	syntax on
 endif
+
+autocmd BufNewFile,BufRead gitconfig setfiletype gitconfig
+autocmd BufNewFile,BufRead xdefaults,xdefaults.* setfiletype xdefaults
+autocmd FileType log setlocal autoread nomodifiable readonly
 
 " syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
 let g:is_posix = 1
