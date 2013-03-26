@@ -194,6 +194,11 @@ endif
 " For TabBar plugin: allow single-click tab switching
 let g:Tb_UseSingleClick = 1
 
+" --- FSwitch ---
+
+let g:fsnonewfiles = 1
+map <C-h> :FSHere<CR>
+
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
@@ -273,7 +278,3 @@ iab recrusive  recursive
 iab Recrusive  Recursive
 
 map <leader>cd :cd %:p:h<cr> " When pressing <leader>cd switch to the directory of the open buffer
-
-" FSwitch
-let g:fsnonewfiles = 1
-map <c-h> :FSHere<cr>
