@@ -75,6 +75,11 @@ highlight Normal guifg=White guibg=Black
 " Disable highlighting
 map <silent> ; :nohlsearch<CR>
 
+set spelllang=en_us
+set nospell
+map <silent> <F6> :set spell!<CR>
+map! <F6> <Esc><F6>
+
 " formatting
 " ==========
 
