@@ -8,9 +8,8 @@ set nobackup            " Do not keep a backup file.
 set iskeyword=@,48-57,_
 set noerrorbells        " No beeps.
 set magic               " Use 'magic' patterns (extended regular expressions).
-
-" tell vim to find ctags even if in a subdirectory.
-set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
+set hidden		" allow movement to another buffer without saving the current one
+set tags+=./tags;	" tell vim to find ctags even if in a subdirectory.
 
 " view
 " ====
@@ -96,35 +95,14 @@ if has("cscope")
 	set cst		" consult cscope before ctags for :tag jump
 	set nocsverb	" non verbose mode (when adding a database)
 
-	if filereadable("cscope.out") " add any database in current directory
-		cs add cscope.out
-	elseif $CSCOPE_DB != "" " else add database pointed to by environment
+	if exists($CSCOPE_DB) " add database pointed to by environment
 		cs add $CSCOPE_DB
-	endif
-
-	if filereadable("../cscope.out")
-		cs add ../cscope.out
-	endif
-	if filereadable("../../cscope.out")
-		cs add ../../cscope.out
-	endif
-	if filereadable("../../../cscope.out")
-		cs add ../../../cscope.out
-	endif
-	if filereadable("../../../../cscope.out")
-		cs add ../../../../cscope.out
-	endif
-	if filereadable("../../../../../cscope.out")
-		cs add ../../../../../cscope.out
-	endif
-	if filereadable("../../../../../../cscope.out")
-		cs add ../../../../../../cscope.out
-	endif
-	if filereadable("../../../../../../../cscope.out")
-		cs add ../../../../../../../cscope.out
-	endif
-	if filereadable("../../../../../../../../cscope.out")
-		cs add ../../../../../../../../cscope.out
+	else " add any database in current directory
+		let s:cscope_file=findfile("cscope.out", ".;")
+		let s:cscope_pre=matchstr(s:cscope_file, ".*/")
+		if !empty(s:cscope_file) && filereadable(s:cscope_file)
+			exec "cs add" s:cscope_file s:cscope_pre
+		endif
 	endif
 
 	" CScope related mappings.
