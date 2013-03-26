@@ -1,18 +1,27 @@
 set runtimepath^=LIB_PLACEHOLDER/vim
 
+" general
+" =======
+
+set nocompatible        " Disable vi compatibility.
+set nobackup            " Do not keep a backup file.
+set iskeyword=@,48-57,_
+set noerrorbells        " No beeps.
+set magic               " Use 'magic' patterns (extended regular expressions).
+
+" tell vim to find ctags even if in a subdirectory.
+set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
+
 set autoindent
 set smartindent
 set shiftwidth=8
 set tabstop=8
 set whichwrap=b,s,<,>,[,]
 set listchars=trail:^
-set iskeyword=@,48-57,_
 set cmdheight=2
 
 set nu					" show line numbers
 set lbr					" wrap on words, not characters
-set nocompatible        " Disable vi compatibility.
-set nobackup            " Do not keep a backup file.
 set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
 set textwidth=0         " Don't wrap words by default. set to, for example, 70 to wrap after 70 characters.
@@ -23,10 +32,8 @@ set ruler               " Show the line and column numbers of the cursor.
 set ignorecase          " Case insensitive matching.
 set smartcase			" If search contains capitals, search exact case.
 set incsearch           " Incremental search.
-set noerrorbells        " No beeps.
 set modeline            " Enable modeline.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
-set magic               " Use 'magic' patterns (extended regular expressions).
 set hlsearch            " Highlight search matches.
 set bg=dark				" bright terminal colors
 set wildmenu			" display file list when browsing files to open
@@ -140,9 +147,6 @@ map! <F8> <esc>:w<cr>i
 map  <F8> :w<cr>
 
 map <leader>cd :cd %:p:h<cr> " When pressing <leader>cd switch to the directory of the open buffer
-
-" tell vim to find ctags even if in a subdirectory.
-set tags=./tags,tags,../tags,../../tags,../../../tags,../../../../tags,../../../../../tags,../../../../../../tag,../../../../../../../tags,../../../../../../../../tag
 
 if has("cscope")
 	set cscopetag	" treat scsope tags like ctags
