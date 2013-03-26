@@ -1,10 +1,7 @@
 #!/bin/bash
 
+# ls
 __LS_FLAGS="-Fh"
-__COREUTILS_FLAGS="-v"
-
-alias du='du -hs'
-alias df='df -h'
 alias lsd='ls -d'
 alias llx='ll -X'
 alias lld='ll -d'
@@ -16,8 +13,18 @@ alias psx='ps -e -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww | less'
 cmd_exists htop && alias top='htop'
 cmd_exists vim && alias vi='vim'
 
+# misc
+__COREUTILS_FLAGS="-v"
+alias du='du -hs'
+alias df='df -h'
+
 export LESS="-MRi -z-4" # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
+
+unset MAIL MAILCHECK MAILPATH # don't check mail
+
+# more informative trace when debugging bash scripts
+export PS4='+ $$:$(basename ${BASH_SOURCE}):${BASH_LINENO}:${FUNCNAME}: '
 
 WORKSPACE=WORKSPACE_PLACEHOLDER
 for REPO_ROOT in "$WORKSPACE" REPO_ROOT_LIST_PLACEHOLDER; do
@@ -26,36 +33,6 @@ for REPO_ROOT in "$WORKSPACE" REPO_ROOT_LIST_PLACEHOLDER; do
 	fi
 done
 export REPOSITORY_ROOTS
-
-__get_working_copy()
-{
-	if [ $# -eq 0 ]; then
-		return
-	fi
-	if [ $# -eq 1 ]; then
-		for REPO_ROOT in $REPOSITORY_ROOTS; do
-			if [ -d "$REPO_ROOT/$1" ]; then
-				echo "$REPO_ROOT/$1"
-				return
-			fi
-		done
-	fi
-	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'` # shorthand: a1b -> a 1 b
-	REPOS=`echo "$REPOSITORY_ROOTS " | sed 's|^ *||; s| |/* |g'` # append /* to repos
-	LIST=`\ls -u1d $REPOS` # list by access time from most recent
-	for ITEM in "$@"; do
-		LIST=`echo "$LIST" | \grep -i /[^/]*$ITEM[^/]*$` # grep the basename
-	done
-	echo "$LIST" | sed 1q
-}
-
-__jump_working_copy()
-{
-	cd `__get_working_copy $@`
-}
-
-# 'j' jumps around the user's working directoy using short mnemonics
-alias j="__jump_working_copy"
 
 case $TERM in
 	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${GIT_LOCATION:-\W}\007\]" ;;
@@ -95,8 +72,32 @@ __set_prompt()
 PROMPT_COMMAND=__set_prompt
 PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${GIT_LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
-# more informative trace when debugging bash scripts
-export PS4='+ $$:$(basename ${BASH_SOURCE}):${BASH_LINENO}:${FUNCNAME}: '
+__get_working_copy()
+{
+	if [ $# -eq 0 ]; then
+		return
+	fi
+	if [ $# -eq 1 ]; then
+		for REPO_ROOT in $REPOSITORY_ROOTS; do
+			if [ -d "$REPO_ROOT/$1" ]; then
+				echo "$REPO_ROOT/$1"
+				return
+			fi
+		done
+	fi
+	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'` # shorthand: a1b -> a 1 b
+	REPOS=`echo "$REPOSITORY_ROOTS " | sed 's|^ *||; s| |/* |g'` # append /* to repos
+	LIST=`\ls -u1d $REPOS` # list by access time from most recent
+	for ITEM in "$@"; do
+		LIST=`echo "$LIST" | \grep -i /[^/]*$ITEM[^/]*$` # grep the basename
+	done
+	echo "$LIST" | sed 1q
+}
 
-# don't check mail
-unset MAIL MAILCHECK MAILPATH
+__jump_working_copy()
+{
+	cd `__get_working_copy $@`
+}
+
+# 'j' jumps around the user's working directoy using short mnemonics
+alias j="__jump_working_copy"
