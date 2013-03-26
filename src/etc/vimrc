@@ -205,6 +205,11 @@ nmap <S-Tab> :Tbbp<CR>
 let g:fsnonewfiles = 1
 map <C-h> :FSHere<CR>
 
+" --- Man ---
+
+runtime ftplugin/man.vim
+nmap K :Man <cword><CR>
+
 " Correct typos
 " =============
 " this gets its own section because its large and stupid.
