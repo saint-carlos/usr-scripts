@@ -157,6 +157,43 @@ if has("cscope")
 	nmap <Leader>c8 :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 endif
 
+" --- TabBar ---
+
+" For TabBar plugin: set up tab bar depending on screen width:
+"if &columns <= 125 "screen NOT wide enough for vertical tabbar:
+if &columns <= 115 "screen NOT wide enough for vertical tabbar:
+    " make tab bar multiline (use as many lines as necessary) and make sure
+    " no tab is 'cut' to next line:
+    let g:Tb_TabWrap = 1
+    let g:Tb_MaxSize = 0
+else " screen wide-enough for vertical tabbar:
+    " open tab bar side-by-side with main window, on the right:
+    let g:Tb_VSplit = 1
+    let g:Tb_SplitBelow = 1
+    let g:Tb_MinSize = 25
+    let g:Tb_MaxSize = 25
+endif
+
+" For TabBar plugin : prevent from opening when in diff mode. From help :
+"   In your .vimrc file you could do something special when Vim was
+"   started in diff mode.  You could use a construct like this:
+"     if &diff
+"         setup for diff mode
+"     else
+"         setup for non-diff mode
+"     endif
+" For this to work, tabbar.vim must be patched with the following IF right
+" at the beginning, obviously :
+"   if exists("g:V_DirDiffRunning")
+"       finish
+"   endif
+if &diff
+    let g:V_DirDiffRunning = 1
+endif
+
+" For TabBar plugin: allow single-click tab switching
+let g:Tb_UseSingleClick = 1
+
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
@@ -236,46 +273,6 @@ iab recrusive  recursive
 iab Recrusive  Recursive
 
 map <leader>cd :cd %:p:h<cr> " When pressing <leader>cd switch to the directory of the open buffer
-
-" For TabBar plugin: make it open not 'at the edge of screen', whatever
-" that's supposed to mean (doesn't cure 'showing at the top of leftmost
-" vertically split window only' problem, unfortunately) :
-" let g:Tb_SplitToEdge = 0
-
-" For TabBar plugin: set up tab bar depending on screen width:
-"if &columns <= 125 "screen NOT wide enough for vertical tabbar:
-if &columns <= 115 "screen NOT wide enough for vertical tabbar:
-    " make tab bar multiline (use as many lines as necessary) and make sure
-    " no tab is 'cut' to next line:
-    let g:Tb_TabWrap = 1
-    let g:Tb_MaxSize = 0
-else " screen wide-enough for vertical tabbar:
-    " open tab bar side-by-side with main window, on the right:
-    let g:Tb_VSplit = 1
-    let g:Tb_SplitBelow = 1
-    let g:Tb_MinSize = 25
-    let g:Tb_MaxSize = 25
-endif
-
-" For TabBar plugin : prevent from opening when in diff mode. From help :
-"   In your .vimrc file you could do something special when Vim was
-"   started in diff mode.  You could use a construct like this:
-"     if &diff
-"         setup for diff mode
-"     else
-"         setup for non-diff mode
-"     endif
-" For this to work, tabbar.vim must be patched with the following IF right
-" at the beginning, obviously :
-"   if exists("g:V_DirDiffRunning")
-"       finish
-"   endif
-if &diff
-    let g:V_DirDiffRunning = 1
-endif
-
-" For TabBar plugin: allow single-click tab switching
-let g:Tb_UseSingleClick = 1
 
 " FSwitch
 let g:fsnonewfiles = 1
