@@ -18,12 +18,22 @@ set showcmd             " Show (partial) command in status line.
 set cmdheight=2		" height of the command line
 set number		" show line numbers
 set showmode            " Show current mode.
-set ruler               " Show the line and column numbers of the cursor.
 set modeline            " Enable modeline. BE CAREFUL WITH THAT!!!
 set background=dark	" bright terminal colors
 set wildmenu		" display file list when browsing files to open
 set wildmode=list:longest " bash-like file completion
 set laststatus=2	" When to show a statusline.
+
+" status line, left side
+set statusline=
+set statusline+=%*%-3.3n%0*                    " buffer number
+set statusline+=%f                             " file name
+set statusline+=\ [%{strlen(&ft)?&ft:'none'}   " filetype
+set statusline+=%R%M]                          " flags
+" status line, right side
+set statusline+=%=                             " right align
+set statusline+=%*0x%-8B                       " current char
+set statusline+=%-16.(%l/%L(%p%%),\ %c%V%)     " location of cursor in file - line#/total(percentage), column
 
 " buffer view
 " ===========
