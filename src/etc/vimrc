@@ -113,6 +113,11 @@ map! <F7> <Esc><F7>
 map <silent> <F8> :set paste!<cr>:set number!<cr>
 map! <F8> <Esc><F8>
 
+" these turned out to be annoying
+" imap ( ()<left>
+" imap [ []<left>
+" imap < <><left>
+
 " plugins
 " =======
 
