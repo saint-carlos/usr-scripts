@@ -52,13 +52,20 @@ set hlsearch            " Highlight search matches.
 
 highlight Normal guifg=White guibg=Black
 
-set autoindent
-set smartindent
-set shiftwidth=8
+" formatting
+" ==========
+
+set autoindent		" indent a new line like the previous line
+set smartindent		" rudimentary c-like indent
+set shiftwidth=8	" indentation width
+set textwidth=0         " Don't wrap words by default.
+
+filetype plugin indent on
+
+autocmd FileType make setlocal noexpandtab "'tab' means 'tab' in makefiles
 
 set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
-set textwidth=0         " Don't wrap words by default. set to, for example, 70 to wrap after 70 characters.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
@@ -143,9 +150,6 @@ iab flase      false
 iab recrusive  recursive
 iab Recrusive  Recursive
 
-
-filetype plugin indent on
-au FileType make setlocal noexpandtab  "'tab' means 'tab' in makefiles
 
 " F5: left to right
 " F6: right to left.
