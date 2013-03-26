@@ -99,8 +99,11 @@ set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode.
+set complete=k,.,w,b	" autocomplete from these places
 
 autocmd! BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
+
+imap <silent> <C-o> <C-x><C-o>
 
 " hebrew support
 map <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
