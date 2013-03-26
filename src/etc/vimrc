@@ -109,6 +109,9 @@ imap <silent> <C-o> <C-x><C-o>
 map <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
 map! <F7> <Esc><F7>
 
+" interaction with other terminals
+map <silent> <F8> :set paste!<cr>:set number!<cr>
+map! <F8> <Esc><F8>
 
 " plugins
 " =======
