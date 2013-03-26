@@ -72,6 +72,9 @@ set hlsearch            " Highlight search matches.
 
 highlight Normal guifg=White guibg=Black
 
+" Disable highlighting
+map <silent> ; :nohlsearch<CR>
+
 " formatting
 " ==========
 
