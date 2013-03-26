@@ -42,6 +42,16 @@ endif
 " syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
 let g:is_posix = 1
 
+" search & highlight
+" ==================
+
+set ignorecase          " Case insensitive matching.
+set smartcase		" If search contains capitals, search exact case.
+set incsearch           " Incremental search.
+set hlsearch            " Highlight search matches.
+
+highlight Normal guifg=White guibg=Black
+
 set autoindent
 set smartindent
 set shiftwidth=8
@@ -49,11 +59,7 @@ set shiftwidth=8
 set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
 set textwidth=0         " Don't wrap words by default. set to, for example, 70 to wrap after 70 characters.
-set ignorecase          " Case insensitive matching.
-set smartcase			" If search contains capitals, search exact case.
-set incsearch           " Incremental search.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
-set hlsearch            " Highlight search matches.
 " set expandtab			" expand tabs to spaces upon typing
 " set autochdir			" Automatically cd to file's directory.
 " set encoding=utf-8	" Set default encoding to UTF-8.
@@ -64,8 +70,6 @@ set hlsearch            " Highlight search matches.
 
 autocmd! bufwritepost vimrc source ~/.vimrc " reload .vimrc if edited
 autocmd! bufwritepost vimrc source ETC_PLACEHOLDER/vimrc " reload vimrc if edited
-
-hi Normal guifg=White guibg=Black
 
 " flag problematic whitespace (trailing and spaces before tabs). Note you get the same by doing let c_space_errors=1 but this rule really applys to everything.
 hi RedundantSpaces term=standout ctermbg=red guibg=red
