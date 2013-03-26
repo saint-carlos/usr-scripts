@@ -24,6 +24,11 @@ set wildmenu		" display file list when browsing files to open
 set wildmode=list:longest " bash-like file completion
 set laststatus=2	" When to show a statusline.
 
+set splitright
+set splitbelow
+map <silent> - <C-w>-
+map <silent> = <C-w>+
+
 " status line, left side
 set statusline=
 set statusline+=%*%-3.3n%0*                    " buffer number
