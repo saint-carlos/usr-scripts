@@ -97,15 +97,10 @@ set backspace=indent,eol,start " Allow backspacing over everything in insert mod
 
 autocmd! BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
 
-" F5: left to right
-" F6: right to left.
-map <F5> %s/\s\+$//
-map  <F5> <Esc>:set guifont=FreeSans<CR>:set norightleft<CR>:set nohk<CR>i
-map! <F5> <Esc>:set guifont=FreeSans<CR><Esc>:set norightleft<CR>:set nohk<CR>a
-map  <F6> <Esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<CR><Esc>:set rightleft<CR>:set hk<CR>i
-map! <F6> <Esc>:set guifont=-Hebrew-Bible-Medium-R-Normal--16-160-75-75-M-80-ISO8859-8<CR><Esc>:set rightleft<CR>:set hk<CR>a
-map! <F8> <Esc>:w<CR>i
-map  <F8> :w<CR>
+" hebrew support
+map <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
+map! <F7> <Esc><F7>
+
 
 " plugins
 " =======
