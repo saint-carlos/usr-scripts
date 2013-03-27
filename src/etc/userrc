@@ -17,6 +17,8 @@ cmd_exists vim && alias vi='vim'
 __COREUTILS_FLAGS="-v"
 alias du='du -hs'
 alias df='df -h'
+alias diff='diff -U20'
+alias findc='findgrep -c'
 
 export LESS="-MRi -z-4" # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
