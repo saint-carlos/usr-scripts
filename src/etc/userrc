@@ -37,7 +37,7 @@ done
 export REPOSITORY_ROOTS
 
 case $TERM in
-	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${GIT_LOCATION:-\W}\007\]" ;;
+	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${__LOCATION:-\W}\007\]" ;;
 	*) __TITLEBAR="" ;;
 esac
 
@@ -45,13 +45,17 @@ __set_prompt()
 {
 	STATUS=$? # must be first line ever of this function
 
-	GIT_LOCATION=""
+	__LOCATION=""
 	GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
 	if [ -n "$GIT_REPO" ]; then
 		GIT_REPO=$(basename $GIT_REPO)
 		GIT_BRANCH=$(__git_ps1 "%s" 2>/dev/null)
 		GIT_PREFIX=$(git rev-parse --show-prefix)
-		GIT_LOCATION="${GIT_REPO}[${GIT_BRANCH}]/${GIT_PREFIX}"
+		__LOCATION="${GIT_REPO}[${GIT_BRANCH}]/${GIT_PREFIX}"
+	else
+		__LOCATION="${PWD/#$HOME/~}"
+		PWD_MAXLEN=$((PWD_PERCENTAGE_PLACEHOLDER * COLUMNS / 100))
+		[ ${#__LOCATION} -gt $PWD_MAXLEN ] && __LOCATION="${__LOCATION%%/*}/.../${__LOCATION##*/}"
 	fi
 
 	STATUS_COLOR=${PROMPT_COLOR}
@@ -72,7 +76,7 @@ __set_prompt()
 	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${GIT_LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${__LOCATION}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 __get_working_copy()
 {
