@@ -40,6 +40,13 @@ case $TERM in
 	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${__LOCATION:-\W}\007\]" ;;
 	*) __TITLEBAR="" ;;
 esac
+if [ -n "$SSH_CLIENT" ]; then
+	HOSTNAME_BOLD='\['"$(tput smul)"'\]'
+	HOSTNAME_UNBOLD='\['"$(tput rmul)"'\]'
+else
+	HOSTNAME_BOLD=""
+	HOSTNAME_UNBOLD=""
+fi
 
 __set_prompt()
 {
@@ -76,7 +83,7 @@ __set_prompt()
 	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@\h:\${__LOCATION}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 __get_working_copy()
 {
