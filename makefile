@@ -4,7 +4,11 @@ DEFAULT_CONFIG_FILE=default_config.sh
 VALID_CONFIG=tmp/.valid_config
 export PROJECT=usr_scripts
 
-FILES=$(patsubst src/%, %, $(wildcard src/*/*))
+FILES=$(patsubst src/%, %, $(wildcard	\
+	src/bin/*			\
+	src/sbin/*			\
+	src/etc/*			\
+))
 
 SED_COMMANDS=$(shell ./${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
