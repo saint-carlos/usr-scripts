@@ -36,7 +36,7 @@ ${VALID_CONFIG}: ${CONFIG_FILE}
 	touch $@
 
 install: build tgt ${CONFIG_FILE}
-	./${BUILD}/install.sh ${CONFIG_FILE} tgt
+	./${BUILD}/install.sh ${CONFIG_FILE} tgt ${FILES}
 
 install_user: build tgt ${CONFIG_FILE}
 	./${BUILD}/install_user.sh ${CONFIG_FILE}

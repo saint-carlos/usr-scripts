@@ -11,16 +11,24 @@ install_dir()
 
 }
 
-[ $# -eq 2 ] || exit 1
+[ $# -ge 2 ] || exit 1
 
 PARAMS_FILE="$1"
 INSTALL_SOURCE="$2"
+shift 2
 
 . "$PARAMS_FILE"
 . "$(dirname $BASH_SOURCE)/common.sh"
 
-install_dir etc 0644 "$ETC_PLACEHOLDER"
-install_dir bin 0755 "$BIN_PLACEHOLDER"
-if [ $UID -eq 0 ]; then
-	install_dir sbin 0755 "$SBIN_PLACEHOLDER"
-fi
+for FILE; do
+	DIR=${FILE%%/*}
+	if [ $UID -ne 0 ] && [ $DIR = sbin ]; then
+		continue
+	fi
+	if [[ $DIR =~ bin ]]; then
+		MODE=755
+	else
+		MODE=644
+	fi
+	install -m $MODE -D $INSTALL_SOURCE/$FILE $VROOT_PLACEHOLDER/$FILE
+done
