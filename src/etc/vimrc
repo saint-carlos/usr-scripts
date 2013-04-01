@@ -110,7 +110,7 @@ map <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
 map! <F7> <Esc><F7>
 
 " interaction with other terminals
-map <silent> <F8> :set paste!<cr>:set number!<cr>
+map <silent> <F8> :set paste!<CR>:set number!<CR>
 map! <F8> <Esc><F8>
 
 " these turned out to be annoying
