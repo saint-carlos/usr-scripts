@@ -26,8 +26,8 @@ set laststatus=2	" When to show a statusline.
 
 set splitright
 set splitbelow
-map <silent> - <C-w>-
-map <silent> = <C-w>+
+noremap <silent> - <C-w>-
+noremap <silent> = <C-w>+
 
 " status line, left side
 set statusline=
@@ -73,11 +73,11 @@ set hlsearch            " Highlight search matches.
 highlight Normal guifg=White guibg=Black
 
 " Disable highlighting
-map <silent> ; :nohlsearch<CR>
+noremap <silent> ; :nohlsearch<CR>
 
 set spelllang=en_us
 set nospell
-map <silent> <F6> :set spell!<CR>
+noremap <silent> <F6> :set spell!<CR>
 map! <F6> <Esc><F6>
 
 " formatting
@@ -103,14 +103,14 @@ set complete=k,.,w,b	" autocomplete from these places
 
 autocmd! BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
 
-imap <silent> <C-o> <C-x><C-o>
+inoremap <silent> <C-o> <C-x><C-o>
 
 " hebrew support
-map <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
+noremap <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
 map! <F7> <Esc><F7>
 
 " interaction with other terminals
-map <silent> <F8> :set paste!<CR>:set number!<CR>
+noremap <silent> <F8> :set paste!<CR>:set number!<CR>
 map! <F8> <Esc><F8>
 
 " these turned out to be annoying
@@ -203,12 +203,12 @@ nmap <S-Tab> :Tbbp<CR>
 " --- FSwitch ---
 
 let g:fsnonewfiles = 1
-map <C-h> :FSHere<CR>
+noremap <C-h> :FSHere<CR>
 
 " --- Man ---
 
 runtime ftplugin/man.vim
-nmap K :Man <cword><CR>
+nnoremap K :Man <cword><CR>
 
 " Correct typos
 " =============
