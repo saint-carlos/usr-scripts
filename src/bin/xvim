@@ -31,4 +31,4 @@ while getopts h option; do
 	esac
 done
 
-exec xterm -fa xft:Terminus:size=12 -rightbar -geometry 132x56+150 -e vim ${1+"$@"}
+exec urxvt -e vim ${1+"$@"}
