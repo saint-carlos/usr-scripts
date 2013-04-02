@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ $- == *i* ]] || return
+
 ETC=ETC_PLACEHOLDER
 BIN=BIN_PLACEHOLDER
 SBIN=SBIN_PLACEHOLDER
