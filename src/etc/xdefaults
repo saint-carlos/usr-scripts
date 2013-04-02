@@ -58,6 +58,7 @@
 *URxvt*scrollBar_right:		true
 *URxvt*scrollBar_floating:	false
 *URxvt*scrollTtyOutput:		false
+*URxvt*scrollWithBuffer:	true
 *URxvt*scrollTtyKeypress:	true
 *URxvt*scrollColor:		#D3D7Cf
 *URxvt*thickness:		10
