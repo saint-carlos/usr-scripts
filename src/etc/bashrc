@@ -49,7 +49,7 @@ export HISTTIMEFORMAT='%F %T '
 export HISTCONTROL=ignorespace # don't ignore dups, it might be useful when printing history with timestamps
 export HISTSIZE=20000
 export HISTFILESIZE=5000
-export HISTIGNORE="exit:logout:reboot:shutdown:poweroff:return:clear:history:bg:fg:jobs:pwd:ls:ll:la:cd:ps:[ \t]*"
+export HISTIGNORE="exit:logout:reboot:shutdown:poweroff:return:clear:history:bg:fg:jobs:pwd:ls:ll:la:cd:ps"
 
 stty -ixon # disable ^S/^Q
 test -t 0 && stty -ctlecho
