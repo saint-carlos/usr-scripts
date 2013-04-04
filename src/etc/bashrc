@@ -27,7 +27,7 @@ fi
 PROMPT_COLOR=${!PROMPT_COLOR}
 PS1="\[\033${PROMPT_COLOR}\]\u@\h:\w\\\$\[\033${_NORMAL}\] "
 
-. $ETC/userrc
+. $ETC/bashrc.user
 
 alias mkdir='mkdir -p'
 
