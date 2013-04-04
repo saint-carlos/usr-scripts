@@ -1,6 +1,6 @@
 BUILD=build
 CONFIG_FILE=config.sh
-DEFAULT_CONFIG_FILE=default_config.sh
+DEFAULT_CONFIG_FILE=${BUILD}/default_config.sh
 VALID_CONFIG=tmp/.valid_config
 export PROJECT=usr_scripts
 
