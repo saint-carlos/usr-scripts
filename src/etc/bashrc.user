@@ -47,6 +47,9 @@ else
 	HOSTNAME_BOLD=""
 	HOSTNAME_UNBOLD=""
 fi
+if PROMPT_USERNAME_PLACEHOLDER; then
+	__USER='\u@'
+fi
 
 __set_prompt()
 {
@@ -106,7 +109,7 @@ __set_prompt()
 	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 __get_working_copy()
 {
