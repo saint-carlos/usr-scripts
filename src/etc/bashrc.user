@@ -63,10 +63,16 @@ __set_prompt()
 		local GIT_HEAD=$(__git_ps1 "%s" 2>/dev/null)
 		__LOCATION_ROOT="${GIT_REPO}[${GIT_HEAD}]"
 		__LOCATION=$(git rev-parse --show-prefix)
+		__LOCATION=${__LOCATION%/}
 		local TOTAL_LEN=$((${#__LOCATION}  + ${#__LOCATION_ROOT}))
 		if [ -n "$__LOCATION" ] && [ $TOTAL_LEN -gt $PWD_MAXLEN ]; then
 			local TMP=$(basename $__LOCATION)
-			[ "$__LOCATION" = "${TMP}/" ] || __LOCATION=".../${TMP}"
+			if [ $TMP != $__LOCATION ]; then
+				TMP=".../${TMP}"
+				if [ ${#TMP} -lt ${#__LOCATION} ]; then
+					__LOCATION=${TMP}
+				fi
+			fi
 		fi
 		__LOCATION="/${__LOCATION}"
 	else
