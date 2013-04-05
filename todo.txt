@@ -1,10 +1,8 @@
 - required packages
-- more usable userrc, at least rename to bashrc.user
 - better config system (kconfig? something simpler?)
 - feature to update from current installation (e.g. edit `which findgrep` and port the changes to src/bin/findgrep)
-- make help
+-- call it 'make import'
 - option to configure whether or not PS1 displays the user name
-- option to configure whether or not PS1 displays the whole directory
 - colordiffrc
 - use 'tput setaf' instead of hard coded color sequences which don't work in linux-console. tput should be queried once when bashrc is read, not every time we present the prompt.
 - see if we can move setting terminal title from the prompt itself to the prompt function
