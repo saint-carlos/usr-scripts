@@ -52,17 +52,40 @@ __set_prompt()
 {
 	STATUS=$? # must be first line ever of this function
 
-	__LOCATION=""
-	GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
+	local PWD_MAXLEN=$((PWD_PERCENTAGE_PLACEHOLDER * COLUMNS / 100))
+
+	local GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
 	if [ -n "$GIT_REPO" ]; then
 		GIT_REPO=$(basename $GIT_REPO)
-		GIT_BRANCH=$(__git_ps1 "%s" 2>/dev/null)
-		GIT_PREFIX=$(git rev-parse --show-prefix)
-		__LOCATION="${GIT_REPO}[${GIT_BRANCH}]/${GIT_PREFIX}"
+		local GIT_HEAD=$(__git_ps1 "%s" 2>/dev/null)
+		__LOCATION_ROOT="${GIT_REPO}[${GIT_HEAD}]"
+		__LOCATION=$(git rev-parse --show-prefix)
+		local TOTAL_LEN=$((${#__LOCATION}  + ${#__LOCATION_ROOT}))
+		if [ -n "$__LOCATION" ] && [ $TOTAL_LEN -gt $PWD_MAXLEN ]; then
+			local TMP=$(basename $__LOCATION)
+			[ "$__LOCATION" = "${TMP}/" ] || __LOCATION=".../${TMP}"
+		fi
+		__LOCATION="/${__LOCATION}"
 	else
 		__LOCATION="${PWD/#$HOME/~}"
-		PWD_MAXLEN=$((PWD_PERCENTAGE_PLACEHOLDER * COLUMNS / 100))
-		[ ${#__LOCATION} -gt $PWD_MAXLEN ] && __LOCATION="${__LOCATION%%/*}/.../${__LOCATION##*/}"
+
+		# this will cause pwd to be trimmed on a greater threshold than it
+		# should if the beginning is something like "${HOME}1", because we
+		# will think its "~1", but for now its the best we can do.
+		if [ ${#__LOCATION} -gt $PWD_MAXLEN ]; then
+			PROMPT_DIRTRIM=1
+			__LOCATION_ROOT=/
+		else
+			PROMPT_DIRTRIM=0
+			__LOCATION_ROOT=""
+		fi
+
+		if [[ ${__LOCATION:0:1} = "~" && / =~ ${__LOCATION:1:1} ]]; then
+		# a real home, not something like "${HOME}1"
+			__LOCATION_ROOT=""
+		fi
+
+		__LOCATION="" # let bash sort it out, it's better at it.
 	fi
 
 	STATUS_COLOR=${PROMPT_COLOR}
@@ -83,7 +106,7 @@ __set_prompt()
 	return $STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} \u@${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 __get_working_copy()
 {
