@@ -66,9 +66,20 @@ filter_processes()
 	esac
 }
 
-PS_COMMAND='ps -e -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww'
+# in order to avoid showing the our own processes, the strategy is to assume
+# the shell has its own built-in 'echo' which will not fork to a new process,
+# and therefore the pipeline will only fork one process at the time.
+# this will cause our own processes to be first-class children of ourselves. of
+# these children, we actually only care about 'ps' itself, so the point is to
+# make sure that while we're executing ps, the only processes which belong to us
+# are ps' process and $$.
+PS_COMMAND='ps -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww'
+PROCESSES=`$PS_COMMAND -e`
+PROCESSES=`echo "$PROCESSES" | egrep -v -e "^\<$$\>" -e "^[0-9]+ +\<$$\>"`
+PROCESSES=`echo "$PROCESSES" | eval tail -n +2 "$DSTATE_FILTER" | filter_processes "$@"`
+if [ -n "$PROCESSES" ]; then
+	$SHOW_HEADER && $PS_COMMAND | head -n 1
+	echo "$PROCESSES"
+fi
 
-$SHOW_HEADER && $PS_COMMAND | sed '1q'
-PROCESSES=`$PS_COMMAND | grep -v " $$ "`
-echo "$PROCESSES" | eval sed 1d "$DSTATE_FILTER" | filter_processes "$@"
 exit 0
