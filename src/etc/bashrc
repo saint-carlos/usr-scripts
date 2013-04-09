@@ -13,11 +13,11 @@ if [ $UID -eq 0 ]; then
 	export PATH=$PATH:$SBIN
 fi
 
-. $ETC/bash_completion
+source $ETC/bash_completion
 shopt -s no_empty_cmd_completion
 shopt -s hostcomplete
 
-. $ETC/colorsrc
+source $ETC/colorsrc
 
 if [ $UID -eq 0 ]; then
 	PROMPT_COLOR=_${ROOT_PROMPT_COLOR}
@@ -27,7 +27,7 @@ fi
 PROMPT_COLOR=${!PROMPT_COLOR}
 PS1="\[\033${PROMPT_COLOR}\]\u@\h:\w\\\$\[\033${_NORMAL}\] "
 
-. $ETC/bashrc.user
+source $ETC/bashrc.user
 
 alias mkdir='mkdir -p'
 
