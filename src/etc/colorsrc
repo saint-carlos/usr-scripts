@@ -10,8 +10,8 @@ export __MAGENTA='\E[95m'
 export __CYAN='\E[96m'
 export __WHITE='\E[97m'
 
-for __COLOR in __NORMAL __GRAY __RED __GREEN __YELLOW __BLUE __MAGENTA __CYAN __WHITE; do
-	COLOR_NAME=${__COLOR:1}
-	eval "$COLOR_NAME=\"${!__COLOR/\\E/}\""
+for __TMP_COLOR in __NORMAL __GRAY __RED __GREEN __YELLOW __BLUE __MAGENTA __CYAN __WHITE; do
+	__TMP_COLOR_NAME=${__TMP_COLOR:1}
+	eval "$__TMP_COLOR_NAME=\"${!__TMP_COLOR/\\E/}\""
 done
-unset __COLOR COLOR_NAME
+unset __TMP_COLOR __TMP_COLOR_NAME
