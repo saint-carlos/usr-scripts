@@ -34,11 +34,3 @@ case $TERM in
 			}
 		;;
 esac
-
-for C in ${!__COLOR[@]}; do
-	__TMP_COLOR_NAME=${C^^[a-z]}
-	eval "__${__TMP_COLOR_NAME}=\"\$(color_seq $C)\""
-	eval "_${__TMP_COLOR_NAME}=\"\${__${__TMP_COLOR_NAME}:1}\""
-done
-
-unset __TMP_COLOR_NAME
