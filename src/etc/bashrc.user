@@ -53,7 +53,7 @@ fi
 
 __set_prompt()
 {
-	STATUS=$? # must be first line ever of this function
+	__STATUS=$? # must be first line ever of this function
 
 	local PWD_MAXLEN=$((PWD_PERCENTAGE_PLACEHOLDER * COLUMNS / 100))
 
@@ -97,25 +97,22 @@ __set_prompt()
 		__LOCATION="" # let bash sort it out, it's better at it.
 	fi
 
-	STATUS_COLOR=${PROMPT_COLOR}
-	case $STATUS in
-		0) STATUS_DESC="" ;;
-		130) STATUS_DESC="INT" ;;
-		131) STATUS_DESC="QUIT" ;;
-		141) STATUS_DESC="PIPE" ;;
-		148) STATUS_DESC="STP" ;;
-		*) STATUS_DESC="${STATUS}"; STATUS_COLOR=${_RED} ;;
-	esac
-	if [ -n "$STATUS_DESC" ]; then
-		STATUS_DESC=" (${STATUS_DESC})"
+	__PROMPT_ERROR_COLOR_SET="${PROMPT_COLOR}"
+	if [ $__STATUS -eq 0 ]; then
+		__PROMPT_STATUS_DESC=""
+	elif [ $__STATUS -gt 128 ] && [ $__STATUS -lt 192 ]; then
+		__PROMPT_STATUS_DESC=" ($(kill -l $((__STATUS - 128))))"
+	else
+		__PROMPT_STATUS_DESC=" (${__STATUS})"
+		__PROMPT_ERROR_COLOR_SET="$_RED"
 	fi
 
 	# my shell ignores the return value of this function rather than
 	# put it in $?, but i don't know about other shells
-	return $STATUS
+	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${STATUS_COLOR}\]\${STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
 
 __get_working_copy()
 {
