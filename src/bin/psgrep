@@ -47,7 +47,11 @@ done
 shift `expr $OPTIND - 1`
 
 if supported -m 1 grep "--color=auto" .; then
-	GREP_OPTIONS="$GREP_OPTIONS --color=auto"
+	if [ -t 1 ]; then
+		GREP_OPTIONS="$GREP_OPTIONS --color=always"
+	else
+		GREP_OPTIONS="$GREP_OPTIONS --color=auto"
+	fi
 fi
 
 if $DSTATE; then
