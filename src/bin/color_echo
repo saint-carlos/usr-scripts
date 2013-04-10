@@ -45,9 +45,8 @@ done
 shift `expr $OPTIND - 1`
 
 . $ETC/colorsrc
-COLOR_VAR_NAME="__`echo $1 | tr a-z A-Z`"
-COLOR=${!COLOR_VAR_NAME}
+COLOR=$1
 shift
 TEXT="$*"
-printf "${COLOR}%s${__NORMAL}${EOL}" "$TEXT"
+printf "$(color_seq $COLOR)%s$(color_seq normal)${EOL}" "$TEXT"
 
