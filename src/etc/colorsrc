@@ -18,6 +18,12 @@ case $TERM in
 				echo -en "\033[9${__COLOR[$1]}m"
 			}
 		;;
+	linux|*)
+			color_seq()
+			{
+				tput setaf ${__COLOR[$1]}
+			}
+		;;
 esac
 
 for C in ${!__COLOR[@]}; do
