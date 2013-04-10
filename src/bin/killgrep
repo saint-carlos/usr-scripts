@@ -43,9 +43,11 @@ shift `expr $OPTIND - 1`
 
 RES=1
 for TARGET in "$@"; do
-	psgrep -n "$TARGET" | grep -v $$ | awk '{ print $2 }' | tr '\n' ' ' | xargs kill $KILLFLAGS
+	PROCESSES="$(psgrep -n "$TARGET")"
+	PROCESSES="$(echo "$PROCESSES" | grep -v "^ *$$" | awk '{ print $1 }' | xargs kill $KILLFLAGS)"
 	TEMP=$?
-	psgrep -n "$TARGET" | grep -v $$
+	PROCESSES="$(psgrep -n "$TARGET")"
+	echo "$PROCESSES" | grep -v "^ *$$"
 	if [ "$TEMP" -eq 0 ]; then
 		RES=0
 	fi
