@@ -1,17 +1,29 @@
 #!/bin/sh
 
-export __NORMAL='\E[0m'
-export __GRAY='\E[90m'
-export __RED='\E[91m'
-export __GREEN='\E[92m'
-export __YELLOW='\E[93m'
-export __BLUE='\E[94m'
-export __MAGENTA='\E[95m'
-export __CYAN='\E[96m'
-export __WHITE='\E[97m'
+declare -A __COLOR
+__COLOR[black]=0
+__COLOR[red]=1
+__COLOR[green]=2
+__COLOR[yellow]=3
+__COLOR[blue]=4
+__COLOR[magenta]=5
+__COLOR[cyan]=6
+__COLOR[white]=7
+__COLOR[normal]=${__COLOR[white]}
 
-for __TMP_COLOR in __NORMAL __GRAY __RED __GREEN __YELLOW __BLUE __MAGENTA __CYAN __WHITE; do
-	__TMP_COLOR_NAME=${__TMP_COLOR:1}
-	eval "$__TMP_COLOR_NAME=\"${!__TMP_COLOR/\\E/}\""
+case $TERM in
+	xterm*|rxvt*)
+			color_seq()
+			{
+				echo -en "\033[9${__COLOR[$1]}m"
+			}
+		;;
+esac
+
+for C in ${!__COLOR[@]}; do
+	__TMP_COLOR_NAME=${C^^[a-z]}
+	eval "__${__TMP_COLOR_NAME}=\"\$(color_seq $C)\""
+	eval "_${__TMP_COLOR_NAME}=\"\${__${__TMP_COLOR_NAME}:1}\""
 done
-unset __TMP_COLOR __TMP_COLOR_NAME
+
+unset __TMP_COLOR_NAME
