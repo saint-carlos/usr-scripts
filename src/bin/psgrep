@@ -75,7 +75,7 @@ filter_processes()
 # are ps' process and $$.
 PS_COMMAND='ps -o pid,ppid,user,flags,stat,wchan,tty,start,cmd -ww'
 PROCESSES=`$PS_COMMAND -e`
-PROCESSES=`echo "$PROCESSES" | egrep -v -e "^\<$$\>" -e "^[0-9]+ +\<$$\>"`
+PROCESSES=`echo "$PROCESSES" | egrep -v -e "^ *\<$$\>" -e "^[0-9]+ +\<$$\>"`
 PROCESSES=`echo "$PROCESSES" | eval tail -n +2 "$DSTATE_FILTER" | filter_processes "$@"`
 if [ -n "$PROCESSES" ]; then
 	$SHOW_HEADER && $PS_COMMAND | head -n 1
