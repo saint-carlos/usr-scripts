@@ -30,7 +30,7 @@ exit status:
 otherwise it is the same as the given command.
 EOF
 
-    exit $1
+	exit $1
 }
 
 while getopts h option; do

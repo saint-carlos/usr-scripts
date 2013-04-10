@@ -31,7 +31,7 @@ exit status:
 1	if some arguments are bad
 EOF
 
-    exit $1
+	exit $1
 }
 
 EOL='\n'
@@ -49,4 +49,3 @@ COLOR=$1
 shift
 TEXT="$*"
 printf "$(color_seq $COLOR)%s$(color_seq normal)${EOL}" "$TEXT"
-
