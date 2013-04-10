@@ -37,7 +37,7 @@ done
 export REPOSITORY_ROOTS
 
 case $TERM in
-	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${__LOCATION:-\W}\007\]" ;;
+	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${__LOCATION_ROOT}\${__LOCATION:-\w}\007\]" ;;
 	*) __TITLEBAR="" ;;
 esac
 if [ -n "$SSH_CLIENT" ]; then

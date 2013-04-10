@@ -2,8 +2,8 @@
 - better config system (kconfig? something simpler?)
 - feature to update from current installation (e.g. edit `which findgrep` and port the changes to src/bin/findgrep)
 -- call it 'make import'
+-- make tgt, diff import source with tgt, make patch and apply
 - colordiffrc
-- use 'tput setaf' instead of hard coded color sequences which don't work in linux-console. tput should be queried once when bashrc is read, not every time we present the prompt.
 - see if we can move setting terminal title from the prompt itself to the prompt function
 -- use tput tsl, tput fsl
 - vim extended bad-whitespace plugin
