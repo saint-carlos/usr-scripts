@@ -50,6 +50,7 @@ fi
 if PROMPT_USERNAME_PLACEHOLDER; then
 	__USER='\u@'
 fi
+__PROMPT_ERROR_COLOR="$(color_seq red)"
 
 __set_prompt()
 {
@@ -97,14 +98,14 @@ __set_prompt()
 		__LOCATION="" # let bash sort it out, it's better at it.
 	fi
 
-	__PROMPT_ERROR_COLOR_SET="${PROMPT_COLOR}"
+	__PROMPT_ERROR_COLOR_SET=""
 	if [ $__STATUS -eq 0 ]; then
 		__PROMPT_STATUS_DESC=""
 	elif [ $__STATUS -gt 128 ] && [ $__STATUS -lt 192 ]; then
 		__PROMPT_STATUS_DESC=" ($(kill -l $((__STATUS - 128))))"
 	else
 		__PROMPT_STATUS_DESC=" (${__STATUS})"
-		__PROMPT_ERROR_COLOR_SET="$_RED"
+		__PROMPT_ERROR_COLOR_SET="$__PROMPT_ERROR_COLOR"
 	fi
 
 	# my shell ignores the return value of this function rather than
@@ -112,7 +113,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}\[\033${PROMPT_COLOR}\]\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\033\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}\[\033${PROMPT_COLOR}\]\\\$\[\033${_NORMAL}\] "
+PS1="${__TITLEBAR}${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\\\$${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
