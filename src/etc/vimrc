@@ -10,6 +10,7 @@ set noerrorbells        " No beeps.
 set magic               " Use 'magic' patterns (extended regular expressions).
 set hidden		" allow movement to another buffer without saving the current one
 set tags+=./tags;	" tell vim to find ctags even if in a subdirectory.
+let mapleader = ","
 
 " view
 " ====
