@@ -43,3 +43,6 @@ if $CONFIG_DESKTOP; then
 fi
 
 restore_backup ~/.gitconfig
+if [ $UID -eq 0 ]; then
+	restore_backup /etc/rsyslog.conf
+fi
