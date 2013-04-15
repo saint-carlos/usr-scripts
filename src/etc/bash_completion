@@ -6,3 +6,38 @@ complete -W "$_SYS_COMMANDS" sys 2>/dev/null
 complete -F _make build
 
 complete -F _command gui
+
+_git_make_patchset()
+{
+	if [ "$prev" = "-o" ]; then
+		COMPREPLY=($(compgen -d $cur))
+	elif [[ "$cur" =~ ^- ]]; then
+		getopt=""
+		COMPREPLY=()
+		for opt in h p v s o; do
+			if [ $cur = "-$opt" ]; then
+				COMPREPLY=($cur)
+				return
+			fi
+			COMPREPLY+=("-$opt")
+			getopt+=$opt
+		done
+	
+		all_formatted=$(echo ${COMPREPLY[@]} | tr ' ' '\n' | sort)
+		opt_formatted=$(getopt -o $getopt -- ${words[@]} | tr ' ' '\n' | sort)
+		COMPREPLY=($(comm -23 <(echo "$all_formatted") <(echo "$opt_formatted")))
+	else
+		for ((__i=$((${#words[@]})); __i >= 2; __i--)); do
+			if [[ ${words[__i - 1]} =~ ^- ]]; then
+				[[ pvso =~ ${words[__i]:1:1} ]] && ((i++))
+				break
+			fi
+		done
+		((__i++))
+		if [ $cword -eq $__i ] || [ $cword -eq $((__i + 1)) ]; then
+			__gitcomp_nl "$(__git_refs)"
+		elif [ $cword -eq $((__i + 2)) ]; then
+			__gitcomp_nl "$(__git_remotes)"
+		fi
+	fi
+}
