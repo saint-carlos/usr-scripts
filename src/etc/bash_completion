@@ -41,3 +41,31 @@ _git_make_patchset()
 		fi
 	fi
 }
+
+__external_root_executable()
+{
+	[ $COMP_CWORD -eq 1 ] || return 1
+	local COMPS=($(compgen -f $1))
+	COMPREPLY=()
+	local i=0 F HAS_EXEC=false
+	for F in ${COMPS[@]}; do
+		if [ -f $F ] && # regular file
+			[ "$(stat -c %u $F)" = 0 ] && # owned by root
+			(( 0$(stat -c %a $F) & 0100 )); # executable by owner
+		then
+			HAS_EXEC=true
+			COMPREPLY+=("$F")
+		elif [ -d $F ]; then
+			COMPREPLY+=("$F/")
+		fi
+	done
+	$HAS_EXEC
+}
+
+_root_command()
+{
+	local PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+	local root_command=$1
+	__external_root_executable $2 && return
+	_command $1 $2 $3
+}
