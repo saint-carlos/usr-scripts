@@ -44,7 +44,7 @@ case $TERM in
 	*) __TITLEBAR="" ;;
 esac
 if [ -n "$SSH_CLIENT" ]; then
-	HOSTNAME_BOLD='\['"$__BOLD"'\['
+	HOSTNAME_BOLD='\['"$__BOLD"'\]'
 	HOSTNAME_UNBOLD='\['"$__UNBOLD"'\]'
 else
 	HOSTNAME_BOLD=""
