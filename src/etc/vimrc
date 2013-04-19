@@ -80,7 +80,7 @@ noremap <silent> ; :nohlsearch<CR>
 set spelllang=en_us
 set nospell
 noremap <silent> <F6> :set spell!<CR>
-map! <F6> <Esc><F6>
+imap <F6> <Esc><F6>
 
 " formatting
 " ==========
@@ -118,11 +118,11 @@ vnoremap <leader>[] <Esc>`><Esc>a]<Esc>`<i[<Esc>
 
 " hebrew support
 noremap <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
-map! <F7> <Esc><F7>
+imap <F7> <Esc><F7>
 
 " interaction with other terminals
 noremap <silent> <F8> :set paste!<CR>:set number!<CR>
-map! <F8> <Esc><F8>
+imap <F8> <Esc><F8>
 
 " these turned out to be annoying
 " imap ( ()<left>
