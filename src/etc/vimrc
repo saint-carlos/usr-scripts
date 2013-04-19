@@ -79,7 +79,7 @@ noremap <silent> ; :nohlsearch<CR>
 
 set spelllang=en_us
 set nospell
-noremap <silent> <F6> :set spell!<CR>
+noremap <silent> <F6> :setlocal spell!<CR>
 imap <F6> <Esc><F6>
 
 " formatting
@@ -117,11 +117,11 @@ vnoremap <leader>() <Esc>`><Esc>a)<Esc>`<i(<Esc>
 vnoremap <leader>[] <Esc>`><Esc>a]<Esc>`<i[<Esc>
 
 " hebrew support
-noremap <silent> <F7> :set rightleft!<CR>:set hkmap!<CR>
+noremap <silent> <F7> :setlocal rightleft!<CR>:set hkmap!<CR>
 imap <F7> <Esc><F7>
 
 " interaction with other terminals
-noremap <silent> <F8> :set paste!<CR>:set number!<CR>
+noremap <silent> <F8> :setlocal paste!<CR>:setlocal number!<CR>
 imap <F8> <Esc><F8>
 
 " these turned out to be annoying
@@ -216,7 +216,7 @@ nmap <S-Tab> :Tbbp<CR>
 " --- FSwitch ---
 
 let g:fsnonewfiles = 1
-autocmd Filetype c,cpp noremap <C-h> :FSHere<CR>
+autocmd Filetype c,cpp noremap <buffer> <C-h> :FSHere<CR>
 
 " --- Man ---
 
