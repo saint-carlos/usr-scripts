@@ -57,9 +57,12 @@ if has("syntax")
 	syntax on
 endif
 
-autocmd BufNewFile,BufRead gitconfig setfiletype gitconfig
-autocmd BufNewFile,BufRead xdefaults,xdefaults.* setfiletype xdefaults
-autocmd FileType log setlocal autoread nomodifiable readonly
+augroup bufferview
+	autocmd!
+	autocmd BufNewFile,BufRead gitconfig setfiletype gitconfig
+	autocmd BufNewFile,BufRead xdefaults,xdefaults.* setfiletype xdefaults
+	autocmd FileType log setlocal autoread nomodifiable readonly
+augroup END
 
 " syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
 let g:is_posix = 1
@@ -92,7 +95,10 @@ set textwidth=0         " Don't wrap words by default.
 
 filetype plugin indent on
 
-autocmd FileType make setlocal noexpandtab "'tab' means 'tab' in makefiles
+augroup formatting
+	autocmd!
+	autocmd FileType make setlocal noexpandtab "'tab' means 'tab' in makefiles
+augroup END
 
 " editing
 " =======
@@ -103,7 +109,10 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode.
 set complete=k,.,w,b	" autocomplete from these places
 
-autocmd! BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
+augroup editing
+	autocmd!
+	autocmd BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
+augroup END
 
 inoremap <silent> <C-o> <C-x><C-o>
 
@@ -216,7 +225,10 @@ nmap <S-Tab> :Tbbp<CR>
 " --- FSwitch ---
 
 let g:fsnonewfiles = 1
-autocmd Filetype c,cpp noremap <buffer> <C-h> :FSHere<CR>
+augroup FSwitch
+	autocmd!
+	autocmd Filetype c,cpp noremap <buffer> <C-h> :FSHere<CR>
+augroup END
 
 " --- Man ---
 
