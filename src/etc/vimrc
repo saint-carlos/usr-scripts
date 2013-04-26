@@ -83,7 +83,7 @@ noremap <silent> ; :nohlsearch<CR>
 set spelllang=en_us
 set nospell
 noremap <silent> <F6> :setlocal spell!<CR>
-imap <F6> <Esc><F6>
+imap <F6> <C-o><F6>
 
 " formatting
 " ==========
@@ -114,7 +114,7 @@ augroup editing
 	autocmd BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
 augroup END
 
-inoremap <silent> <C-o> <C-x><C-o>
+" inoremap <silent> <C-o> <C-x><C-o>
 
 " wrap selection with stuff
 " we start with the closer since the opener changes the position of the
@@ -127,11 +127,11 @@ vnoremap <leader>[] <Esc>`><Esc>a]<Esc>`<i[<Esc>
 
 " hebrew support
 noremap <silent> <F7> :setlocal rightleft!<CR>:set hkmap!<CR>
-imap <F7> <Esc><F7>
+imap <F7> <C-o><F7>
 
 " interaction with other terminals
 noremap <silent> <F8> :setlocal paste!<CR>:setlocal number!<CR>
-imap <F8> <Esc><F8>
+imap <F8> <C-o><F8>
 
 " these turned out to be annoying
 " imap ( ()<left>
