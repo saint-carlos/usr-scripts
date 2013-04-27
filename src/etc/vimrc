@@ -1,7 +1,6 @@
 set runtimepath^=LIB_PLACEHOLDER/vim
 
-" general
-" =======
+" general {{{
 
 set nocompatible        " Disable vi compatibility.
 set nobackup            " Do not keep a backup file.
@@ -13,8 +12,9 @@ set tags+=./tags;	" tell vim to find ctags even if in a subdirectory.
 let mapleader = ","
 let maplocalleader = mapleader
 
-" view
-" ====
+" }}}
+
+" view {{{
 
 set showcmd             " Show (partial) command in status line.
 set cmdheight=2		" height of the command line
@@ -42,8 +42,9 @@ set statusline+=%=                             " right align
 set statusline+=%*0x%-8B                       " current char
 set statusline+=%-16.(%l/%L(%p%%),\ %c%V%)     " location of cursor in file - line#/total(percentage), column
 
-" buffer view
-" ===========
+" }}}
+
+" buffer view {{{
 
 set tabstop=8		" tab width
 set linebreak		" wrap on words, not characters
@@ -67,8 +68,9 @@ augroup END
 " syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
 let g:is_posix = 1
 
-" search & highlight
-" ==================
+" }}}
+
+" search & highlight {{{
 
 set ignorecase          " Case insensitive matching.
 set smartcase		" If search contains capitals, search exact case.
@@ -85,8 +87,9 @@ set nospell
 noremap <silent> <F6> :setlocal spell!<CR>
 imap <F6> <C-o><F6>
 
-" formatting
-" ==========
+" }}}
+
+" formatting {{{
 
 set autoindent		" indent a new line like the previous line
 set smartindent		" rudimentary c-like indent
@@ -100,8 +103,9 @@ augroup formatting
 	autocmd FileType make setlocal noexpandtab "'tab' means 'tab' in makefiles
 augroup END
 
-" editing
-" =======
+" }}}
+
+" editing {{{
 
 set history=100         " Number of lines of command line history.
 set undolevels=200      " Number of undo levels.
@@ -138,10 +142,11 @@ imap <F8> <C-o><F8>
 " imap [ []<left>
 " imap < <><left>
 
-" plugins
-" =======
+" }}}
 
-" --- cscope ---
+" plugins {{{
+
+"	cscope {{{
 " not strictly a plugin, but an external feature to be configured
 
 if has("cscope")
@@ -192,7 +197,9 @@ if has("cscope")
 	endif
 endif
 
-" --- TabBar ---
+"	}}}
+
+"	TabBar {{{
 
 " For TabBar plugin: set up tab bar depending on screen width:
 if &columns <= 115 "screen NOT wide enough for vertical tabbar:
@@ -221,8 +228,9 @@ let g:Tb_UseSingleClick = 1
 nmap <Tab> :Tbbn<CR>
 nmap <S-Tab> :Tbbp<CR>
 
+"	}}}
 
-" --- FSwitch ---
+"	FSwitch {{{
 
 let g:fsnonewfiles = 1
 augroup FSwitch
@@ -230,15 +238,21 @@ augroup FSwitch
 	autocmd Filetype c,cpp noremap <buffer> <C-h> :FSHere<CR>
 augroup END
 
-" --- Man ---
+"	}}}
+
+"	Man {{{
 
 runtime ftplugin/man.vim
 nnoremap K :Man <cword><CR>
 
-" Correct typos
-" =============
+"	}}}
+
+" }}}
+
+" Correct typos {{{
 " this gets its own section because its large and stupid.
 
+"	general {{{
 iab beacuse	because
 iab becuase	because
 iab acn		can
@@ -298,8 +312,9 @@ iab obnsolete	obsolete
 iab flase	false
 iab recrusive	recursive
 iab Recrusive	Recursive
+"	}}}
 
-" Days
+"	Days {{{
 iab monday	Monday
 iab tuesday	Tuesday
 iab wednesday	Wednesday
@@ -307,8 +322,9 @@ iab thursday	Thursday
 iab friday	Friday
 iab saturday	Saturday
 iab sunday	Sunday
+" }}}
 
-" Months
+"	Months {{{
 iab january	January
 iab february	February
 " iab march	March
@@ -321,3 +337,6 @@ iab september	September
 iab october	October
 iab november	November
 iab december	December
+"	}}}
+
+" }}}
