@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="start the build system."
 PARAMS="[make arguments]"
-OPTIONS="[-hlprs]"
+OPTIONS="[-hlprs] [-f err-filter]"
 PTS=`tty | xargs basename`
 BUILD_LOG_PREFIX=/tmp/buildlog
 ERROR_LOG_PREFIX=/tmp/errlog
@@ -27,6 +27,9 @@ options:
 -l	log: show the build log.
 -r	rebuild: clean before build.
 -s	serial: build serially, not in parallel.
+-f	error filter: string to be used as a shell command to filter stderr.
+
+normally stderr is not filtered even if -f is given, however even in normal operation filtering is used to count errors and therefore decide on success/failure of the build. filtering can also be used in conjunction with -p, however the same filter can be applied to '$PROGRAM' itself. in any case, be sure to properly escape/quote the filter.
 
 exit status:
 2	some arguments are bad.
@@ -40,6 +43,7 @@ EOF
 COMMAND=build
 PARALLEL="-j `system_cpu_count`"
 CLEAN=false
+ERROR_OUTPUT=cat
 
 last_log()
 {
@@ -53,7 +57,7 @@ show_log()
 
 show_problems()
 {
-	cat "$ERROR_LOG"
+	eval "$ERROR_OUTPUT" < "$ERROR_LOG"
 }
 
 beep()
@@ -90,13 +94,14 @@ build()
 	return $RETVAL
 }
 
-while getopts hlprs option; do
+while getopts hlprsf: option; do
         case ${option} in
 		h) usage 0 ;;
 		l) COMMAND=show_log ;;
 		p) COMMAND=show_problems ;;
 		r) CLEAN=true ;;
 		s) PARALLEL="" ;;
+		f) ERROR_OUTPUT="$OPTARG" ;;
 		\?) usage 2 ;;
         esac
 done
