@@ -50,6 +50,14 @@ if CONFIG_PROMPT_USERNAME; then
 	__USER='\u@'
 fi
 
+title()
+{
+	local TITLE="$*"
+	case $TERM in
+		xterm*|rxvt*) printf "\e]0;$TITLE\007" ;;
+	esac
+}
+
 __set_prompt()
 {
 	__STATUS=$? # must be first line ever of this function
