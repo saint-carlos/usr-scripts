@@ -1,8 +1,5 @@
 - required packages
 - better config system (kconfig? something simpler?)
-- feature to update from current installation (e.g. edit `which findgrep` and port the changes to src/bin/findgrep)
--- call it 'make import'
--- make tgt, diff import source with tgt, make patch and apply
 - colordiffrc
 - see if we can move setting terminal title from the prompt itself to the prompt function
 -- use tput tsl, tput fsl

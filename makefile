@@ -58,6 +58,11 @@ uninstall: ${CONFIG_FILE} # remove the scripts/config files from the user config
 
 update: uninstall install_all # update a user configuration from the repository
 
+import: ${CONFIG_FILE} tgt build # import changes from the current user
+	# do it in reverse order such that it's easier to patch
+	(eval $$(grep VROOT_PLACEHOLDER ${CONFIG_FILE}) && cd tgt && (diff -ur $$VROOT_PLACEHOLDER . || true)) > tmp/$@.patch
+	patch --directory=src --reverse -p0 --merge < tmp/$@.patch
+
 tags:: # create tags
 	ctags -R --language-force=sh .
 
