@@ -39,10 +39,6 @@ export REPOSITORY_ROOTS
 __BOLD="$(tput smul)"
 __UNBOLD="$(tput rmul)"
 __PROMPT_ERROR_COLOR="$(color_seq red)"
-case $TERM in
-	xterm*|rxvt*) __TITLEBAR="\[\e]0;\h:\${__LOCATION_ROOT}\${__LOCATION:-\w}\007\]" ;;
-	*) __TITLEBAR="" ;;
-esac
 if [ -n "$SSH_CLIENT" ]; then
 	HOSTNAME_BOLD='\['"$__BOLD"'\]'
 	HOSTNAME_UNBOLD='\['"$__UNBOLD"'\]'
@@ -122,7 +118,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__TITLEBAR}${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${HOSTNAME_BOLD}\h${HOSTNAME_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
