@@ -46,6 +46,7 @@ else
 	HOSTNAME_BOLD=""
 	HOSTNAME_UNBOLD=""
 fi
+__USER=""
 if PROMPT_USERNAME_PLACEHOLDER; then
 	__USER='\u@'
 fi
