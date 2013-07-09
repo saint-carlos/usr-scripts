@@ -39,6 +39,7 @@
 *URxvt*foreground:	#ffffff
 *URxvt*geometry:	104x60
 *URxvt*buffered:	false
+*URxvt*secondaryScroll:	false
 *URxvt*selection*pattern-0:		([[:word:]-,./?%&#:_=+@~]+)
 
 ! RENDERING & FONT
