@@ -19,7 +19,7 @@ __verify_color()
 }
 
 case $TERM in
-	xterm*|rxvt*)
+	xterm*|rxvt*|screen*)
 			color_seq()
 			{
 				__verify_color $1 || return 1
