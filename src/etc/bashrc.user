@@ -39,7 +39,7 @@ export REPOSITORY_ROOTS
 __BOLD="$(tput smul)"
 __UNBOLD="$(tput rmul)"
 __PROMPT_ERROR_COLOR="$(color_seq red)"
-if [ -n "$SSH_CLIENT" ]; then
+if [ -n "${SSH_CLIENT-}" ]; then
 	__MAKE_BOLD='\['"$__BOLD"'\]'
 	__MAKE_UNBOLD='\['"$__UNBOLD"'\]'
 else
