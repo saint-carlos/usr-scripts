@@ -184,22 +184,22 @@ if has("cscope")
 		"	8 or i: Find files #including this file
 
 		" map ,cX to :cs find X
-		nmap <localleader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c0 :cs find s <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c1 :cs find g <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c2 :cs find d <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c3 :cs find c <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c4 :cs find t <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>c6 :cs find e <C-R>=expand("<cword>")<CR><CR>
-		nmap <localleader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
-		nmap <localleader>c7 :cs find f <C-R>=expand("<cfile>")<CR><CR>
-		nmap <localleader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-		nmap <localleader>c8 :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+		nnoremap <localleader>cs :cs find s <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c0 :cs find s <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>cg :cs find g <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c1 :cs find g <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>cd :cs find d <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c2 :cs find d <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c3 :cs find c <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>ct :cs find t <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c4 :cs find t <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>ce :cs find e <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>c6 :cs find e <C-R>=expand("<cword>")<CR><CR>
+		nnoremap <localleader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
+		nnoremap <localleader>c7 :cs find f <C-R>=expand("<cfile>")<CR><CR>
+		nnoremap <localleader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+		nnoremap <localleader>c8 :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
 	endif
 endif
 
@@ -231,8 +231,8 @@ endif
 let g:Tb_UseSingleClick = 1
 
 " cycles tabs
-nmap <Tab> :Tbbn<CR>
-nmap <S-Tab> :Tbbp<CR>
+nnoremap <Tab> :Tbbn<CR>
+nnoremap <S-Tab> :Tbbp<CR>
 
 "	}}}
 
