@@ -51,7 +51,7 @@ REMOTE="$3"
 [ -n "$OUTDIR" ] || usage 254
 
 if [ -n "$REMOTE" ]; then
-	REMOTE_URL=$(git remote show -n idank | grep 'Fetch URL' | awk '{ print $NF }')
+	REMOTE_URL=$(git remote show -n $REMOTE | grep 'Fetch URL' | awk '{ print $NF }')
 	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV | head -7)
 else
 	PULL_REQ=""
