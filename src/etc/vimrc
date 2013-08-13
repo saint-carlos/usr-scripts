@@ -121,7 +121,7 @@ set complete=k,.,w,b	" autocomplete from these places
 augroup editing
 	autocmd!
 	autocmd BufWritePost {,.}vimrc source ~/.vimrc " reload vimrc files if edited
-	autocmd FileType vim {,.}vimrc setlocal foldmethod=marker
+	autocmd FileType vim setlocal foldmethod=marker
 augroup END
 
 " inoremap <silent> <C-o> <C-x><C-o>
