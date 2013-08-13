@@ -136,11 +136,11 @@ vnoremap <leader>() <Esc>`>a)<Esc>`<i(<Esc>
 vnoremap <leader>[] <Esc>`>a]<Esc>`<i[<Esc>
 
 " hebrew support
-noremap <silent> <F7> :setlocal rightleft!<CR>:set hkmap!<CR>
+noremap <silent> <F7> :setlocal rightleft! \| setlocal hkmap!<CR>
 imap <F7> <C-o><F7>
 
 " interaction with other terminals
-noremap <silent> <F8> :setlocal paste!<CR>:setlocal number!<CR>
+noremap <silent> <F8> :setlocal paste! \| setlocal number!<CR>
 imap <F8> <C-o><F8>
 
 " these turned out to be annoying
