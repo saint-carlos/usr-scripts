@@ -42,9 +42,7 @@ termcapinfo xterm 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
 #termcapinfo xterm|xterms|xs|rxvt ti@:te@
 
 # turn sending of screen messages to hardstatus off
-hardstatus off
-# use this for the hard status string
-hardstatus string "%h%? users: %u%?"
+hardstatus alwaysignore
 # An alternative hardstatus to display a bar at the bottom listing the
 # windownames and highlighting the current windowname in blue. (This is only
 # enabled if there is no hardstatus setting for your terminal)
