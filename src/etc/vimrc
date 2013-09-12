@@ -156,10 +156,9 @@ imap <F8> <C-o><F8>
 " not strictly a plugin, but an external feature to be configured
 
 if has("cscope")
-	set cscopetag	" treat scsope tags like ctags
-	set csto=0	" boolean: should ctags be queried before cscope?
-	set cst		" consult cscope before ctags for :tag jump
-	set nocsverb	" non verbose mode (when adding a database)
+	set cscopetag		" consult cscope before ctags for :tag jump
+	set cscopetagorder=0	" boolean: should ctags be queried before cscope?
+	set nocscopeverbose	" non verbose mode (when adding a database)
 
 	if exists($CSCOPE_DB) " add database pointed to by environment
 		cs add $CSCOPE_DB
