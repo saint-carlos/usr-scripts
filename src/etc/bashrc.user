@@ -100,8 +100,14 @@ __set_prompt()
 	__PROMPT_ERROR_COLOR_SET=""
 	if [ $__STATUS -eq 0 ]; then
 		__PROMPT_STATUS_DESC=""
-	elif [ $__STATUS -gt 128 ] && [ $__STATUS -lt 192 ]; then
-		__PROMPT_STATUS_DESC=" ($(kill -l $((__STATUS - 128))))"
+	elif [ $__STATUS -gt 128 ] && [ $__STATUS -lt 192 ]; then # signal
+		local SIG=$(kill -l $((__STATUS - 128)))
+		__PROMPT_STATUS_DESC=" ($SIG)"
+		case $SIG in
+			HUP|ILL|ABRT|BUS|FPE|SEGV|STKFLT|SYS) 
+				__PROMPT_ERROR_COLOR_SET="$__PROMPT_ERROR_COLOR"
+				;;
+		esac
 	else
 		__PROMPT_STATUS_DESC=" (${__STATUS})"
 		__PROMPT_ERROR_COLOR_SET="$__PROMPT_ERROR_COLOR"
