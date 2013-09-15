@@ -104,7 +104,7 @@ __set_prompt()
 		local SIG=$(kill -l $((__STATUS - 128)))
 		__PROMPT_STATUS_DESC=" ($SIG)"
 		case $SIG in
-			HUP|ILL|ABRT|BUS|FPE|SEGV|STKFLT|SYS) 
+			HUP|ILL|ABRT|BUS|FPE|SEGV|STKFLT|SYS)
 				__PROMPT_ERROR_COLOR_SET="$__PROMPT_ERROR_COLOR"
 				;;
 		esac
