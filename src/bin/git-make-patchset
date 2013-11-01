@@ -24,6 +24,8 @@ options:
 -o	output: where to put the output
 
 exit status:
+0:	success
+253:	out directory exists
 254:	bad arguments
 otherwise, exit status from git-format-patch
 EOF
@@ -50,6 +52,11 @@ REMOTE="$3"
 
 [ -n "$OUTDIR" ] || usage 254
 
+if [ -d "$OUTDIR" ] && [ -n "$(ls -A "$OUTDIR")" ]; then
+	echo "$PROGRAM: cannot write to $OUTDIR: Directory not empty"
+	exit 253
+fi
+
 if [ -n "$REMOTE" ]; then
 	REMOTE_URL=$(git remote show -n $REMOTE | grep 'Fetch URL' | awk '{ print $NF }')
 	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV | head -7)
@@ -57,7 +64,7 @@ else
 	PULL_REQ=""
 fi
 
-git format-patch -U15 --cover-letter -o "$OUTDIR" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit
+git format-patch -U15 --cover-letter -o "$OUTDIR" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
 
 COVER_LETTER=$OUTDIR/0000-cover-letter.patch
 sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
