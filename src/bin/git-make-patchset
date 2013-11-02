@@ -80,8 +80,13 @@ fi
 git format-patch -U15 --cover-letter -o "$OUTDIR" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
 
 COVER_LETTER=$OUTDIR/0000-cover-letter.patch
+PATCHES=$(ls $OUTDIR/* | grep -vx $COVER_LETTER)
+PATCHSET_ID="$(date +%Y%m%d%H%M%S)${VERSION:1}T"
+
 sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
 perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
+sed -i -e '/Subject:/{n;i\' -e "\nID: $PATCHSET_ID" -e ':a;n;ba;}' $COVER_LETTER
+sed -i -e '/---/{n;i\' -e "\nPatchset: ${PATCHSET_ID} ${SUBJECT}\n" -e ':a;n;ba;}' $PATCHES
 rm ${COVER_LETTER}.bak
 
 if $EDIT; then
