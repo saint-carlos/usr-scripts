@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="create a patchset to send"
 PARAMS="from-rev to-rev [remote-name]"
-OPTIONS="[-h] [-p prefix] [-v version] [-s subject] -o out-dir"
+OPTIONS="[-he] [-p prefix] [-v version] [-s subject] -o out-dir"
 
 usage()
 {
@@ -18,16 +18,17 @@ generate a pull request in the cover letter.
 
 options:
 -h	help: show this help message and exit.
+-e	edit: edit all patches manually
 -p	prefix: set the patchset prefix (e.g. RTK for [RTK PATCH])
 -v	version: patchset version
 -s	subject: cover letter subject
 -o	output: where to put the output
 
-the cover letter will be edited by the default editor, which is defined similar
-to less(1): if the VISUAL environment variable is defined, it will be used.
-otherwise, if the EDITOR environment variable is defined, it will be used.
-otherwise, if vim(1) is in the path, it will be used. otherwise, vi(1) will be
-used.
+the cover letter and, if -e is given, all other patches, will be edited using
+the default editor, which is defined similar to less(1): if the VISUAL
+environment variable is defined, it will be used. otherwise, if the EDITOR
+environment variable is defined, it will be used. otherwise, if vim(1) is in
+the path, it will be used. otherwise, vi(1) will be used.
 
 exit status:
 0:	success
@@ -41,13 +42,15 @@ EOF
 PREFIX=""
 VERSION=""
 SUBJECT=""
-while getopts hp:v:s:o: option; do
+EDIT=false
+while getopts hp:v:s:o:e option; do
 	case $option in
 		h) usage 0 ;;
 		p) PREFIX="$OPTARG " ;;
 		v) VERSION=" v$OPTARG" ;;
 		s) SUBJECT="$OPTARG" ;;
 		o) OUTDIR="$OPTARG" ;;
+		e) EDIT=true ;;
 		\?) usage 254 ;;
 	esac
 done
@@ -81,4 +84,10 @@ sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
 perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
 rm ${COVER_LETTER}.bak
 
-$VISUAL $COVER_LETTER
+if $EDIT; then
+	FILES=$OUTDIR/*
+else
+	FILES=$COVER_LETTER
+fi
+
+$VISUAL $FILES
