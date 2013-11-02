@@ -68,7 +68,7 @@ git format-patch -U15 --cover-letter -o "$OUTDIR" --subject-prefix="${PREFIX}PAT
 
 COVER_LETTER=$OUTDIR/0000-cover-letter.patch
 sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
-perl -i.bak -pne "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
+perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
 rm ${COVER_LETTER}.bak
 
 vim $COVER_LETTER
