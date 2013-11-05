@@ -97,7 +97,6 @@ imap <F6> <C-o><F6>
 " formatting {{{
 
 set autoindent		" indent a new line like the previous line
-set smartindent		" rudimentary c-like indent
 set shiftwidth=8	" indentation width
 set textwidth=0         " Don't wrap words by default.
 
