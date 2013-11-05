@@ -1,8 +1,6 @@
 - required packages
 - better config system (kconfig? something simpler?)
 - colordiffrc
-- see if we can move setting terminal title from the prompt itself to the prompt function
--- use tput tsl, tput fsl
 - vim extended bad-whitespace plugin
 -- filetypes excluded from bad whitespace: help, diff
 - vimrc: F8 should also do the mouse, and enter/exit insert mode
