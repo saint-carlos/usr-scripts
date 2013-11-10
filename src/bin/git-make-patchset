@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="create a patchset to send"
 PARAMS="from-rev to-rev [remote-name]"
-OPTIONS="[-he] [-p prefix] [-v version] [-s subject] -o out-dir"
+OPTIONS="[-he] [-p prefix] [-v version] [-s subject] [-o out-dir]"
 
 usage()
 {
@@ -30,6 +30,10 @@ environment variable is defined, it will be used. otherwise, if the EDITOR
 environment variable is defined, it will be used. otherwise, if vim(1) is in
 the path, it will be used. otherwise, vi(1) will be used.
 
+if out-dir is not given, the output directory will be named based on to-rev
+using git-rev-parse(1). if that doesn't work, the output directory will be
+named based on to-rev without using git-rev-parse.
+
 exit status:
 0:	success
 253:	out directory exists
@@ -42,6 +46,7 @@ EOF
 PREFIX=""
 VERSION=""
 SUBJECT=""
+OUTDIR=""
 EDIT=false
 while getopts hp:v:s:o:e option; do
 	case $option in
@@ -63,7 +68,12 @@ REMOTE="$3"
 [ -z "$VISUAL" ] && cmd_exists vim && VISUAL=vim
 : ${VISUAL:=vi}
 
-[ -n "$OUTDIR" ] || usage 254
+if [ -z "$OUTDIR" ]; then
+	BASENAME=$(basename $TO_REV)
+	OUTDIR=$(git rev-parse --abbrev-ref $BASENAME)
+	[ -z "$OUTDIR" ] && OUTDIR=$BASENAME
+fi
+
 
 if [ -d "$OUTDIR" ] && [ -n "$(ls -A "$OUTDIR")" ]; then
 	echo "$PROGRAM: cannot write to $OUTDIR: Directory not empty"
