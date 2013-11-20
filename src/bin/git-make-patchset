@@ -68,6 +68,9 @@ REMOTE="$3"
 [ -z "$VISUAL" ] && cmd_exists vim && VISUAL=vim
 : ${VISUAL:=vi}
 
+VISUAL_FLAGS=()
+[[ $VISUAL =~ ^vi ]] && VISUAL_FLAGS+=("-c" "set textwidth=80")
+
 if [ -z "$OUTDIR" ]; then
 	BASENAME=$(basename $TO_REV)
 	OUTDIR=$(git rev-parse --abbrev-ref $BASENAME)
@@ -108,4 +111,4 @@ else
 	FILES=$COVER_LETTER
 fi
 
-$VISUAL $FILES
+$VISUAL "${VISUAL_FLAGS[@]}" $FILES
