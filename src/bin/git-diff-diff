@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# -ne 2 ] ; then
+	printf "\nUSAGE: gdd <commit-or-range> <commit-or-range>\n\n" 1>&2
+	exit 1
+fi
+from_cmd=show
+case $1 in
+	*..*) from_cmd=diff;;
+esac
+to_cmd=show
+case $2 in
+	*..*) to_cmd=diff;;
+esac
+vimdiff -c 'set diffexpr=GitDiffDiff()' <(git $from_cmd $1) <(git $to_cmd $2)

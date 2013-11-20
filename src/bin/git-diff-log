@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ $# -ne 2 ] ; then
+	printf "\nUSAGE: gdl <commit-or-range> <commit-or-range>\n\n" 1>&2
+	exit 1
+fi
+
+from_base=0
+to_base=0
+[[ $1 =~ \.\. ]] && from_base=1
+[[ $2 =~ \.\. ]] && to_base=1
+if (( (from_base + to_base) % 2 != 0 )) ; then
+	printf "\nERROR: one side specifies commit, the other - range\n" 1>&2
+	exit 2
+fi
+if [ $from_base -ne 1 ] ; then
+	base=$(git merge-base $1 $2)
+	if [ $? -ne 0 ] ; then
+		printf "\nERROR: '$1' and '$2' don't seem to have common base!\n" 1>&2
+		exit 2
+	fi
+	from_base=$base^..
+	to_base=$base^..
+else
+	from_base=
+	to_base=
+fi
+
+vimdiff -c 'set diffexpr=GitDiffLog()' <(git log ${from_base}$1) <(git log ${to_base}$2)
