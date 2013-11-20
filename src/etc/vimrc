@@ -25,7 +25,7 @@ set showcmd             " Show (partial) command in status line.
 set cmdheight=2		" height of the command line
 set number		" show line numbers
 set showmode            " Show current mode.
-set modeline            " Enable modeline. BE CAREFUL WITH THAT!!!
+set nomodeline          " turns out to be very annoying
 set background=dark	" bright terminal colors
 set wildmenu		" display file list when browsing files to open
 set wildmode=list:longest " bash-like file completion
