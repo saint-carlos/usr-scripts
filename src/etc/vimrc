@@ -33,8 +33,6 @@ set laststatus=2	" When to show a statusline.
 
 set splitright
 set splitbelow
-noremap <silent> <C--> <C-w>-
-noremap <silent> <C-=> <C-w>+
 
 " status line, left side
 set statusline=
