@@ -72,9 +72,8 @@ VISUAL_FLAGS=()
 [[ $VISUAL =~ ^vi ]] && VISUAL_FLAGS+=("-c" "set textwidth=80")
 
 if [ -z "$OUTDIR" ]; then
-	BASENAME=$(basename $TO_REV)
-	OUTDIR=$(git rev-parse --abbrev-ref $BASENAME)
-	[ -z "$OUTDIR" ] && OUTDIR=$BASENAME
+	REF=$(git rev-parse --abbrev-ref $TO_REV)
+	OUTDIR=$(basename ${REF:-$TO_REV})
 fi
 
 
