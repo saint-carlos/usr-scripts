@@ -60,6 +60,7 @@ while getopts hp:v:s:o:e option; do
 	esac
 done
 shift $(($OPTIND - 1))
+(( 2 <= $# && $# <= 3 )) || usage 254
 FROM_REV="$1"
 TO_REV="$2"
 REMOTE="$3"
