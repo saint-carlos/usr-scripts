@@ -13,8 +13,9 @@ usage()
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
-create a patchset ready to be sent. if remote-name is supplied, it is used to
-generate a pull request in the cover letter.
+create a patchset ready to be sent. if the range contains only one patch, a
+single patch will be generated, rather than a patchset. if remote-name is
+supplied, it is used to generate a pull request in the cover letter.
 
 options:
 -h	help: show this help message and exit.
@@ -30,6 +31,9 @@ environment variable is defined, it will be used. otherwise, if the EDITOR
 environment variable is defined, it will be used. otherwise, if vim(1) is in
 the path, it will be used. otherwise, vi(1) will be used.
 
+if there is only one patch to generate, out is the name of the patch file.
+otherwise, it is the name of the output directory in which all patches will be
+placed.
 if out is not given, it will be named based on to-rev using
 git-rev-parse(1). if that doesn't work, the output directory will be named based
 on to-rev without using git-rev-parse.
@@ -77,9 +81,19 @@ if [ -z "$OUT" ]; then
 	OUT=$(basename ${REF:-$TO_REV})
 fi
 
+if [ $(git rev-parse ${FROM_REV}) = $(git rev-parse ${TO_REV}^) ]; then
+	PATCHSET=false
+	EDIT=false
+	OUT=${OUT}.patch
+else
+	PATCHSET=true
+fi
 
-if [ -d "$OUT" ] && [ -n "$(ls -A "$OUT")" ]; then
+if $PATCHSET && [ -d "$OUT" ] && [ -n "$(ls -A "$OUT")" ]; then
 	echo "$PROGRAM: cannot write to $OUT: Directory not empty"
+	exit 253
+elif ! $PATCHSET && [ -e "$OUT" ]; then
+	echo "$PROGRAM: cannot write to $OUT: File exists"
 	exit 253
 fi
 
@@ -93,16 +107,24 @@ else
 	PULL_REQ=""
 fi
 
-git format-patch -U15 --cover-letter -o "$OUT" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
+if $PATCHSET; then
+	git format-patch -U15 --cover-letter -o "$OUT" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
 
-COVER_LETTER=$OUT/0000-cover-letter.patch
-PATCHES=$(ls $OUT/* | grep -vx $COVER_LETTER)
-PATCHSET_ID="$(date +%Y%m%d%H%M%S)${VERSION:1}T"
+	COVER_LETTER=$OUT/0000-cover-letter.patch
+	PATCHES=$(ls $OUT/* | grep -vx $COVER_LETTER)
+	PATCHSET_ID="$(date +%Y%m%d%H%M%S)${VERSION:1}T"
 
-sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
-perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
-sed -i -e '/Subject:/{n;i\' -e "\nID: $PATCHSET_ID" -e ':a;n;ba;}' $COVER_LETTER
-sed -i -e '/---/{n;i\' -e "\nPatchset: ${PATCHSET_ID} ${SUBJECT}\n" -e ':a;n;ba;}' $PATCHES
+	sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" $COVER_LETTER
+	perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" $COVER_LETTER
+	sed -i -e '/Subject:/{n;i\' -e "\nID: $PATCHSET_ID" -e ':a;n;ba;}' $COVER_LETTER
+	sed -i -e '/---/{n;i\' -e "\nPatchset: ${PATCHSET_ID} ${SUBJECT}\n" -e ':a;n;ba;}' $PATCHES
+else
+	git format-patch -U15 --stdout --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" > "$OUT" || exit $?
+
+	COVER_LETTER=$OUT
+
+	perl -i.bak -p -e "\$first=1 if(!\$first && s|^---|---\n\n$PULL_REQ\n|)" $COVER_LETTER
+fi
 rm ${COVER_LETTER}.bak
 
 if $EDIT; then
