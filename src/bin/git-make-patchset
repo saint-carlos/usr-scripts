@@ -20,7 +20,7 @@ supplied, it is used to generate a pull request in the cover letter.
 options:
 -h	help: show this help message and exit.
 -e	edit: edit all patches manually
--p	prefix: set the patchset prefix (e.g. RTK for [RTK PATCH])
+-p	prefix: set the patchset prefix (e.g. RFC for [PATCH RFC])
 -v	version: patchset version
 -s	subject: cover letter subject
 -o	output: where to put the output
@@ -55,7 +55,7 @@ EDIT=false
 while getopts hp:v:s:o:e option; do
 	case $option in
 		h) usage 0 ;;
-		p) PREFIX="$OPTARG " ;;
+		p) PREFIX=" $OPTARG" ;;
 		v) VERSION=" v$OPTARG" ;;
 		s) SUBJECT="$OPTARG" ;;
 		o) OUT="$OPTARG" ;;
@@ -108,7 +108,7 @@ else
 fi
 
 if $PATCHSET; then
-	git format-patch -U15 --cover-letter -o "$OUT" --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
+	git format-patch -U15 --cover-letter -o "$OUT" --subject-prefix="PATCH${PREFIX}${VERSION}" "${FROM_REV}..${TO_REV}" || exit $?
 
 	COVER_LETTER=$OUT/0000-cover-letter.patch
 	PATCHES=$(ls $OUT/* | grep -vx $COVER_LETTER)
