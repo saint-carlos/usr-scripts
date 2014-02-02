@@ -94,8 +94,8 @@
 
 
 ! Normal
-*URxvt*keysym*Home:		\033OH
-*URxvt*keysym*End:		\033OF
+! *URxvt*keysym*Home:		\033OH
+! *URxvt*keysym*End:		\033OF
 *URxvt*keysym*F1:		\033OP
 *URxvt*keysym*F2:		\033OQ
 *URxvt*keysym*F3:		\033OR
@@ -104,9 +104,9 @@
 ! Shift
 ! paste conflict
 ! *URxvt*keysym*S-Insert:	\033[2;2~
-*URxvt*keysym*S-Delete:		\033[3;2~
-*URxvt*keysym*S-Home:		\033[1;2H
-*URxvt*keysym*S-End:		\033[1;2F
+! *URxvt*keysym*S-Delete:	\033[3;2~
+! *URxvt*keysym*S-Home:		\033[1;2H
+! *URxvt*keysym*S-End:		\033[1;2F
 ! scrolling conflict
 ! *URxvt*keysym*S-Page_Up:	\033[5;2~
 ! *URxvt*keysym*S-Page_Down:	\033[6;2~
