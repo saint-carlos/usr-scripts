@@ -39,6 +39,8 @@ alias ls="ls $__LS_FLAGS"
 alias ll="ls -l $__LS_FLAGS"
 alias la="ls -A $__LS_FLAGS"
 
+cmd_exists vim && alias vi='vim' && alias view='vim -R'
+
 ulimit -c unlimited
 
 export PAGER=less

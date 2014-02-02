@@ -11,7 +11,6 @@ alias tree='tree -CshF --dirsfirst'
 # processes
 alias psx='ps -e -o pid,ppid,user,flags,stat,wchan:16,tty,start,cmd -ww | less'
 cmd_exists htop && alias top='htop'
-cmd_exists vim && alias vi='vim'
 
 # misc
 __COREUTILS_FLAGS="-v"
