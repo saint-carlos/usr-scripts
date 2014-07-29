@@ -29,4 +29,4 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
-echo $((${*/x/*}))
+echo $((${*//x/*}))
