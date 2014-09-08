@@ -17,6 +17,8 @@
 
 [mergetool "bc3"]
 	cmd = bcompare -automerge -reviewconflicts \"$LOCAL\" \"$BASE\" \"$REMOTE\" \"$MERGED\"
+	keepBackup = false
+	keepTemporaries = false
 
 [color]
 	branch = auto
