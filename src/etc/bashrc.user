@@ -143,18 +143,21 @@ __get_working_copy()
 	if [ $# -eq 1 ]; then
 		for REPO_ROOT in $REPOSITORY_ROOTS; do
 			if [ -d "$REPO_ROOT/$1" ]; then
-				echo "$REPO_ROOT/$1"
-				return
+				WORKING_COPY="$REPO_ROOT/$1"
+				break
 			fi
 		done
 	fi
-	set `echo "$@" | sed 's/[1-9][1-9]*/ & /g'` # shorthand: a1b -> a 1 b
-	REPOS=`echo "$REPOSITORY_ROOTS " | sed 's|^ *||; s| |/* |g'` # append /* to repos
-	LIST=`\ls -u1d $REPOS` # list by access time from most recent
-	for ITEM in "$@"; do
-		LIST=`echo "$LIST" | \grep -i /[^/]*$ITEM[^/]*$` # grep the basename
-	done
-	echo "$LIST" | sed 1q
+	if [ -z "$WORKING_COPY" ]; then
+		set $(echo "$@" | sed 's/[1-9][1-9]*/ & /g') # shorthand: a1b -> a 1 b
+		REPOS=$(echo "$REPOSITORY_ROOTS " | sed 's|^ *||; s| |/* |g') # append /* to repos
+		LIST=$(\ls -u1d $REPOS) # list by access time from most recent
+		for ITEM in "$@"; do
+			LIST=$(echo "$LIST" | \grep -i /[^/]*$ITEM[^/]*$) # grep the basename
+		done
+		WORKING_COPY=$(echo "$LIST" | sed 1q)
+	fi
+	echo "$WORKING_COPY"
 }
 
 __jump_working_copy()
