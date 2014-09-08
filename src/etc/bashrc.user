@@ -152,6 +152,7 @@ __get_working_copy()
 		done
 		WORKING_COPY=$(echo "$LIST" | sed 1q)
 	fi
+	[ -n "$WORKING_COPY" ] && termset $(basename "$WORKING_COPY") > /dev/tty
 	echo "$WORKING_COPY"
 }
 
