@@ -1,0 +1,35 @@
+#!/bin/bash
+
+PROGRAM=`basename $0`
+DESCRIPTION="create a formatted timestamp"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+same as date(1).
+EOF
+
+    exit $1
+}
+
+
+while getopts h option; do
+	case $option in
+		h) usage 0 ;;
+	esac
+done
+shift `expr $OPTIND - 1`
+
+date +%y-%m-%d-%H-%M-%S "$@"
