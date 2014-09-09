@@ -30,5 +30,5 @@ for FILE; do
 	else
 		MODE=644
 	fi
-	install -m $MODE -D $INSTALL_SOURCE/$FILE $VROOT_PLACEHOLDER/$FILE
+	install -m $MODE -D $INSTALL_SOURCE/$FILE $CONFIG_VROOT/$FILE
 done

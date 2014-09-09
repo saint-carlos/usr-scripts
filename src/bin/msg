@@ -34,4 +34,4 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
-less +F MESSAGES_PLACEHOLDER
+less +F CONFIG_SYSLOG_FILE

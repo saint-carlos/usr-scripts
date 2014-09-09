@@ -2,9 +2,9 @@
 
 [[ $- == *i* ]] || return
 
-ETC=ETC_PLACEHOLDER
-BIN=BIN_PLACEHOLDER
-SBIN=SBIN_PLACEHOLDER
+ETC=CONFIG_ETC
+BIN=CONFIG_BIN
+SBIN=CONFIG_SBIN
 
 export PATH=$PATH:$BIN
 if [ $UID -eq 0 ]; then
@@ -18,9 +18,9 @@ shopt -s hostcomplete
 source $ETC/colorsrc
 
 if [ $UID -eq 0 ]; then
-	__PROMPT_COLOR_SET="\[$(color_seq ROOT_PROMPT_COLOR_PLACEHOLDER)\]"
+	__PROMPT_COLOR_SET="\[$(color_seq CONFIG_ROOT_PROMPT_COLOR)\]"
 else
-	__PROMPT_COLOR_SET="\[$(color_seq USER_PROMPT_COLOR_PLACEHOLDER)\]"
+	__PROMPT_COLOR_SET="\[$(color_seq CONFIG_USER_PROMPT_COLOR)\]"
 fi
 __PROMPT_COLOR_RESET="\[$(color_seq normal)\]"
 PS1="${__PROMPT_COLOR_SET}\u@\h:\w\\\$${__PROMPT_COLOR_RESET} "

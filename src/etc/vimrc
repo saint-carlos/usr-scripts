@@ -1,4 +1,4 @@
-set runtimepath^=LIB_PLACEHOLDER/vim
+set runtimepath^=CONFIG_LIB/vim
 
 " general {{{
 

@@ -36,7 +36,7 @@ while getopts kh option; do
 done
 shift `expr $OPTIND - 1`
 
-old_file="MESSAGES_PLACEHOLDER"
+old_file="CONFIG_SYSLOG_FILE"
 new_file="${old_file}-`date +%y-%m-%d-%H-%M-%S`"
 
 service rsyslog stop

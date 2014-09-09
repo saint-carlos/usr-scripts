@@ -11,7 +11,7 @@ PROGRAM=`basename $0`
 DESCRIPTION="print a line in a color."
 PARAMS="color line"
 OPTIONS="[-hn]"
-ETC=ETC_PLACEHOLDER
+ETC=CONFIG_ETC
 
 usage()
 {
