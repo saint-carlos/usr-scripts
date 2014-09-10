@@ -1,16 +1,5 @@
 #!/bin/bash -xe
 
-install_dir()
-{
-	DIRNAME="$1"
-	MODE="$2"
-	PLACEHOLDER="$3"
-	mkdir -p "$PLACEHOLDER"
-	cp "$INSTALL_SOURCE/$DIRNAME"/* "$PLACEHOLDER"
-	chmod "$MODE" "$PLACEHOLDER"/*
-
-}
-
 [ $# -ge 2 ] || exit 1
 
 PARAMS_FILE="$1"
