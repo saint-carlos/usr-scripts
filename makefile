@@ -72,8 +72,21 @@ clean: # remove built targets
 mrproper: clean # remove everything generate by any build target from the project's directory
 	rm -f config.sh tags
 
+# code is ugly, format is pretty
+# first, we find all "hard-coded" targets
+# then, remove everything that doesn't have a comment and remove everything
+# but the target and comment themselves. ':' marks the beginning of explanation.
+# then, fold it tightly such that the terminal doesn't fold it
+# then append ' :' to folded lines so that the formatter undestands its part of
+# the explanation column
+# then format it to columns
+# see? it wasn't that bad... right? right?!
 help: # this message
-	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${MAKEFILE_LIST} | sed 's/:[^#]*$$//; s/:.*# /\t - /'
+	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${MAKEFILE_LIST} |	\
+		sed 's/:[^#]*$$//; s/:.*# /:/' |		\
+		fold -s -w 65 |					\
+		sed 's/\(^[^:]*$$\)/ :&/' |			\
+		column -s : -t
 
 test: # dump configuration
 	@echo "files:"
