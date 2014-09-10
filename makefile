@@ -73,7 +73,7 @@ mrproper: clean # remove everything generate by any build target from the projec
 	rm -f config.sh tags
 
 help: # this message
-	@egrep '^[a-zA-Z0-9]*::?( |$$)' ${MAKEFILE_LIST} | sed 's/:[^#]*$$//; s/:.*# /\t - /'
+	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${MAKEFILE_LIST} | sed 's/:[^#]*$$//; s/:.*# /\t - /'
 
 test: # dump configuration
 	@echo "files:"
