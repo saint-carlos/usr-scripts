@@ -1,4 +1,4 @@
-BUILD=build
+BUILD=./build
 CONFIG_FILE=config.sh
 TMP_CFG=tmp/cfg
 VALID_CONFIG=${TMP_CFG}/valid_config
@@ -14,7 +14,7 @@ FILES=$(patsubst src/%, %, $(wildcard	\
 	src/lib/vim/*/*			\
 ))
 
-SED_COMMANDS=$(shell ./${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
+SED_COMMANDS=$(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
 
@@ -25,10 +25,10 @@ config: ${VALID_CONFIG} # update or create a config file from the default settin
 basedir = $(shell basename $(dir $1))
 tmpdir = tmp/$(call basedir,$1)
 
-tgt/%: src/% ./${BUILD}/make_sed_commands.sh ${CONFIG_FILE} ${VALID_CONFIG}
+tgt/%: src/% ${BUILD}/make_sed_commands.sh ${CONFIG_FILE} ${VALID_CONFIG}
 	mkdir -p $(dir $@) $(call tmpdir,$@)
 	cp -f $< $(call tmpdir,$@)
-	./${BUILD}/binary $@ || sed -i "${SED_COMMANDS}" $(call tmpdir,$@)/$(notdir $@)
+	${BUILD}/binary $@ || sed -i "${SED_COMMANDS}" $(call tmpdir,$@)/$(notdir $@)
 	mv $(call tmpdir,$@)/$(notdir $@) $@
 
 ${VALID_CONFIG}: ${CONFIG_FILE}
@@ -46,15 +46,15 @@ ${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE}
 	cut -d= -f1 $< | sort > $@
 
 install: build tgt ${CONFIG_FILE} # install configured scripts/config files from tgt/
-	./${BUILD}/install.sh ${CONFIG_FILE} tgt ${FILES}
+	${BUILD}/install.sh ${CONFIG_FILE} tgt ${FILES}
 
 install_user: build tgt ${CONFIG_FILE} # update the user configuration to accommodate an installed scripts/config files
-	./${BUILD}/install_user.sh ${CONFIG_FILE}
+	${BUILD}/install_user.sh ${CONFIG_FILE}
 
 install_all: install install_user # install configured scripts/config files and update the user configuration to accommodate them
 
 uninstall: ${CONFIG_FILE} # remove the scripts/config files from the user configuration and delete them
-	./${BUILD}/uninstall.sh ${CONFIG_FILE}
+	${BUILD}/uninstall.sh ${CONFIG_FILE}
 
 update: uninstall install_all # update a user configuration from the repository
 
