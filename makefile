@@ -1,20 +1,20 @@
-BUILD=./build
-CONFIG_FILE=config.sh
-TMP_CFG=tmp/cfg
-VALID_CONFIG=${TMP_CFG}/valid_config
-DEFAULT_CONFIG_FILE=${BUILD}/default_config.sh
-ALL_CONFIG_VARS=${TMP_CFG}/config_vars.all.txt
-CURRENT_CONFIG_VARS=${TMP_CFG}/config_vars.current.txt
-export PROJECT=usr_scripts
+export PROJECT	:= usr_scripts
+BUILD 		:= ./build
+CONFIG_FILE	:= config.sh
+TMP_CFG		:= tmp/cfg
+VALID_CONFIG	:= ${TMP_CFG}/valid_config
+DEFAULT_CONFIG_FILE	:= ${BUILD}/default_config.sh
+ALL_CONFIG_VARS		:= ${TMP_CFG}/config_vars.all.txt
+CURRENT_CONFIG_VARS	:= ${TMP_CFG}/config_vars.current.txt
 
-FILES=$(patsubst src/%, %, $(wildcard	\
+FILES := $(patsubst src/%, %, $(wildcard \
 	src/bin/*			\
 	src/sbin/*			\
 	src/etc/*			\
 	src/lib/vim/*/*			\
 ))
 
-SED_COMMANDS=$(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
+SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
 
