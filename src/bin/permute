@@ -38,9 +38,10 @@ VER='1.3'
 
 usage () {
     echo >&2 "$PN - print permutations, $VER
-usage: $PN [-h] arg [arg ...]
+usage: $PN [-h] [arg ...]
    -h:  print this usage summary
    -a:  print permutations of all sub-sequences as well (slow)
+   -p:	print the power set of the arguments
 
 Prints all permutations of the arguments.
 
@@ -81,17 +82,16 @@ searchprog () {
 # We need a "new" NAWK implementation with functions
 : ${NAWK:=`searchprog mawk || searchprog gawk || searchprog nawk || echo awk`}
 
-PERMUTE_ALL=false
-while getopts ah option; do
+MODE=normal
+while getopts aph option; do
 	case $option in
 		h) usage 0 ;;
-		a) PERMUTE_ALL=true ;;
+		a) MODE=all ;;
+		p) MODE=power ; CMD="$SHELL $0 -p" ;;
 		\?) usage 1 ;;
 	esac
 done
 shift `expr $OPTIND - 1`
-
-[ $# -lt 1 ] && exit 0
 
 if ${SUBSET_PERMUTE:-false}; then
 	SEQ=( "$@" )
@@ -105,9 +105,22 @@ if ${SUBSET_PERMUTE:-false}; then
 		"$0" ${CURRENT_SEQ}
 	done
 	exit
-elif ${PERMUTE_ALL}; then
+elif [ $MODE = all ]; then
 	export SUBSET_PERMUTE=true
 	"$0" "$@" | xargs -l1 "$0" | sort | uniq
+	exit
+elif [ $MODE = power ]; then
+	if [ $# -eq 0 ]; then
+		echo
+		exit
+	fi
+
+	CURRENT="$1"
+	shift
+	$CMD "$@" | while read R; do
+		echo "$CURRENT $R"
+		echo "$R"
+	done
 	exit
 fi
 
