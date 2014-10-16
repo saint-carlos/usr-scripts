@@ -28,7 +28,8 @@ ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
 endif
 
-PD_FILES :=
+PD_FILES :=			\
+	etc/bash_completion.pd
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_PD))
 	FILES := $(filter-out ${PD_FILES},${FILES})
 endif

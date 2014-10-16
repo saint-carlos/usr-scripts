@@ -79,3 +79,5 @@ _root_command()
 	__external_root_executable $2 && return
 	_command $1 $2 $3
 }
+
+CONFIG_PD && source "CONFIG_ETC/bash_completion.pd"
