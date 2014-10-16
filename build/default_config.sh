@@ -1,7 +1,7 @@
-CONFIG_VROOT=~/vroot
+CONFIG_VROOT=$HOME/vroot
 CONFIG_USER_FULL_NAME="$(getent passwd "${USER}" | cut -d: -f5 | cut -d, -f1)"
 CONFIG_USER_EMAIL="${USER}@$(hostname -d)"
-CONFIG_WORKSPACE=~/workspace
+CONFIG_WORKSPACE=$HOME/workspace
 CONFIG_REPO_DIRS=""
 CONFIG_USER_PROMPT_COLOR=green # see colorsrc
 CONFIG_ROOT_PROMPT_COLOR=yellow # see colorsrc
