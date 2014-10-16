@@ -28,6 +28,11 @@ ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
 endif
 
+PD_FILES :=
+ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_PD))
+	FILES := $(filter-out ${PD_FILES},${FILES})
+endif
+
 SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
