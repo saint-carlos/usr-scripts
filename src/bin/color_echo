@@ -44,7 +44,7 @@ while getopts nh option; do
 done
 shift `expr $OPTIND - 1`
 
-. $ETC/colorsrc
+source $ETC/colorsrc
 COLOR=$1
 shift
 TEXT="$*"

@@ -6,8 +6,8 @@ PARAMS_FILE="$1"
 INSTALL_SOURCE="$2"
 shift 2
 
-. "$PARAMS_FILE"
-. "$(dirname $BASH_SOURCE)/common.sh"
+source "$PARAMS_FILE"
+source "$(dirname $BASH_SOURCE)/common.sh"
 
 for FILE; do
 	DIR=${FILE%%/*}

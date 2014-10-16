@@ -27,8 +27,8 @@ restore_backup()
 [ $# -eq 1 ] || exit 1
 
 PARAMS_FILE="$1"
-. "${PARAMS_FILE}"
-. "$(dirname $BASH_SOURCE)/common.sh"
+source "${PARAMS_FILE}"
+source "$(dirname $BASH_SOURCE)/common.sh"
 
 test -d "$CONFIG_ETC" && rm -r "$CONFIG_ETC"
 test -d "$CONFIG_BIN" && rm -r "$CONFIG_BIN"

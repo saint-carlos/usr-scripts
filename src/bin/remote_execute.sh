@@ -100,7 +100,7 @@ MACHINE_FILE=$1
 shift
 [ -n "$MACHINE_FILE" ] || die 255 "no machine file given"
 IS_VIRTUAL=false
-. $MACHINE_FILE
+source $MACHINE_FILE
 test -n "$VMFILE" && IS_VIRTUAL=true
 assure_vm_up
 ssh root@${IP} $*
