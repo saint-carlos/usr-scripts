@@ -1,5 +1,4 @@
 - required packages
-- better config system (kconfig? something simpler?)
 - colordiffrc
 - vim extended bad-whitespace plugin
 -- filetypes excluded from bad whitespace: help, diff
@@ -8,3 +7,8 @@
 - make scrolling work in screen
 - help for git-diff-*
 - diff parameters (e.g. -U) for git-diff-*
+- see if __get_working_copy() and friends can use some simplifications
+- try to get title() to get the current title and assign conditionally (based on a switch)
+	- alias 'build' and 'kbuild' to "title build; build"
+	- have 'vm' change the title
+- "build" default return value should be like 'make', only base on stderr if a flag is given
