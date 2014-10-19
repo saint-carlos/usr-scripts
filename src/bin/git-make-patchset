@@ -119,7 +119,7 @@ if $PATCHSET; then
 	sed -i -e '/Subject:/{n;i\' -e "\nID: $PATCHSET_ID" -e ':a;n;ba;}' $COVER_LETTER
 	sed -i -e '/---/{n;i\' -e "\nPatchset: ${PATCHSET_ID} ${SUBJECT}\n" -e ':a;n;ba;}' $PATCHES
 else
-	git format-patch -U15 --stdout --subject-prefix="${PREFIX}PATCH${VERSION}" "${FROM_REV}..${TO_REV}" > "$OUT" || exit $?
+	git format-patch -U15 --stdout --subject-prefix="PATCH${PREFIX}${VERSION}" "${FROM_REV}..${TO_REV}" > "$OUT" || exit $?
 
 	COVER_LETTER=$OUT
 
