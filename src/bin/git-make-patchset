@@ -3,7 +3,7 @@
 PROGRAM=`basename $0`
 DESCRIPTION="create a patchset to send"
 PARAMS="from-rev to-rev [remote-name]"
-OPTIONS="[-he] [-p prefix] [-v version] [-s subject] [-o out]"
+OPTIONS="[-he] [-p prefix | -r] [-v version] [-s subject] [-o out]"
 
 usage()
 {
@@ -21,6 +21,7 @@ options:
 -h	help: show this help message and exit.
 -e	edit: edit all patches manually
 -p	prefix: set the patchset prefix (e.g. RFC for [PATCH RFC])
+-r	rfc: set the patchset prefix to RFC (i.e. [PATCH RFC])
 -v	version: patchset version
 -s	subject: cover letter subject
 -o	output: where to put the output
@@ -52,10 +53,11 @@ VERSION=""
 SUBJECT=""
 OUT=""
 EDIT=false
-while getopts hp:v:s:o:e option; do
+while getopts hp:rv:s:o:e option; do
 	case $option in
 		h) usage 0 ;;
 		p) PREFIX=" $OPTARG" ;;
+		r) PREFIX=" RFC" ;;
 		v) VERSION=" v$OPTARG" ;;
 		s) SUBJECT="$OPTARG" ;;
 		o) OUT="$OPTARG" ;;

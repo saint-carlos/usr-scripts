@@ -14,7 +14,7 @@ _git_make_patchset()
 	elif [[ "$cur" =~ ^- ]]; then
 		getopt=""
 		COMPREPLY=()
-		for opt in h p v s o e; do
+		for opt in h p r v s o e; do
 			if [ $cur = "-$opt" ]; then
 				COMPREPLY=($cur)
 				return
@@ -29,7 +29,7 @@ _git_make_patchset()
 	else
 		for ((__i=$((${#words[@]})); __i >= 2; __i--)); do
 			if [[ ${words[__i - 1]} =~ ^- ]]; then
-				[[ pvso =~ ${words[__i]:1:1} ]] && ((i++))
+				[[ prvso =~ ${words[__i]:1:1} ]] && ((i++))
 				break
 			fi
 		done
