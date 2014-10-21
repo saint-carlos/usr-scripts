@@ -69,6 +69,11 @@
 	reflogexpireunreachable = 180
 
 [sendemail]
+	smtpdomain = CONFIG_DOMAIN
+	smtpserver = CONFIG_MAIL_SMTP_SERVER
+	smtpencryption = CONFIG_MAIL_SMTP_ENCRYPT
+	smtpserverport = CONFIG_MAIL_SMTP_PORT
+	smtpuser = CONFIG_USER_EMAIL
 	from = CONFIG_USER_FULL_NAME <CONFIG_USER_EMAIL>
 	suppresscc = all
 	suppressfrom = yes
