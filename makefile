@@ -62,7 +62,11 @@ ${VALID_CONFIG}: ${CONFIG_FILE}
 ${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE} ${ALL_CONFIG_VARS}
 	: > ${CURRENT_CONFIG_VARS}
 	test ! -f $@ || cut -d= -f1 $@ | sort > ${CURRENT_CONFIG_VARS}
-	comm -23 ${ALL_CONFIG_VARS} ${CURRENT_CONFIG_VARS} | xargs -L 1 -I @ grep ^@= ${DEFAULT_CONFIG_FILE} >> $@
+	comm -23 ${ALL_CONFIG_VARS} ${CURRENT_CONFIG_VARS} | xargs -L 1 -I @ grep ^@= ${DEFAULT_CONFIG_FILE} > ${TMP_CFG}/config.unsorted
+	: > ${TMP_CFG}/config.dependent
+	grep '\$$.*CONFIG' ${TMP_CFG}/config.unsorted > ${TMP_CFG}/config.dependent || true
+	comm -23 ${TMP_CFG}/config.unsorted ${TMP_CFG}/config.dependent > ${TMP_CFG}/config.tmp
+	cat ${TMP_CFG}/config.tmp ${TMP_CFG}/config.dependent >> $@
 
 ${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE}
 	mkdir -p $(dir $@)
