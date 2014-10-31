@@ -24,7 +24,10 @@ DESKTOP_FILES :=		\
 	bin/xvim		\
 	etc/xdefaults		\
 	bin/vm			\
-	bin/mvspc
+	bin/mvspc		\
+	$(patsubst src/%, %, $(wildcard	\
+		src/lib/urxvt/*		\
+	))
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
 endif
