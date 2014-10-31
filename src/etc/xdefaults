@@ -74,8 +74,11 @@
 ! PERL
 
 *URxvt*perl-lib:	CONFIG_LIB/urxvt
-*URxvt*perl-ext:	default,clipboard,keyboard-select
+*URxvt*perl-ext:	default,clipboard,keyboard-select,font-size
 *URxvt*keysym*M-s:	perl:keyboard-select:activate
+*URxvt*keysym*M-C-Up:	perl:font-size:increase
+*URxvt*keysym*M-C-Down:	perl:font-size:decrease
+*URxvt*font-size*step:	1
 *URxvt*clipboard*autocopy:		true
 
 ! XTERM KEYSYMS
@@ -256,8 +259,6 @@
 *URxvt*keysym*M-C-Page_Up:	\033[5;7~
 *URxvt*keysym*M-C-Page_Down:	\033[6;7~
 
-*URxvt*keysym*M-C-Up:		\033[1;7A
-*URxvt*keysym*M-C-Down:		\033[1;7B
 *URxvt*keysym*M-C-Right:	\033[1;7C
 *URxvt*keysym*M-C-Left:		\033[1;7D
 
