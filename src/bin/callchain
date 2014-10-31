@@ -1,0 +1,117 @@
+#!/usr/bin/tclsh8.5
+#
+# Author: dilip Chhetri
+# Author: sachin bhamare
+
+set usage "
+This uses 'cscope' to generate list of functions called by a particular
+function. Run it from the directory contatining cscope.out
+Usage: cscope_callchain.tcl <caller> \[<max search depth>\]"
+
+set debug 0
+#set cscope /usr/local/bin/cscope
+set g_callchain {}
+set g_tail {}
+#words know to confuse cscope, or the ones we want to exclude
+set exclude_word [list "TAILQ_HEAD" "<global>" "main" "getpagesize"]
+
+
+# cscope output
+#   <file name> <caller> <line no> <call instance>;
+#
+proc get_callers {callee} {
+	global cscope
+	global debug
+	global exclude_word
+	global db
+
+	set callers [list]
+	set out [exec cscope -f $db -d -L3$callee]
+	foreach l [split $out '\n'] {
+		set caller [lindex [split $l '\ '] 1]
+		if {$caller == $callee} {
+			continue;
+		}
+		if {[lsearch -exact $exclude_word $caller] >= 0} {
+			if {$debug} {
+				puts "debug: excluding $caller"
+			}
+			continue;
+		}
+		lappend callers $caller
+	}
+	return $callers
+}
+
+proc add_caller {callee callchain} {
+	global g_callchain
+	global g_tail
+	if {![string length $callee]} {
+		set callee "<unknown>"
+	}
+	lappend g_callchain "$callchain <- $callee"
+	if {[lsearch -exact $g_tail $callee] < 0} {
+		lappend g_tail $callee
+	}
+}
+
+proc dump_callers {} {
+	global g_callchain
+	global g_tail
+
+	lsort g_callchain
+	puts "Call chain:"
+	foreach gl $g_callchain {
+		puts "    $gl"
+	}
+	lsort g_tail
+	puts "\nEnd callers:"
+	foreach gl $g_tail {
+		puts "    $gl"
+	}
+}
+
+proc get_recursive_callers {callee level callchain} {
+	global debug
+
+	if {$level == 0} {
+		add_caller $callee $callchain
+		return
+	}
+	set callers [get_callers $callee]
+	if {![llength $callers]} {
+		add_caller $callee $callchain
+		return
+	}
+
+	set level [expr $level - 1]
+	if {[string length $callchain]} {
+		set callchain "$callchain <- $callee"
+	} else {
+		set callchain "$callee"
+	}
+	foreach caller $callers {
+		if {[regexp " $caller " $callchain]} {
+			if {$debug} {
+				puts "debug: avoid cycle $caller in $callchain"
+			}
+			# avoid cycle
+			continue
+		}
+		get_recursive_callers $caller $level $callchain
+	}
+}
+if {$argc == 0} {
+	puts "$usage\n"
+	exit 1
+}
+
+set db "cscope.out"
+set chain_max 3
+set callee [lindex $argv 0]
+if {$argc > 2} {
+	set chain_max [lindex $argv 1]
+}
+
+get_recursive_callers $callee $chain_max ""
+dump_callers
