@@ -28,15 +28,15 @@ _git_make_patchset()
 		COMPREPLY=($(comm -23 <(echo "$all_formatted") <(echo "$opt_formatted")))
 	else
 		for ((__i=$((${#words[@]})); __i >= 2; __i--)); do
-			if [[ ${words[__i - 1]} =~ ^- ]]; then
-				[[ prvso =~ ${words[__i]:1:1} ]] && ((i++))
+			if [[ ${words[__i]} =~ ^- ]]; then
+				[[ pvso =~ ${words[__i]:1:1} ]] && ((__i++))
 				break
 			fi
 		done
-		((__i++))
-		if [ $cword -eq $__i ] || [ $cword -eq $((__i + 1)) ]; then
+		__arg=$((cword - __i))
+		if [ $__arg -eq 1 ] || [ $__arg -eq 2 ]; then
 			__gitcomp_nl "$(__git_refs)"
-		elif [ $cword -eq $((__i + 2)) ]; then
+		elif [ $__arg -eq 3 ]; then
 			__gitcomp_nl "$(__git_remotes)"
 		fi
 	fi
