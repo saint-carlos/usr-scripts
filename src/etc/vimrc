@@ -123,6 +123,7 @@ augroup END
 
 " inoremap <silent> <C-o> <C-x><C-o>
 nnoremap YY "*yy
+vnoremap Y "*y
 vnoremap . :s/^/> /<CR>
 
 " wrap selection with stuff
