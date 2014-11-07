@@ -10,7 +10,7 @@ complete -F _command gui
 _git_make_patchset()
 {
 	if [ "$prev" = "-o" ]; then
-		COMPREPLY=($(compgen -d $cur))
+		COMPREPLY=($(compgen -d -- $cur))
 	elif [[ "$cur" =~ ^- ]]; then
 		getopt=""
 		COMPREPLY=()
@@ -55,7 +55,7 @@ _git_diff_log()
 __external_root_executable()
 {
 	[ $COMP_CWORD -eq 1 ] || return 1
-	local COMPS=($(compgen -f $1))
+	local COMPS=($(compgen -f -- $1))
 	COMPREPLY=()
 	local i=0 F HAS_EXEC=false
 	for F in ${COMPS[@]}; do
@@ -82,7 +82,7 @@ _root_command()
 
 _vbox()
 {
-	COMPREPLY=( $(compgen -W "$(vm -l)" $2) )
+	COMPREPLY=( $(compgen -W "$(vm -l)" -- $2) )
 }
 complete -F _vbox vm
 
