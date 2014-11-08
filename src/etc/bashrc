@@ -35,6 +35,7 @@ alias rm="rm -i $__COREUTILS_FLAGS"
 alias mv="mv -i $__COREUTILS_FLAGS"
 alias ln="ln -i $__COREUTILS_FLAGS"
 
+supported ls --group-directories-first && __LS_FLAGS+=" --group-directories-first"
 alias ls="ls $__LS_FLAGS"
 alias ll="ls -l $__LS_FLAGS"
 alias la="ls -A $__LS_FLAGS"

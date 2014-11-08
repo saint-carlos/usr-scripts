@@ -12,4 +12,3 @@
 	- have 'vm' change the title
 - "build" default return value should be like 'make', only base on stderr if a flag is given
 - avoid word-wrapping in tab bar
-- list dirs first in ls
