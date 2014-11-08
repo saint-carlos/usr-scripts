@@ -30,6 +30,7 @@ options:
 -s	setup: create the setup required for the script.
 -c	cleanup: cleanup the setup.
 -l	list: list known vms
+-r	running: list running machines. implies -l.
 
 exit status:
 255	if some arguments are bad
@@ -92,13 +93,22 @@ list_vms()
 	ls "${MACHINES_DIR}"
 }
 
+list_running()
+{
+	for MACHINE_DIR in ${MACHINES_DIR}/*; do
+		MACHINE=$(basename $MACHINE_DIR)
+		vm_avail $MACHINE && echo $MACHINE
+	done
+}
+
 ACTION=connect_ssh
-while getopts hscl option; do
+while getopts hsclr option; do
 	case $option in
 		h) usage 0 ;;
 		s) ACTION=setup ;;
 		c) ACTION=cleanup ;;
 		l) ACTION=list_vms ;;
+		r) ACTION=list_running ;;
 		\?) usage 255 ;;
 	esac
 done
