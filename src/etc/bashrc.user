@@ -16,8 +16,12 @@ cmd_exists htop && alias top='htop'
 __COREUTILS_FLAGS="-v"
 alias du='du -hs'
 alias df='df -h'
-alias diff='diff -U20'
 alias findc='findgrep -c'
+if cmd_exists colordiff; then
+	alias diff='colordiff -U20'
+else
+	alias diff='diff -U20'
+fi
 
 export LESS='--LONG-PROMPT --RAW-CONTROL-CHARS --ignore-case --window=-4 --jump-target=4 -Pm?c<--%c-- .[ ?f"%f":<PIPE>. | Ln %lt?L of %L. | Pg %db?B of %D.?e | 100\%:?pm | %Pm\%.. ]' # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter

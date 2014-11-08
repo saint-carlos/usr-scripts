@@ -43,6 +43,7 @@ if $CONFIG_DESKTOP; then
 fi
 
 restore_backup ~/.gitconfig
+restore_backup ~/.colordiffrc
 if [ $UID -eq 0 ]; then
 	restore_backup /etc/rsyslog.conf
 fi
