@@ -11,6 +11,7 @@ BUILD_LOG="${BUILD_LOG_PREFIX}-pts-${PTS}"
 ERROR_LOG="${ERROR_LOG_PREFIX}-pts-${PTS}"
 STDERR=/proc/$PPID/fd/2
 ERROR_COLOR=red
+STDERR_FAIL=false
 
 usage()
 {
@@ -28,6 +29,7 @@ options:
 -r	rebuild: clean before build.
 -s	serial: build serially, not in parallel.
 -f	error filter: string to be used as a shell command to filter stderr.
+-e	stderr: fail if something was emitted to stderr, even if make succeeded.
 
 normally stderr is not filtered even if -f is given, however even in normal operation filtering is used to count errors and therefore decide on success/failure of the build. filtering can also be used in conjunction with -p, however the same filter can be applied to '$PROGRAM' itself. in any case, be sure to properly escape/quote the filter.
 
@@ -71,21 +73,24 @@ beep()
 
 build()
 {
-	RETVAL=1
 	if cmd_exists update_clock.sh; then
 		update_clock.sh
 	fi
 	$CLEAN && make "$@" clean
 	rm -f "$BUILD_LOG" "$ERROR_LOG"
 	time make ${PARALLEL} "$@" 2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | tee -a "$BUILD_LOG"
-	PROBLEM_COUNT=`show_problems | wc -l | awk '{ print $1 }'`
-	COLORTERM="$ERROR_COLOR"
-	if [ $PROBLEM_COUNT -eq 0 ]; then
-		PROBLEM_COUNT=no
-		COLORTERM=normal
-		RETVAL=0
+	RETVAL=${PIPESTATUS[0]}
+	if $STDERR_FAIL; then
+		RETVAL=1
+		PROBLEM_COUNT=`show_problems | wc -l | awk '{ print $1 }'`
+		COLORTERM="$ERROR_COLOR"
+		if [ $PROBLEM_COUNT -eq 0 ]; then
+			PROBLEM_COUNT=no
+			COLORTERM=normal
+			RETVAL=0
+		fi
+		color_echo -n "$COLORTERM" "there were ${PROBLEM_COUNT} errors/warnings."
 	fi
-	color_echo -n "$COLORTERM" "there were ${PROBLEM_COUNT} errors/warnings."
 	echo " log file: $BUILD_LOG. error log: $ERROR_LOG."
 	beep &
 	if grep 'make returned error' $BUILD_LOG >/dev/null; then
@@ -94,7 +99,7 @@ build()
 	return $RETVAL
 }
 
-while getopts hlprsf: option; do
+while getopts hlprsf:e option; do
         case ${option} in
 		h) usage 0 ;;
 		l) COMMAND=show_log ;;
@@ -102,6 +107,7 @@ while getopts hlprsf: option; do
 		r) CLEAN=true ;;
 		s) PARALLEL="" ;;
 		f) ERROR_OUTPUT="$OPTARG" ;;
+		e) STDERR_FAIL=true ;;
 		\?) usage 2 ;;
         esac
 done

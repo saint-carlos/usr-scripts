@@ -10,4 +10,3 @@
 - try to get title() to get the current title and assign conditionally (based on a switch)
 	- alias 'build' and 'kbuild' to "title build; build"
 	- have 'vm' change the title
-- "build" default return value should be like 'make', only base on stderr if a flag is given
