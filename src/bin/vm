@@ -4,7 +4,7 @@ PROGRAM=`basename $0`
 DESCRIPTION="ssh to a VirtualBox vm"
 PARAMS="[name [ssh-args]]"
 OPTIONS="[-hscl]"
-FILE=$HOME/.config/VirtualBox/VirtualBox.xml
+FILES="$HOME/.config/VirtualBox/VirtualBox.xml $HOME/.VirtualBox/VirtualBox.xml"
 TIMESTAMP=.vmssh
 SSH_PORT=22
 SHUTDOWN="shutdown -h now"
@@ -146,5 +146,5 @@ case "$1" in
 		usage 255 ;;
 esac
 
-MACHINES_DIR=$(grep MachineEntry $FILE | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
+MACHINES_DIR=$(grep MachineEntry --max-count=1 $FILES 2>/dev/null | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
 $ACTION "$@"
