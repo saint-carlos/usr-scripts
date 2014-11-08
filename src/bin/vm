@@ -7,6 +7,7 @@ OPTIONS="[-hscl]"
 FILE=$HOME/.config/VirtualBox/VirtualBox.xml
 TIMESTAMP=.vmssh
 SSH_PORT=22
+SHUTDOWN="shutdown -h now"
 
 usage()
 {
@@ -31,6 +32,8 @@ options:
 -c	cleanup: cleanup the setup.
 -l	list: list known vms
 -r	running: list running machines. implies -l.
+--shutdown	gracefully shut the given machine down
+--shutdown-all	gracefully shut all running machines down
 
 exit status:
 255	if some arguments are bad
@@ -101,6 +104,22 @@ list_running()
 	done
 }
 
+shutdown()
+{
+	local MACHINE=$(find_vm)
+	vm_avail $MACHINE || return 0
+	ssh "root@${MACHINE}" $SHUTDOWN
+}
+
+shutdown_all()
+{
+	for MACHINE_DIR in ${MACHINES_DIR}/*; do
+		MACHINE=$(basename $MACHINE_DIR)
+		vm_avail $MACHINE || continue;
+		ssh "root@${MACHINE}" $SHUTDOWN
+	done
+}
+
 ACTION=connect_ssh
 while getopts hsclr- option; do
 	case $option in
@@ -115,6 +134,14 @@ while getopts hsclr- option; do
 done
 shift `expr $OPTIND - 1`
 case "$1" in
+	--shutdown)
+		ACTION=shutdown
+		shift
+		;;
+	--shutdown-all)
+		ACTION=shutdown_all
+		shift
+		;;
 	-*)
 		usage 255 ;;
 esac
