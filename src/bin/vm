@@ -102,17 +102,22 @@ list_running()
 }
 
 ACTION=connect_ssh
-while getopts hsclr option; do
+while getopts hsclr- option; do
 	case $option in
 		h) usage 0 ;;
 		s) ACTION=setup ;;
 		c) ACTION=cleanup ;;
 		l) ACTION=list_vms ;;
 		r) ACTION=list_running ;;
+		-) break ;;
 		\?) usage 255 ;;
 	esac
 done
 shift `expr $OPTIND - 1`
+case "$1" in
+	-*)
+		usage 255 ;;
+esac
 
 MACHINES_DIR=$(grep MachineEntry $FILE | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
 $ACTION "$@"
