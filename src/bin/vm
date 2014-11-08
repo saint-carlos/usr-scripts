@@ -2,10 +2,11 @@
 
 PROGRAM=`basename $0`
 DESCRIPTION="ssh to a VirtualBox vm"
-PARAMS="[name]"
+PARAMS="[name [ssh-args]]"
 OPTIONS="[-hscl]"
 FILE=$HOME/.config/VirtualBox/VirtualBox.xml
 TIMESTAMP=.vmssh
+SSH_PORT=22
 
 usage()
 {
@@ -38,6 +39,11 @@ EOF
 	exit $1
 }
 
+vm_avail()
+{
+	timeout 1s nc -z $1 $SSH_PORT
+}
+
 machines_by_time()
 {
 	ls -c ${MACHINES_DIR}/*/${TIMESTAMP} | sed 's:.*/\([^/]*\)/'${TIMESTAMP}':\1:'
@@ -61,7 +67,12 @@ connect_ssh()
 {
 	local MACHINE=$(find_vm "$1")
 	shift
-	ssh -X "root@${MACHINE}"
+	if vm_avail $MACHINE; then
+		exec ssh -X "root@${MACHINE}" "$@"
+	else
+		echo "${MACHINE}: unavailable on port $SSH_PORT"
+		return 250
+	fi
 }
 
 setup()
