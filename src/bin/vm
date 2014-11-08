@@ -43,8 +43,9 @@ machines_by_time()
 	ls -c ${MACHINES_DIR}/*/${TIMESTAMP} | sed 's:.*/\([^/]*\)/'${TIMESTAMP}':\1:'
 }
 
-connect_ssh()
+find_vm()
 {
+	local NAME=$1
 	if [ -z "$NAME" ]; then
 		MACHINE=$(machines_by_time | head -1)
 	elif [ -d "${MACHINES_DIR}/${NAME}" ]; then
@@ -52,8 +53,14 @@ connect_ssh()
 	else
 		MACHINE=$(machines_by_time | grep "$NAME" | head -1)
 	fi
+	touch "$MACHINES_DIR/$MACHINE/$TIMESTAMP"
+	echo $MACHINE
+}
 
-	touch "${MACHINES_DIR}/${MACHINE}/${TIMESTAMP}"
+connect_ssh()
+{
+	local MACHINE=$(find_vm "$1")
+	shift
 	ssh -X "root@${MACHINE}"
 }
 
@@ -86,6 +93,5 @@ while getopts hscl option; do
 done
 shift `expr $OPTIND - 1`
 
-NAME="$1"
 MACHINES_DIR=$(grep MachineEntry $FILE | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
-$ACTION
+$ACTION "$@"
