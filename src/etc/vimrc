@@ -124,7 +124,7 @@ augroup END
 " inoremap <silent> <C-o> <C-x><C-o>
 nnoremap YY "*yy
 vnoremap Y "*y
-vnoremap . :s/^/> /<CR>
+vnoremap . :s/^/> /<CR>:nohlsearch<CR>
 
 " wrap selection with stuff
 " we start with the closer since the opener changes the position of the
