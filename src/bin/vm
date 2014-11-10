@@ -106,7 +106,7 @@ list_running()
 
 shutdown()
 {
-	local MACHINE=$(find_vm)
+	local MACHINE=$(find_vm "$@")
 	vm_avail $MACHINE || return 0
 	ssh "root@${MACHINE}" $SHUTDOWN
 }
