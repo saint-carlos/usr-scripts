@@ -1144,7 +1144,7 @@ function! <SID>Bf_BuildList(delBufNum, updateBufList)
                                 let l:tab = l:tab . '+'
                             endif
                         else
-                                   if l:open == 1
+                            if l:open == 1
                                 let l:tab = l:tab . '*'
                             else
                                 let l:tab = l:tab . ' '
