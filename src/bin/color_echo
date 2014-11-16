@@ -48,4 +48,4 @@ source $ETC/colorsrc
 COLOR=$1
 shift
 TEXT="$*"
-printf "$(color_seq $COLOR)%s$(color_seq normal)${EOL}" "$TEXT"
+printf "$(__color_seq $COLOR)%s$(__color_seq normal)${EOL}" "$TEXT"

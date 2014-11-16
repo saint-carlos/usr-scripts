@@ -46,7 +46,7 @@ if [ $# -ne 1 ]; then
 fi
 
 # the simplistic implementation would be
-# color_seq <color>; cat; color_seq normal
+# __color_seq <color>; cat; __color_seq normal
 # however, we only want to colorize one stream - our stdout. other streams may
 # be intermingled and multiplexed to the terminal. nothing sophisticated is
 # implemented at the moment, but a good approximation is that every line

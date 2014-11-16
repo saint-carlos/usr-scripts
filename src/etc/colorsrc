@@ -20,14 +20,14 @@ __verify_color()
 
 case $TERM in
 	xterm*|rxvt*|screen*)
-			color_seq()
+			__color_seq()
 			{
 				__verify_color $1 || return 1
 				echo -en "\033[9${__COLOR[$1]}m"
 			}
 		;;
 	linux|*)
-			color_seq()
+			__color_seq()
 			{
 				__verify_color $1 || return 1
 				tput setaf ${__COLOR[$1]}
