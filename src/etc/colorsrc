@@ -11,25 +11,18 @@ __COLOR[cyan]=6
 __COLOR[white]=7
 __COLOR[normal]=${__COLOR[white]}
 
-__verify_color()
-{
-	if [ -z "${__COLOR[$1]}" ]; then
-		echo "bad color $1" >&2
-	fi
-}
-
 case $TERM in
 	xterm*|rxvt*|screen*)
 			__color_seq()
 			{
-				__verify_color $1 || return 1
+				[ -n "${__COLOR[$1]}" ] || set normal
 				echo -en "\033[9${__COLOR[$1]}m"
 			}
 		;;
 	linux|*)
 			__color_seq()
 			{
-				__verify_color $1 || return 1
+				[ -n "${__COLOR[$1]}" ] || set normal
 				tput setaf ${__COLOR[$1]}
 			}
 		;;
