@@ -5,7 +5,7 @@
 ! COLORS
 
 ! black
-*color0:	#2E3436
+*color0:	#000000
 *color8:	#555753
 ! red
 *color1:	#CC0000
@@ -18,7 +18,7 @@
 *color11:	#FCE94F
 ! blue
 *color4:	#3465A4
-*color12:	#729FCF
+*color12:	#629FCF
 ! magenta
 *color5:	#95408B
 *color13:	#BD4FA8
@@ -27,7 +27,7 @@
 *color14:	#34E2E2
 ! white
 *color7:	#D3D7CF
-*color15:	#EEEEEC
+*color15:	#FFFFFF
 
 ! =============
 ! URxvt
@@ -36,7 +36,7 @@
 ! GENERAL
 
 *URxvt*background:	#000000
-*URxvt*foreground:	#ffffff
+*URxvt*foreground:	#FFFFFF
 *URxvt*geometry:	104x60
 *URxvt*buffered:	false
 *URxvt*secondaryScroll:	false
