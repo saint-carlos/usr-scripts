@@ -7,7 +7,7 @@
 # NAME:		color
 # DESCRIPTION: output stdin to stdout, in color
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="output stdin to stdout, in color."
 PARAMS="color"
 OPTIONS="[-h]"
@@ -33,17 +33,15 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case $option in
+while getopts h OPTION; do
+	case OPTION in
 		h) usage 0 ;;
 		\?) usage 255 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-if [ $# -ne 1 ]; then
-	usage 255
-fi
+[ $# -eq 1 ] || usage 255
 
 # the simplistic implementation would be
 # __color_seq <color>; cat; __color_seq normal

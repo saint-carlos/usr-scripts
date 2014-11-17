@@ -7,7 +7,7 @@
 # NAME:		color_stderr
 # DESCRIPTION: print stderr output in a different color.
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="print stderr output in a different color."
 PARAMS="color command args..."
 OPTIONS="[-h]"
@@ -33,13 +33,13 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case $option in
+while getopts h OPTION; do
+	case OPTION in
 		h) usage 0 ;;
 		\?) usage 255 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 if [ $# -lt 2 ]; then
 	usage 255
@@ -48,4 +48,4 @@ fi
 COLOR="$1"
 shift
 
-"$@" 2> >(color "$COLOR" > "$STDERR")
+exec 2> >(color "$COLOR" > "$STDERR") "$@"

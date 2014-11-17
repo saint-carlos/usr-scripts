@@ -7,7 +7,7 @@
 # NAME:		color_echo
 # DESCRIPTION:	print a line in a given color
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="print a line in a color."
 PARAMS="color line"
 OPTIONS="[-hn]"
@@ -35,17 +35,17 @@ EOF
 }
 
 EOL='\n'
-while getopts nh option; do
-	case $option in
+while getopts nh OPTION; do
+	case OPTION in
 		h) usage 0 ;;
 		n) EOL="" ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-source $ETC/colorsrc
-COLOR=$1
+source "$ETC/colorsrc"
+COLOR="$1"
 shift
 TEXT="$*"
-printf "$(__color_seq $COLOR)%s$(__color_seq normal)${EOL}" "$TEXT"
+printf "$(__color_seq "$COLOR")%s$(__color_seq normal)${EOL}" "$TEXT"
