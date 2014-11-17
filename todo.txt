@@ -7,4 +7,3 @@
 - see if __get_working_copy() and friends can use some simplifications
 - try to get title() to get the current title and assign conditionally (based on a switch)
 	- alias 'build' and 'kbuild' to "title build; build"
-	- have 'vm' change the title

@@ -72,6 +72,7 @@ connect_ssh()
 	local MACHINE=$(find_vm "$1")
 	shift
 	if vm_avail $MACHINE; then
+		[ $# -eq 0 ] && termset "$MACHINE"
 		exec ssh -X "root@${MACHINE}" "$@"
 	else
 		echo "${MACHINE}: unavailable on port $SSH_PORT"
