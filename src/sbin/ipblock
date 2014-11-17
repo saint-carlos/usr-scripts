@@ -48,7 +48,8 @@ if ! $BLOCK_INBOUND && ! $BLOCK_OUTBOUND; then
 fi
 
 for IP in "$@"; do
-	$BLOCK_INBOUND && echo "$ACTION_NAME $IP for inbound traffic" && iptables -t filter $FLAGS INPUT -s $IP -j DROP &&
-	$BLOCK_OUTBOUND && echo "$ACTION_NAME $IP for outbound traffic" &&  iptables -t filter $FLAGS OUTPUT -s $IP -j DROP
+	$BLOCK_INBOUND && echo "$ACTION_NAME $IP for inbound traffic" &&
+		iptables -t filter $FLAGS INPUT -s $IP -j DROP &&
+	$BLOCK_OUTBOUND && echo "$ACTION_NAME $IP for outbound traffic" &&
+		iptables -t filter $FLAGS OUTPUT -s $IP -j DROP
 done
-
