@@ -113,7 +113,7 @@ mrproper: clean # remove everything generate by any build target from the projec
 # see? it wasn't that bad... right? right?!
 help: # this message
 	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${MAKEFILE_LIST} |	\
-		sed 's/:[^#]*$$//; s/:.*# /:/' |		\
+		sed '/:[^#]*$$/d; s/:.*# /:/' |			\
 		fold -s -w 65 |					\
 		sed 's/\(^[^:]*$$\)/ :&/' |			\
 		column -s : -t
