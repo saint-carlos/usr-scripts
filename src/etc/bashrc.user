@@ -60,20 +60,20 @@ __set_prompt()
 
 	local PWD_MAXLEN=$((CONFIG_PWD_SCREEN_PERCENT * COLUMNS / 100))
 
-	local GIT_REPO=$(git rev-parse --show-toplevel 2>/dev/null)
+	local GIT_REPO="$(git rev-parse --show-toplevel 2>/dev/null)"
 	if [ -n "$GIT_REPO" ]; then
-		GIT_REPO=$(basename $GIT_REPO)
+		GIT_REPO="$(basename "$GIT_REPO")"
 		local GIT_HEAD=$(__git_ps1 "%s" 2>/dev/null)
 		__LOCATION_ROOT="${GIT_REPO}[${GIT_HEAD}]"
 		__LOCATION=$(git rev-parse --show-prefix)
-		__LOCATION=${__LOCATION%/}
+		__LOCATION="${__LOCATION%/}"
 		local TOTAL_LEN=$((${#__LOCATION}  + ${#__LOCATION_ROOT}))
 		if [ -n "$__LOCATION" ] && [ $TOTAL_LEN -gt $PWD_MAXLEN ]; then
-			local TMP=$(basename $__LOCATION)
-			if [ $TMP != $__LOCATION ]; then
+			local TMP="$(basename "$__LOCATION")"
+			if [ "$TMP" != "$__LOCATION" ]; then
 				TMP=".../${TMP}"
 				if [ ${#TMP} -lt ${#__LOCATION} ]; then
-					__LOCATION=${TMP}
+					__LOCATION="${TMP}"
 				fi
 			fi
 		fi
@@ -157,7 +157,7 @@ __get_working_copy()
 
 __jump_working_copy()
 {
-	cd `__get_working_copy $@`
+	cd $(__get_working_copy "$@")
 }
 
 # 'j' jumps around the user's working directoy using short mnemonics

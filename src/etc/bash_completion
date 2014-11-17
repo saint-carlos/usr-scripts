@@ -10,33 +10,33 @@ complete -F _command gui
 _git_make_patchset()
 {
 	if [ "$prev" = "-o" ]; then
-		COMPREPLY=($(compgen -d -- $cur))
+		COMPREPLY=($(compgen -d -- "$cur"))
 	elif [[ "$cur" =~ ^- ]]; then
-		getopt=""
+		GETOPT=""
 		COMPREPLY=()
-		for opt in h p r v s o e; do
-			if [ $cur = "-$opt" ]; then
-				COMPREPLY=($cur)
+		for OPT in h p r v s o e; do
+			if [ "$cur" = "-$OPT" ]; then
+				COMPREPLY=("$cur")
 				return
 			fi
-			COMPREPLY+=("-$opt")
-			getopt+=$opt
+			COMPREPLY+=("-$OPT")
+			GETOPT+=$OPT
 		done
 	
-		all_formatted=$(echo ${COMPREPLY[@]} | tr ' ' '\n' | sort)
-		opt_formatted=$(getopt -o $getopt -- ${words[@]} | tr ' ' '\n' | sort)
-		COMPREPLY=($(comm -23 <(echo "$all_formatted") <(echo "$opt_formatted")))
+		ALL_FORMATTED=$(echo "${COMPREPLY[@]}" | tr ' ' '\n' | sort)
+		OPT_FORMATTED=$(getopt -o $GETOPT -- ${words[@]} | tr ' ' '\n' | sort)
+		COMPREPLY=($(comm -23 <(echo "$ALL_FORMATTED") <(echo "$OPT_FORMATTED")))
 	else
 		for ((__i=$((${#words[@]})); __i >= 2; __i--)); do
-			if [[ ${words[__i]} =~ ^- ]]; then
+			if [[ "${words[__i]}" =~ ^- ]]; then
 				[[ pvso =~ ${words[__i]:1:1} ]] && ((__i++))
 				break
 			fi
 		done
-		__arg=$((cword - __i))
-		if [ $__arg -eq 1 ] || [ $__arg -eq 2 ]; then
+		__ARG=$((cword - __i))
+		if [ $__ARG -eq 1 ] || [ $__ARG -eq 2 ]; then
 			__gitcomp_nl "$(__git_refs)"
-		elif [ $__arg -eq 3 ]; then
+		elif [ $__ARG -eq 3 ]; then
 			__gitcomp_nl "$(__git_remotes)"
 		fi
 	fi
@@ -54,14 +54,14 @@ _git_diff_log()
 
 __external_root_executable()
 {
-	[ $COMP_CWORD -eq 1 ] || return 1
+	[ "$COMP_CWORD" -eq 1 ] || return 1
 	local COMPS=($(compgen -f -- $1))
 	COMPREPLY=()
 	local i=0 F HAS_EXEC=false
-	for F in ${COMPS[@]}; do
-		if [ -f $F ] && # regular file
-			[ "$(stat -c %u $F)" = 0 ] && # owned by root
-			(( 0$(stat -c %a $F) & 0100 )); # executable by owner
+	for F in "${COMPS[@]}"; do
+		if [ -f "$F" ] && # regular file
+			[ "$(stat -c %u "$F")" = 0 ] && # owned by root
+			(( 0$(stat -c %a "$F") & 0100 )); # executable by owner
 		then
 			HAS_EXEC=true
 			COMPREPLY+=("$F")
@@ -74,7 +74,7 @@ __external_root_executable()
 
 _root_command()
 {
-	local PATH=$PATH:/sbin:/usr/sbin:/usr/local/sbin
+	local PATH="$PATH:/sbin:/usr/sbin:/usr/local/sbin"
 	local root_command=$1
 	__external_root_executable $2 && return
 	_command $1 $2 $3
@@ -82,7 +82,7 @@ _root_command()
 
 _vbox()
 {
-	COMPREPLY=( $(compgen -W "$(vm -l)" -- $2) )
+	COMPREPLY=( $(compgen -W "$(vm -l)" -- "$2") )
 }
 complete -F _vbox vm
 

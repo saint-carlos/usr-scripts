@@ -2,13 +2,13 @@
 
 [[ $- == *i* ]] || return
 
-ETC=CONFIG_ETC
-BIN=CONFIG_BIN
-SBIN=CONFIG_SBIN
+ETC="CONFIG_ETC"
+BIN="CONFIG_BIN"
+SBIN="CONFIG_SBIN"
 
-export PATH=$PATH:$BIN
+export PATH="$PATH:$BIN"
 if [ $UID -eq 0 ]; then
-	export PATH=$PATH:$SBIN
+	export PATH="$PATH:$SBIN"
 fi
 
 source $ETC/bash_completion

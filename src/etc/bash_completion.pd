@@ -2,8 +2,8 @@
 
 _rtk()
 {
-	DIR=$(dirname $(which rtk))/..
-	SCRIPTS=$(ls $DIR/scenarios/* $DIR/envs/* $DIR/bugs/* | awk -F/ '{ print $NF }')
-	COMPREPLY=( $(compgen -W "$SCRIPTS" $2) )
+	DIR="$(dirname $(which rtk))/.."
+	SCRIPTS=$(ls "$DIR/scenarios"/* "$DIR/envs"/* "$DIR/bugs"/* | awk -F/ '{ print $NF }')
+	COMPREPLY=( $(compgen -W "$SCRIPTS" -- "$2") )
 }
 cmd_exists rtk && complete -F _rtk rtk
