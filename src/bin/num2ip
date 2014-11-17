@@ -7,7 +7,7 @@
 # NAME:		Num To IP
 # DESCRIPTION:	convert a number to an IP address
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="convert a number to an IPv4 address"
 PARAMS="number..."
 OPTIONS="[-hn]"
@@ -35,22 +35,26 @@ EOF
 }
 
 NET_ORDER=false
-while getopts nh option; do
-	case $option in
+while getopts nh OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		n) NET_ORDER=true ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 SEPARATOR=""
 while [ $# -ne 0 ]; do
-	NUM="$1"
+	NUM=$1
 	if $NET_ORDER; then
-		NUM=`hton -4 "$NUM"`
+		NUM=$(hton -4 $NUM)
 	fi
-	printf "%s%s.%s.%s.%s%s" "${SEPARATOR}" "$((NUM >> 24))" "$(( (NUM >> 16) & 0xff ))" "$(( (NUM >> 8) & 0xff ))" "$((NUM & 0xff))" 
+	printf "%s%s.%s.%s.%s%s" "${SEPARATOR}"	\
+		$((NUM >> 24))			\
+		$(( (NUM >> 16) & 0xff ))	\
+		$(( (NUM >> 8) & 0xff ))	\
+		$((NUM & 0xff))
 	SEPARATOR=" "
 	shift
 done

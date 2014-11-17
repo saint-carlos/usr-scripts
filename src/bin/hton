@@ -7,7 +7,7 @@
 # NAME:		Host to Network
 # DESCRIPTION:	convert a number to an IP address
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="convert a number from host order to network order"
 PARAMS="number..."
 OPTIONS="[-ha]"
@@ -37,7 +37,7 @@ EOF
 
 arch_differs_net_order()
 {
-	if [ "`system_arch`" = x86 ]; then
+	if [ "$(system_arch)" = x86 ]; then
 		return 1
 	else
 		return 0
@@ -65,15 +65,15 @@ number_width()
 
 ARCH_DEP=false
 WIDTH=0
-while getopts ah1248 option; do
-	case $option in
+while getopts ah1248 OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		a) ARCH_DEP=true ;;
-		1|2|4|8) WIDTH=$option ;;
+		1|2|4|8) WIDTH=$OPTION ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 if $ARCH_DEP && arch_differs_net_order; then
 	echo "$@"
@@ -84,12 +84,12 @@ NUM="$1"
 RESULT=0
 NUM_WIDTH="$WIDTH"
 if [ "$NUM_WIDTH" -eq 0 ]; then
-	NUM_WIDTH=`number_width "$NUM"`
+	NUM_WIDTH=$(number_width "$NUM")
 fi
 i=0
 while [ "$i" -lt "$NUM_WIDTH" ]; do
-	PART=`get_byte "$NUM" "$i"`
+	PART=$(get_byte "$NUM" "$i")
 	RESULT=$(( (RESULT << 8) | PART ))
-	i=`expr "$i" + 1`
+	((i++))
 done
-echo "$RESULT"
+echo $RESULT

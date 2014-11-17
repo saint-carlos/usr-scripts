@@ -30,19 +30,20 @@
 #    o	All elements must fit into one single AWK string
 ##########################################################################
 
-PN=`basename "$0"`			# Program name
+PROGRAM=$(basename $0)
 VER='1.3'
+DESCRIPTION="print permutations, $VER"
+PARAMS="[arg ...]"
+OPTIONS="[-h]"
 
-# Uncomment the following line to disable the auto-detection below:
-#: ${NAWK:=nawk}
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
-usage () {
-    errcho "$PN - print permutations, $VER
-usage: $PN [-h] [arg ...]
-   -h:  print this usage summary
-   -a:  print permutations of all sub-sequences as well (slow)
-   -p:	print the power set of the arguments
-
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
 Prints all permutations of the arguments.
 
 Note that the number of output lines is the factorial of the number of
@@ -54,44 +55,26 @@ the command line arguments, which increases fast:
 	3		3*2*1 = 6
 	...
 	10		3628800"
+
+options:
+-h	help: show this help message and exit.
+-a:	print permutations of all sub-sequences as well (slow)
+-p:	print the power set of the arguments
+EOF
+
     exit $1
 }
 
-msg () { errcho "$PN:" "$@";  }
-
-fatal () { msg "$@"; exit 1; }
-
-###############################################################################
-# searchprog - search program using search PATH
-# usage: searchprog program
-###############################################################################
-
-searchprog () {
-    _search=$1; shift
-
-    for _dir in `echo "$PATH" | sed "s/^:/.:/;s/:\$/:./;s/:/ /g"`
-    do
-        [ -x "$_dir/$_search" ] || continue
-        echo "$_dir/$_search"
-        return 0
-    done
-
-    return 1
-}
-
-# We need a "new" NAWK implementation with functions
-: ${NAWK:=`searchprog mawk || searchprog gawk || searchprog nawk || echo awk`}
-
 MODE=normal
-while getopts aph option; do
-	case $option in
+while getopts aph OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		a) MODE=all ;;
 		p) MODE=power ; CMD="$SHELL $0 -p" ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 if ${SUBSET_PERMUTE:-false}; then
 	SEQ=( "$@" )
@@ -124,8 +107,7 @@ elif [ $MODE = power ]; then
 	exit
 fi
 
-echo "$*" |
-    $NAWK '
+exec <<< "$*" awk '
     	# permute - print permutations of elem[start...n]
 
 	function permute(s, start, 		i, j, n, tmp) {

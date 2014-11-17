@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="highlight a given string from stdin"
 PARAMS="regexp-to-highlight"
 OPTIONS="[-h]"
@@ -25,13 +25,13 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case $option in
+while getopts h OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		\?) usage 2 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 if [ $# != 1 ]; then # what to hightlight?
 	usage 2
@@ -45,4 +45,4 @@ for S in '/' ':' '|' ','; do
 	SEPARATOR=$S
 	break
 done
-sed -r "s${SEPARATOR}${1}${SEPARATOR}`tput smso`&`tput rmso`${SEPARATOR}g"
+exec sed -r "s${SEPARATOR}${1}${SEPARATOR}`tput smso`&`tput rmso`${SEPARATOR}g"

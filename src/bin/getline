@@ -11,42 +11,49 @@
 #
 ##########################################################################
 
-PN=`basename "$0"`			# Program name
+PROGRAM=$(basename $0)
 VER='1.2'
+DESCRIPTION="get one line of text, $VER (hs '96)"
+PARAMS="[line] [file ...]"
+OPTIONS="[-h]"
 
-usage () {
-    errcho "$PN - get one line of text, $VER (hs '96)
-usage: $PN [line] [file ...]
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
 If no line is given, the default line is 1."
-    exit 1
-}
 
-msg () {
-    for i
-    do errcho "$PN: $i"
-    done
-}
+options:
+-h	help: show this help message and exit.
 
-fatal () { msg "$@"; exit 1; }
+exit status:
+0	all arguments are OK
+99	some arguments are bad
+otherwise it is the exit status from sed.
+EOF
+
+    exit $1
+}
 
 # Check arguments before setting them
-set -- `getopt h "$@"`
-while [ $# -gt 0 ]
-do
-    case "$1" in
-	--)	shift; break;;
-	-h)	usage;;
-	-*)	usage;;
-	*)	break;;			# First file name
-    esac
-    shift
+set -- $(getopt h "$@")
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--)	shift; break;;
+		-h)	usage 0;;
+		-*)	usage 99;;
+		*)	break;; # First file name
+	esac
+	shift
 done
 
-if [ $# -gt 0 ] && expr "$1" + 0 >/dev/null 2>&1
-then					# Seems to be a line number
-    Line=$1
-    shift
+if [ $# -gt 0 ] && expr "$1" + 0 >/dev/null 2>&1; then # Seems to be a line number
+	LINE=$1
+	shift
 fi
 
-exec sed -n "${Line:-1}{p;q;}" "$@"
+exec sed -n "${LINE:-1}{p;q;}" "$@"

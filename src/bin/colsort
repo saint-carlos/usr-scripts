@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="sort files by a certain column"
 PARAMS="column file..."
 OPTIONS="[-h] [-o sort-options] [-s separator]"
@@ -34,27 +34,26 @@ EOF
 
 SORT_OPTIONS=""
 SEPARATOR=" \t\n"
-while getopts ho:s: option; do
-    case $option in
+while getopts ho:s: OPTION; do
+    case $OPTION in
         h) usage 0 ;;
         o) SORT_OPTIONS="$SORT_OPTIONS -$OPTARG" ;;
         s) SEPARATOR="$OPTARG" ;;
         \?) usage 2 ;;
     esac
 done
-shift `expr $OPTIND - 1`
-
+shift $((OPTIND - 1))
 COLUMN=$1
 shift
-if [ -z "$COLUMN" -o -n "`echo $COLUMN | tr -d '0-9-'`" ]; then
+if [ -z "$COLUMN" ] || [ -n "$(echo $COLUMN | tr -d '0-9-')" ]; then
 	usage 1
 fi
 if [ $COLUMN -eq 0 ]; then
 	COLUMN="NF"
 elif [ $COLUMN -le 0 ]; then
-	COLUMN="(NF$COLUMN)"
+	COLUMN="(NF${COLUMN})"
 fi
-OUTPUT_SEPARATOR="`echo "$SEPARATOR" | cut -c1`"
+OUTPUT_SEPARATOR="$(echo "$SEPARATOR" | cut -c1)"
 
 awk "-F[${SEPARATOR}]*" "{ print \$${COLUMN} \"${OUTPUT_SEPARATOR}\" \$0 }" "$@" | sort $SORT_OPTIONS | cut "-d$OUTPUT_SEPARATOR" -f2-
 exit 0

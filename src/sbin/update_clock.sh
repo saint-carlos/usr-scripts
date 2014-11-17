@@ -34,4 +34,4 @@ shift $((OPTIND - 1))
 
 TIME_SERVER=""
 exit 0
-ntpdate $TIME_SERVER
+exec ntpdate $TIME_SERVER

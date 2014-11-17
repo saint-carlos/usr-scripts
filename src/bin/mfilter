@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="multi filter: logical OR between greps"
 PARAMS="expression..."
 OPTIONS="[-voahi]"
@@ -34,7 +34,7 @@ make_junctions()
 {
 	printf "\$0 ~ /$1/"
 	shift
-	for x; do
+	for x in "$@"; do
 		printf " ${JUNCTION_OPERATOR} \$0 ~ /$x/"
 	done
 }
@@ -42,8 +42,8 @@ make_junctions()
 CRITERIA_OPERATOR=""
 JUNCTION_OPERATOR="||"
 BEGIN=""
-while getopts voahi option; do
-	case $option in
+while getopts voahi OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		o) JUNCTION_OPERATOR="||" ;;
 		a) JUNCTION_OPERATOR="&&" ;;
@@ -52,12 +52,11 @@ while getopts voahi option; do
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 if [ $# -eq 0 ]; then
-	cat
+	exec cat
 else
-	AWK_SCRIPT="$BEGIN { if ( $CRITERIA_OPERATOR ( `make_junctions "$@"` ) ) print }"
-	awk "$AWK_SCRIPT"
+	AWK_SCRIPT="$BEGIN { if ( $CRITERIA_OPERATOR ( $(make_junctions "$@") ) ) print }"
+	exec awk "$AWK_SCRIPT"
 fi
-

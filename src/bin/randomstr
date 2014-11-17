@@ -1,7 +1,38 @@
 #!/bin/bash
 
+PROGRAM=$(basename $0)
+DESCRIPTION="emit a string of random characters"
+PARAMS="length lines"
+OPTIONS=""
 ALLOWEDCHARS='[:alnum:][:punct:]'
+DEFLENGTH=10
+DEFLINES=1
 
-length=${1:-10} quantity=${2:-1}
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
-< /dev/urandom tr -dc $ALLOWEDCHARS | fold -w $length | head -n $quantity
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+default length is $DEFLENGTH, default line count is $DEFLINES.
+
+options:
+-h	help: show this help message and exit.
+EOF
+
+    exit $1
+}
+
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+LENGTH=${1:-$DEFLENGTH}
+LINES=${2:-$DEFLINES}
+
+exec < /dev/urandom tr -dc $ALLOWEDCHARS | fold -w $LENGTH | head -n $LINES
