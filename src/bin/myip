@@ -56,7 +56,7 @@ done
 shift $((OPTIND - 1))
 
 TEMPFILE=$(mktemp)
+trap "rm $TEMPFILE" EXIT INT QUIT TERM
 curl -s "${SITE}" > "$TEMPFILE" || die $? "can't retrieve IP information"
 grep -i '<title>' "$TEMPFILE" | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || die 1 "IP information not found"
-rm "$TEMPFILE"
 exit 0
