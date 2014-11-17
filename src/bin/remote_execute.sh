@@ -53,7 +53,7 @@ suspend_vm()
 die()
 {
     local ret_val=$1
-	[ -n "$2" ] && echo "${PROGRAM}($$): $2" >&2
+	[ -n "$2" ] && errcho "${PROGRAM}($$): $2"
 	suspend_vm
     exit $ret_val
 }

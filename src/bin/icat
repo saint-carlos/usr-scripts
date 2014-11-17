@@ -16,7 +16,7 @@ VER='1.2'
 
 Extensions=".Z .z .gz .cpz .tgz"		# known file extensions
 usage () {
-    echo >&2 "$PN - cat file, uncompress if necessary, $VER (stv '95)
+    errcho "$PN - cat file, uncompress if necessary, $VER (stv '95)
 usage: $PN -l
        $PN [file ...]
 
@@ -27,7 +27,7 @@ to print the given file, uncompressing it if necessary."
 
 msg () {
     for line
-    do echo "$PN: $line" >&2
+    do errcho "$PN: $line"
     done
 }
 

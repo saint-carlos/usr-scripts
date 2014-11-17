@@ -103,7 +103,7 @@ lap() {
     fi
 }
 
-echo -n "Space for lap | ? for split | Ctrl-C to stop | Space to start...">&2
+errcho -n "Space for lap | ? for split | Ctrl-C to stop | Space to start..."
 
 while true; do
     trap true INT QUIT  # Set signal handlers.
@@ -111,12 +111,12 @@ while true; do
     ret=$?
     trap '' INT QUIT    # Ignore signals within this script.
     if [ $ret -eq 1 -o $ret -eq 2 -o $ret -eq 130 ]; then # SIGINT = stop
-        [ ! "$start" ] && { echo >&2; exit; }
+        [ ! "$start" ] && { errcho; exit; }
         stop
     elif [ $ret -eq 3 -o $ret -eq 131 ]; then             # SIGQUIT = lap
         if [ ! "$start" ]; then
             start=`now` || exit 1
-            echo >&2
+            errcho
             continue
         fi
         lap "$laptime" "display"

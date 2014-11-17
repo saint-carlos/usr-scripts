@@ -66,7 +66,7 @@ if [ -z "$TARGET_PID" ]; then
 	usage 2
 fi
 if [ ! -r /proc/$TARGET_PID ]; then
-	echo "Process $TARGET_PID not found." >&2
+	errcho "Process $TARGET_PID not found."
 	usage 1
 fi
 

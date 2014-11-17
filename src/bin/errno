@@ -38,7 +38,7 @@ usage: $PN {number|name|regex} [...]
 
 Msg () {
     for i
-    do echo "$PN: $i" >&2
+    do errcho "$PN: $i"
     done
 }
 
@@ -62,7 +62,7 @@ done
 [ $# -lt 1 ] && Usage
 
 [ -s "$Errnos" ] || {
-    echo >&2 "creating errno table (will be cached for faster lookup)..."
+    errcho "creating errno table (will be cached for faster lookup)..."
     umask 000				# Everybody may read and write
     : ${INCLUDE=/usr/include}
     find `echo "$INCLUDE" | tr : ' '`	\

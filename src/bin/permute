@@ -37,7 +37,7 @@ VER='1.3'
 #: ${NAWK:=nawk}
 
 usage () {
-    echo >&2 "$PN - print permutations, $VER
+    errcho "$PN - print permutations, $VER
 usage: $PN [-h] [arg ...]
    -h:  print this usage summary
    -a:  print permutations of all sub-sequences as well (slow)
@@ -57,7 +57,7 @@ the command line arguments, which increases fast:
     exit $1
 }
 
-msg () { echo >&2 "$PN:" "$@";  }
+msg () { errcho "$PN:" "$@";  }
 
 fatal () { msg "$@"; exit 1; }
 

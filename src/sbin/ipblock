@@ -43,7 +43,7 @@ while getopts hiou option; do
 done
 shift $((OPTIND - 1))
 if ! $BLOCK_INBOUND && ! $BLOCK_OUTBOUND; then
-	echo "$PROGRAM: nothing to do" >&2
+	errcho "$PROGRAM: nothing to do"
 	usage 1
 fi
 

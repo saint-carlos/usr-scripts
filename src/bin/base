@@ -56,7 +56,7 @@ PROGRAM=`basename "$0"`			# program name
 
 Msg () {
     for i
-    do echo "$PROGRAM: $i" >&2
+    do errcho "$PROGRAM: $i"
     done
 }
 

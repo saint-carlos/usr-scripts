@@ -15,7 +15,7 @@ PN=`basename "$0"`			# Program name
 VER='1.2'
 
 usage () {
-    echo >&2 "$PN - get one line of text, $VER (hs '96)
+    errcho "$PN - get one line of text, $VER (hs '96)
 usage: $PN [line] [file ...]
 
 If no line is given, the default line is 1."
@@ -24,7 +24,7 @@ If no line is given, the default line is 1."
 
 msg () {
     for i
-    do echo "$PN: $i" >&2
+    do errcho "$PN: $i"
     done
 }
 

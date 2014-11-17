@@ -20,7 +20,7 @@
 
 usage () {
 
-echo >&2 "$NAME_ $VERSION_ - $PURPOSE_
+errcho "$NAME_ $VERSION_ - $PURPOSE_
 Usage: $SYNOPSIS_
 Requires: $REQUIRES_
 Options:
@@ -31,7 +31,7 @@ Options:
 }
 
 # args check
-[ $# -eq 0 ] && { echo >&2 missing argument, type $NAME_ -h for help; exit 1; }
+[ $# -eq 0 ] && { errcho "missing argument, type $NAME_ -h for help"; exit 1; }
 
 # var init
 verbose=false
