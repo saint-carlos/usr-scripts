@@ -98,7 +98,7 @@ done
 			    }
 			    print $3 "	" $2 "	" Desc
 			}
-		' > "$SIGNUMS" || exit # awk will print error message
+		' | sort -u > "$SIGNUMS"
 	[ -s "$SIGNUMS" ] || die 1 "could not find include file(s)"
 }
 

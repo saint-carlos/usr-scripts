@@ -99,7 +99,7 @@ done
 			    }
 			    print $3 "	" $2 "	" Desc
 			}
-		' > "$ERRNOS" || exit # awk will print error message
+		' | sort -u > "$ERRNOS"
 	[ -s "$ERRNOS" ] || die 1 "could not find include file(s)"
 }
 
