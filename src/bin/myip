@@ -11,11 +11,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="return my external IP"
 PARAMS=""
 OPTIONS="[-h]"
-
-# sites to use (this may require changing the greps):
-# readonly SITE="myip.dk"
-# readonly SITE="whatsmyip.org"
-readonly SITE="formyip.com"
+SITE="whatsmyip.net"
 
 usage()
 {
@@ -58,5 +54,5 @@ shift $((OPTIND - 1))
 TEMPFILE=$(mktemp)
 trap "rm $TEMPFILE" EXIT INT QUIT TERM
 curl -s "${SITE}" > "$TEMPFILE" || die $? "can't retrieve IP information"
-grep -i '<title>' "$TEMPFILE" | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || die 1 "IP information not found"
-exit 0
+ADDR=$(egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$TEMPFILE") || die 1 "IP information not found"
+head -1 <<< "$ADDR"
