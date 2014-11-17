@@ -28,4 +28,9 @@ while getopts h option; do
 done
 shift `expr $OPTIND - 1`
 
-echo -en "\033]0;$*\007"
+TITLE="$*"
+case $TERM in
+	xterm*|rxvt*) printf "\e]0;${TITLE}\007" ;;
+	screen*) echo -en "\033_${TITLE}\033\\" ;;
+	linux) : ;; # linux terms don't have titles...
+esac
