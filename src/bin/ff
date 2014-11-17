@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="find a file by name pattern"
 PARAMS="name-pattern [where...]"
 OPTIONS="[-he]"
@@ -27,19 +27,18 @@ EOF
 }
 
 TEST=iname DECORATION="*"
-while getopts he option; do
-    case $option in
-        h) usage 0 ;;
-        e) TEST=name DECORATION="" ;;
-        \?) usage 255 ;;
-    esac
+while getopts he OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		e) TEST=name DECORATION="" ;;
+		\?) usage 255 ;;
+	esac
 done
-shift `expr $OPTIND - 1`
-
+shift $((OPTIND - 1))
 WHAT="$1"
 shift
 if [ $# -eq 0 ]; then
 	set .
 fi
 
-find "$@" -type f "-${TEST}" "${DECORATION}${WHAT}${DECORATION}"
+exec find "$@" -type f "-${TEST}" "${DECORATION}${WHAT}${DECORATION}"

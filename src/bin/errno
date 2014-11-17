@@ -17,96 +17,100 @@
 #	    xargs, "find ... -follow"
 ##########################################################################
 
-PN=`basename "$0"`			# Program name
+PROGRAM=$(basename $0)
 VER='1.5'
+DESCRIPTION="print name and description of error codes, $VER (stv '95)"
+PARAMS="{number|name|regex} [...]"
+OPTIONS="[-hl]"
+ERRNOS=/tmp/$PROGRAM
 
-: ${NAWK:=awk}
-: ${GREP:=grep}
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
-Errnos=/tmp/$PN.cache			# "database" with errnos
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+number:	system error number, i.e. 10
+name:	system error name, i.e. EPERM
+regex:	string to grep for
 
-Usage () {
-    echo "$PN - print name and description of error codes, $VER (stv '95)
-usage: $PN {number|name|regex} [...]
-   or  $PN -l
-    -l 		list all error codes
-    number	system error number, i.e. 10
-    name	system error name, i.e. EPERM
-    regex	string to 'grep' for" >&2
-    exit 1
+options:
+-l	list: list all error codes
+-h	help: show this help message and exit.
+EOF
+
+    exit $1
 }
 
-Msg () {
-    for i
-    do errcho "$PN: $i"
-    done
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
 }
-
-Fatal () { Msg "$@"; exit 1; }
 
 # Check arguments before setting them
-getopt hl "$@" > /dev/null 2>&1	|| Usage
+getopt hl "$@" > /dev/null 2>&1	|| usage 1
 set -- `getopt hl "$@"`
 while [ $# -gt 0 ]
 do
-    case "$1" in
-	-l)	set -- '.'; break;;	# List all errnos
-	--)	shift; break;;
-	-h)	Usage;;
-	-*)	Usage;;
-	*)	break;;			# First argument
-    esac
-    shift
+	case "$1" in
+		-l) set -- .; break ;;
+		--) shift; break ;;
+		-h) usage 0 ;;
+		-*) usage 1 ;;
+		*) break;;
+	esac
+	shift
 done
 
-[ $# -lt 1 ] && Usage
+[ $# -ge 1 ] || usage 1
 
-[ -s "$Errnos" ] || {
-    errcho "creating errno table (will be cached for faster lookup)..."
-    umask 000				# Everybody may read and write
-    : ${INCLUDE=/usr/include}
-    find `echo "$INCLUDE" | tr : ' '`	\
-    	    -follow			\
-   	    -type f -name 'errno*.h' -print |
-    sort -u |
+[ -s "$ERRNOS" ] || {
+	errcho "creating errno table (will be cached for faster lookup)..."
+	umask 000
+	: ${INCLUDE=/usr/include}
+	find $(echo "$INCLUDE" | tr : ' ') -follow -type f -name 'errno*.h' -print | \
+		sort -u | xargs awk '
+			# Create "database" of errno values in the following format:
+			# 2	ENOENT	No such file or directory
 
-    # Create "database" of errno values in the following format:
-    #	2	ENOENT	No such file or directory
-    xargs $NAWK '
-	# Example:
-	# #define ENOENT          2    /* No such file or directory */
-	($1 == "#define") && ($2 ~ /^E[A-Z][A-Z]*$/) && (NF >= 3) {
-	    # $2=name, $3=errno
-	    Desc = ""
-	    for ( i=4; i<=NF; i++ ) {
-		if ( $i == "/*" || $i == "*/" ) continue;
-		# Remove comment delimiters from description:
-		#	"/*Not owner*/" -> "Not owner"
-		if ( $i ~ /^\/\*/ ) {
-		    sub (/\/\*[ 	]*/, "", $i)
-		} else if ( $i ~ /\*\/$/ ) {
-		    sub (/[ 	]*\*\/$/, "", $i)
-		}
-		if ( Desc == "" )
-		    Desc = $i
-		else
-		    Desc = Desc " " $i
-	    }
-	    print $3 "	" $2 "	" Desc
-	}
-    ' > "$Errnos" || exit	# awk will print error message
-    [ -s "$Errnos" ] || Fatal "could not find include file(s)"
+			# Example:
+			# #define ENOENT          2    /* No such file or directory */
+			($1 == "#define") && ($2 ~ /^E[A-Z][A-Z]*$/) && (NF >= 3) {
+			    # $2=name, $3=errno
+			    Desc = ""
+			    for ( i=4; i<=NF; i++ ) {
+				if ( $i == "/*" || $i == "*/" ) continue;
+				# Remove comment delimiters from description:
+				#	"/*Not owner*/" -> "Not owner"
+				if ( $i ~ /^\/\*/ ) {
+				    sub (/\/\*[ 	]*/, "", $i)
+				} else if ( $i ~ /\*\/$/ ) {
+				    sub (/[ 	]*\*\/$/, "", $i)
+				}
+				if ( Desc == "" )
+				    Desc = $i
+				else
+				    Desc = Desc " " $i
+			    }
+			    print $3 "	" $2 "	" Desc
+			}
+		' > "$ERRNOS" || exit # awk will print error message
+	[ -s "$ERRNOS" ] || die 1 "could not find include file(s)"
 }
 
 # Search "database" for given strings
-for i
-do
-    case "$i" in
-	E[A-Z]*) Col=2;;	# Symbolic name given
-	*[!0-9]*)		# No number: just grep for pattern
-		$GREP -i "$i" "$Errnos"
-		continue;;
-	*)	Col=1;;		# This seems to be a number
-    esac
-    $NAWK '$'$Col' == "'$i'"' "$Errnos"
+for i in "$@"; do
+	case "$i" in
+		E[A-Z]*) COL=2 ;; # Symbolic name given
+		*[!0-9]*) # No number: just grep for pattern
+			grep -i "$i" "$ERRNOS"
+			continue ;;
+		*)	COL=1 ;; # This seems to be a number
+	esac
+	awk '$'$COL' == "'$i'"' "$ERRNOS"
 done

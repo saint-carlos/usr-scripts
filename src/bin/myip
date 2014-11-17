@@ -39,16 +39,24 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case ${option} in
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
+
+while getopts h OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		\?) usage 2 ;;
 	esac
 done
 shift $((OPTIND - 1))
 
-TEMPFILE=/tmp/${PROGRAM}-$$.tmp
-curl -s "${SITE}" > "$TEMPFILE" || exit $?
-grep -i '<title>' "$TEMPFILE" | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || exit 1
-rm $TEMPFILE
+TEMPFILE=$(mktemp)
+curl -s "${SITE}" > "$TEMPFILE" || die $? "can't retrieve IP information"
+grep -i '<title>' "$TEMPFILE" | egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' || die 1 "IP information not found"
+rm "$TEMPFILE"
 exit 0

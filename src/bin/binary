@@ -7,7 +7,7 @@
 # NAME:		Binary
 # DESCRIPTION:	tests if a file is binary or not
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="tests if a file is binary or not"
 PARAMS="filename"
 OPTIONS="[-h]"
@@ -34,16 +34,16 @@ EOF
     exit $1
 }
 
-while getopts h option; do
-	case $option in
+while getopts h OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		\?) usage 2 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
-
-test $# -eq 1 || usage 2
+shift $((OPTIND - 1))
+[ $# -eq 1 ] || usage 2
 FILE="$1"
-test -f ${FILE} || exit 3
-CHARSET=`file -bi "${FILE}" | cut -d= -f2`
-test "${CHARSET}" = binary
+[ -f "$FILE" ] || exit 3
+
+CHARSET=`file -bi "$FILE" | cut -d= -f2`
+test "$CHARSET" = binary

@@ -91,7 +91,7 @@ print_bases()
 		NUMBER=$(echo "$i" | sed -e 's:^0[bBxX]::' | tr 'a-f' 'A-F')
 
 		# Convert number to decimal
-		DEC=$(echo "IBASE=$IBASE; $NUMBER" | bc)
+		DEC=$(echo "ibase=$IBASE; $NUMBER" | bc)
 		case "$DEC" in
 			[0-9]*)	;;		# number ok
 			*)	continue;;	# error: ignore

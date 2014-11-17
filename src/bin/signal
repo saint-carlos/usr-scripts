@@ -1,112 +1,115 @@
 #!/bin/bash
 ##########################################################################
-# Title      :	signal - show messages to system signal
+# Title      :	signal - show messages to system signals
 # Author     :	Heiner Steven <heiner.steven@odn.de>
 # Date       :	1995-07-19
 # Requires   :	xargs
 # Category   :	Programming
-# SCCS-Id.   :	@(#) errno	1.5 03/11/04
 ##########################################################################
 # Description
 #    -	Searches the systems "signal.h" include file, and extracts all
 #	signal numbers with descriptions
-#    -	The processed ERRNO-table will be cached for faster lookup
+#    -	The processed SIGNUM-table will be cached for faster lookup
 #
 # Note
 #    o	Needs the following non-standard programs or features:
 #	    xargs, "find ... -follow"
 ##########################################################################
 
-PN=`basename "$0"`			# Program name
+PROGRAM=$(basename $0)
 VER='1.5'
+DESCRIPTION="print name and description of signal numbers, $VER (stv '95)"
+PARAMS="{number|name|regex} [...]"
+OPTIONS="[-hl]"
+SIGNUMS=/tmp/$PROGRAM
 
-: ${NAWK:=awk}
-: ${GREP:=grep}
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
-Signals=/tmp/$PN.cache			# "database" with signals
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+number:	system signal number, i.e. 10
+name:	system signal name, i.e. EPERM
+regex:	string to grep for
 
-Usage () {
-    echo "$PN - print name and description of signal codes, $VER (stv '95)
-usage: $PN {number|name|regex} [...]
-   or  $PN -l
-    -l 		list all signal numbers
-    number	signal number, i.e. 10
-    name	signal name, i.e. SIGSEGV
-    regex	string to 'grep' for" >&2
-    exit 1
+options:
+-l	list: list all signal numbers
+-h	help: show this help message and exit.
+EOF
+
+    exit $1
 }
 
-Msg () {
-    for i
-    do errcho "$PN: $i"
-    done
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
 }
-
-Fatal () { Msg "$@"; exit 1; }
 
 # Check arguments before setting them
-getopt hl "$@" > /dev/null 2>&1	|| Usage
+getopt hl "$@" > /dev/null 2>&1	|| usage 1
 set -- `getopt hl "$@"`
 while [ $# -gt 0 ]
 do
-    case "$1" in
-	-l)	set -- '.'; break;;	# List all errnos
-	--)	shift; break;;
-	-h)	Usage;;
-	-*)	Usage;;
-	*)	break;;			# First argument
-    esac
-    shift
+	case "$1" in
+		-l) set -- .; break ;;
+		--) shift; break ;;
+		-h) usage 0 ;;
+		-*) usage 1 ;;
+		*) break;;
+	esac
+	shift
 done
 
-[ $# -lt 1 ] && Usage
+[ $# -ge 1 ] || usage 1
 
-[ -s "$Signals" ] || {
-    errcho "creating signal table (will be cached for faster lookup)..."
-    umask 000				# Everybody may read and write
-    : ${INCLUDE=/usr/include}
-    find `echo "$INCLUDE" | tr : ' '`	\
-    	    -follow			\
-   	    -type f -name 'sig*.h' -print |
-    sort -u |
+[ -s "$SIGNUMS" ] || {
+	errcho "creating signum table (will be cached for faster lookup)..."
+	umask 000
+	: ${INCLUDE=/usr/include}
+	find $(echo "$INCLUDE" | tr : ' ') -follow -type f -name 'sig*.h' -print | \
+		sort -u | xargs awk '
+			# Create "database" of signum values in the following format:
+			# 3	SIGQUIT	Quit (POSIX).
 
-    # Create "database" of signal values in the following format:
-    #	1	SIGHUP	Hangup (POSIX)
-    xargs $NAWK '
-	# Example:
-	# #define SIGHUP          1    /* Hangup (POSIX) */
-	($1 == "#define") && ($2 ~ /^SIG[A-Z][A-Z]*$/) && (NF >= 3) {
-	    # $2=name, $3=signum
-	    Desc = ""
-	    for ( i=4; i<=NF; i++ ) {
-		if ( $i == "/*" || $i == "*/" ) continue;
-		# Remove comment delimiters from description:
-		#	"/*Not owner*/" -> "Not owner"
-		if ( $i ~ /^\/\*/ ) {
-		    sub (/\/\*[ 	]*/, "", $i)
-		} else if ( $i ~ /\*\/$/ ) {
-		    sub (/[ 	]*\*\/$/, "", $i)
-		}
-		if ( Desc == "" )
-		    Desc = $i
-		else
-		    Desc = Desc " " $i
-	    }
-	    print $3 "	" $2 "	" Desc
-	}
-    ' > "$Signals" || exit	# awk will print error message
-    [ -s "$Signals" ] || Fatal "could not find include file(s)"
+			# Example:
+			# #define SIGQUIT	3	/* Quit (POSIX).  */
+			($1 == "#define") && ($2 ~ /^SIG[A-Z][A-Z]*$/) && (NF >= 3) {
+			    # $2=name, $3=signum
+			    Desc = ""
+			    for ( i=4; i<=NF; i++ ) {
+				if ( $i == "/*" || $i == "*/" ) continue;
+				# Remove comment delimiters from description:
+				#	"/*Not owner*/" -> "Not owner"
+				if ( $i ~ /^\/\*/ ) {
+				    sub (/\/\*[ 	]*/, "", $i)
+				} else if ( $i ~ /\*\/$/ ) {
+				    sub (/[ 	]*\*\/$/, "", $i)
+				}
+				if ( Desc == "" )
+				    Desc = $i
+				else
+				    Desc = Desc " " $i
+			    }
+			    print $3 "	" $2 "	" Desc
+			}
+		' > "$SIGNUMS" || exit # awk will print error message
+	[ -s "$SIGNUMS" ] || die 1 "could not find include file(s)"
 }
 
 # Search "database" for given strings
-for i
-do
-    case "$i" in
-	SIG[A-Z]*) Col=2;;	# Symbolic name given
-	*[!0-9]*)		# No number: just grep for pattern
-		$GREP -i "$i" "$Signals"
-		continue;;
-	*)	Col=1;;		# This seems to be a number
-    esac
-    $NAWK '$'$Col' == "'$i'"' "$Signals" | tail -n 1
+for i in "$@"; do
+	case "$i" in
+		E[A-Z]*) COL=2 ;; # Symbolic name given
+		*[!0-9]*) # No number: just grep for pattern
+			grep -i "$i" "$SIGNUMS"
+			continue ;;
+		*)	COL=1 ;; # This seems to be a number
+	esac
+	awk '$'$COL' == "'$i'"' "$SIGNUMS"
 done

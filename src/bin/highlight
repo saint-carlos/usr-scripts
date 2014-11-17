@@ -45,4 +45,4 @@ for S in '/' ':' '|' ','; do
 	SEPARATOR=$S
 	break
 done
-exec sed -r "s${SEPARATOR}${1}${SEPARATOR}`tput smso`&`tput rmso`${SEPARATOR}g"
+exec sed -r "s${SEPARATOR}${1}${SEPARATOR}$(tput smso)&$(tput rmso)${SEPARATOR}g"

@@ -11,77 +11,69 @@
 #
 ##########################################################################
 
-PN=`basename "$0"`			# program name
-VER='1.2'
+PROGRAM=$(basename $0)
+VER=1.2
+EXTENSIONS=".Z .z .gz .cpz .tgz"
+DESCRIPTION="cat file, uncompress if necessary, $VER (stv '95)"
+PARAMS="[file ...]"
+OPTIONS="[-lh]"
 
-Extensions=".Z .z .gz .cpz .tgz"		# known file extensions
-usage () {
-    errcho "$PN - cat file, uncompress if necessary, $VER (stv '95)
-usage: $PN -l
-       $PN [file ...]
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
 
-The first case lists all known extensions, the other case tries
-to print the given file, uncompressing it if necessary."
-    exit 1
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-l	lists all known extensions.
+EOF
+
+    exit $1
 }
 
-msg () {
-    for line
-    do errcho "$PN: $line"
-    done
-}
-
-fatal () { msg "$@"; exit 1; }
-
-while [ $# -gt 0 ]
-do
-    case "$1" in
-	-l)				# List known suffixes
-	    echo $Extensions
-	    exit 0;;
-	--) shift; break;;		# Simulate getopt
-        -h) usage;;
-	*)  break;;
-    esac
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-l) echo $EXTENSIONS; exit ;;
+		--) shift; break ;;
+		-h) usage 0 ;;
+		*)  break ;;
+	esac
 done
 
-if [ $# -lt 1 ]
-then					# read from stdin (uncompressed)
-    cat
-else
-    for i
-    do
-	if [ -r "$i" ]			# file does exist
-	then
-	    # Try to determine decompressor based on the extension
-	    case "$i" in
-		*.Z)    zcat "$i";;
-		*.z)    gzip -d -c "$i";;
-		*.gz|*.tgz)   gzip -d -c "$i";;
-		*.cpz)	zcat < "$i";;
-		*)	cat "$i";;
-	    esac
-	else				# try to determine compressed version
-	    if [ -r "$i".gz ]
-	    then
-		gzip -d -c "$i"
-	    elif [ -r "$i".tgz ]
-	    then
-		gzip -d -c "$i"
-	    elif [ -r "$i".Z ]
-	    then
-		zcat "$i"
-	    elif [ -r "$i".z ]
-	    then
-		gzip -d -c "$i"
-	    elif [ -r "$i".cpz ]
-	    then
-		zcat < "$i"
-	    else
-		fatal "could not find file: $i"
-	    fi
-	    Err=$?
+[ $# -lt 1 ] && exec cat
+
+RC=0
+for i in "$@"; do
+	if [ -r "$i" ]; then
+		# Try to determine decompressor based on the extension
+		case "$i" in
+			*.Z) zcat "$i";;
+			*.z) gzip -d -c "$i";;
+			*.gz|*.tgz) gzip -d -c "$i";;
+			*.cpz) zcat < "$i";;
+			*) cat "$i";;
+		esac
+	else
+		# try to determine compressed version
+		if [ -r "$i".gz ]; then
+			gzip -d -c "$i"
+		elif [ -r "$i".tgz ]; then
+			gzip -d -c "$i"
+		elif [ -r "$i".Z ]; then
+			zcat "$i"
+		elif [ -r "$i".z ]; then
+			gzip -d -c "$i"
+		elif [ -r "$i".cpz ]; then
+			zcat < "$i"
+		else
+			errcho "could not find file: $i"
+			exit 1
+		fi
+		RC=$?
 	fi
-    done
-fi
-exit ${Err:-0}
+done
+exit $RC

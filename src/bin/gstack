@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="dump the stack(s) trace of a process"
 PARAMS="pid"
 OPTIONS="[-h]"
@@ -53,19 +53,16 @@ $2
 EOF
 }
 
-while getopts h option; do
-    case $option in
+while getopts h OPTION; do
+    case $OPTION in
         h) usage 0 ;;
         \?) usage 2 ;;
     esac
 done
-shift `expr $OPTIND - 1`
-
+shift $((OPTIND - 1))
 TARGET_PID=$1
-if [ -z "$TARGET_PID" ]; then
-	usage 2
-fi
-if [ ! -r /proc/$TARGET_PID ]; then
+[ -n "$TARGET_PID" ] || usage 2
+if [ ! -r "/proc/$TARGET_PID" ]; then
 	errcho "Process $TARGET_PID not found."
 	usage 1
 fi

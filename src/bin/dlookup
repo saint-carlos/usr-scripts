@@ -25,8 +25,8 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case ${option} in
+while getopts h OPTION; do
+	case ${OPTION} in
 		h) usage 0 ;;
 		\?) usage 2 ;;
 	esac
@@ -37,4 +37,4 @@ if [ $# -ne 1 ]; then
 	usage 2
 fi
 
-look "$1" | grep -q "$1\$"
+exec look "$1" | grep -q "$1\$"
