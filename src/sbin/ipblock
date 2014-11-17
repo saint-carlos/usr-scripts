@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="block or unblock an IP"
 PARAMS="IP..."
 OPTIONS="[-hu] [-i | -o]"
@@ -32,8 +32,8 @@ FLAGS=-A
 BLOCK_INBOUND=true
 BLOCK_OUTBOUND=true
 ACTION_NAME="blocking"
-while getopts hiou option; do
-	case $option in
+while getopts hiou OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		u) FLAGS=-D ; ACTION_NAME="unblocking" ;;
 		o) BLOCK_INBOUND=false ;;

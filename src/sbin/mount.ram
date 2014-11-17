@@ -11,7 +11,7 @@
 #  Keeping a large dataset, such as a table or dictionary on ramdisk,
 #+ speeds up data lookup, since memory access is much faster than disk access.
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="mount a ramdisk"
 PARAMS="[mount-point]"
 OPTIONS="[-h] [-s size] [-d device]"
@@ -52,15 +52,19 @@ EOF
 	exit $1
 }
 
-if [ "$UID" -ne 0 ]
-then
-  echo "Must be root to run \"`basename $0`\"."
-  exit $E_NON_ROOT_USER
-fi
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
+
+[ "$UID" -eq 0 ] || die $E_NON_ROOT_USER "Must be root to run $PROGRAM."
 
 DEVICE=$DEFAULT_DEVICE
-while getopts hd:s: option; do
-	case ${option} in
+while getopts hd:s: OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		d) DEVICE=$OPTARG ;;
 		s) SIZE=$OPTARG ;;
@@ -72,10 +76,10 @@ shift $((OPTIND - 1))
 MOUNTPT=${1:-$DEFAULT_MOUNT_POINT}
 mkdir -p $MOUNTPT
 
-dd if=/dev/zero of=$DEVICE count=$SIZE bs=$BLOCKSIZE || exit 2 
-mke2fs $DEVICE || exit 3
-mount $DEVICE $MOUNTPT || exit 4
-chmod 777 $MOUNTPT || exit 5
+dd if=/dev/zero of=$DEVICE count=$SIZE bs=$BLOCKSIZE || die 2 "failed to clear $DEVICE"
+mke2fs $DEVICE || die 3 "failed to format $DEVICE"
+mount $DEVICE $MOUNTPT || die 4 "failed to mount $DEVICE"
+chmod 777 $MOUNTPT || die 5 "failed to chmod $MOUNTPT"
 
 echo "\"$MOUNTPT\" now available for use."
 exit 0

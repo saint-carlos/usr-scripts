@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="reset the system log file"
 PARAMS=""
 OPTIONS="[-hk]"
@@ -27,20 +27,20 @@ EOF
 }
 
 KEEP=false
-while getopts kh option; do
-    case $option in
-        h) usage 0 ;;
-        k) KEEP=true ;;
-        \?) usage 1 ;;
-    esac
+while getopts kh OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		k) KEEP=true ;;
+		\?) usage 1 ;;
+	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-old_file="CONFIG_SYSLOG_FILE"
-new_file="${old_file}-$(timestamp)"
+OLD_FILE="CONFIG_SYSLOG_FILE"
+NEW_FILE="${OLD_FILE}-$(timestamp)"
 
 service rsyslog stop
 $KEEP && return
-rm ${old_file}-*
-[ -e "$old_file" ] && mv "$old_file" "$new_file" && echo "message file saved to $new_file"
+rm ${OLD_FILE}-*
+[ -e "$OLD_FILE" ] && mv "$OLD_FILE" "$NEW_FILE" && echo "message file saved to $NEW_FILE"
 service rsyslog start
