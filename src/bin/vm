@@ -101,8 +101,9 @@ list_running()
 {
 	for MACHINE_DIR in "$MACHINES_DIR"/*; do
 		MACHINE=$(basename "$MACHINE_DIR")
-		vm_avail $MACHINE && echo $MACHINE
+		{ vm_avail $MACHINE && echo $MACHINE; } &
 	done
+	wait
 }
 
 shutdown()
