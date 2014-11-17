@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="print the name of the user (the computer from which the user logged in to the local machine)"
 PARAMS=""
 OPTIONS="[-h]"
@@ -26,19 +26,6 @@ EOF
     exit $1
 }
 
-while getopts h option; do
-    case $option in
-        h) usage 0 ;;
-        \?) usage 1 ;;
-    esac
-done
-shift `expr $OPTIND - 1`
-
-if [ -n "$SYSTEM_USER" ]; then
-	echo "$SYSTEM_USER"
-	exit
-fi
-
 get_login_line()
 {
 	if [ -x "`which get_login_line.sh 2>/dev/null`" ]; then
@@ -47,5 +34,18 @@ get_login_line()
 		who am i
 	fi
 }
-get_login_line | awk '{ print $NF }' | tr -d '()' | cut -d. -f1
 
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if [ -n "$SYSTEM_USER" ]; then
+	echo "$SYSTEM_USER"
+	exit
+fi
+
+get_login_line | awk '{ print $NF }' | tr -d '()' | cut -d. -f1

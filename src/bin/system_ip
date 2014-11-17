@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="prints the machines IP in the LAN."
 PARAMS=""
 OPTIONS="[-ha]"
@@ -27,13 +27,13 @@ EOF
 }
 
 FILTER='head -1'
-while getopts ha option; do
-        case $option in
-                h) usage 0 ;;
+while getopts ha OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
 		a) FILTER=cat ;;
-                \?) usage 1 ;;
+		\?) usage 1 ;;
         esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 hostname -I | tr ' ' '\n' | $FILTER

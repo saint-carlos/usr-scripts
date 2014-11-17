@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="prints the system version."
 PARAMS=""
 OPTIONS="[-hdvsSpk]"
@@ -55,49 +55,48 @@ done
 
 case "${DIST_NAME}" in
 	"CentOS"|"Red Hat"|"Oracle"|"Fedora")
-		DISTRO=`get_distro "${DIST_NAME}"`
-		temp=`cat "$REDHAT_FILE" | awk '{ print $(NF-1) }'`
-		VERSION=`echo "$temp" | cut -d. -f1`
-		SERVICEPACK=`echo "$temp" | cut -s -d. -f2`
-		PATCHLEVEL=`uname -r | cut -d- -f2`
+		DISTRO=$(get_distro "$DIST_NAME")
+		TEMP=$(cat "$REDHAT_FILE" | awk '{ print $(NF-1) }')
+		VERSION=$(echo "$TEMP" | cut -d. -f1)
+		SERVICEPACK=$(echo "$TEMP" | cut -s -d. -f2)
+		PATCHLEVEL=$(uname -r | cut -d- -f2)
 		;;
 	"SuSE")
 		DISTRO=SuSE
-		VERSION=`grep VERSION "$SUSE_FILE" | sed 's: ::g' | cut -d= -f2`
-		SERVICEPACK=`grep PATCHLEVEL "$SUSE_FILE" | sed 's: ::g' | cut -d= -f2`
-		PATCHLEVEL=`uname -r | cut -d. -f4- | cut -d- -f1-2`
+		VERSION=$(grep VERSION "$SUSE_FILE" | sed 's: ::g' | cut -d= -f2)
+		SERVICEPACK=$(grep PATCHLEVEL "$SUSE_FILE" | sed 's: ::g' | cut -d= -f2)
+		PATCHLEVEL=$(uname -r | cut -d. -f4- | cut -d- -f1-2)
 		;;
 	"Debian")
-		DISTRO=`grep DISTRIB_ID "$UBUNTU_FILE" | cut -d= -f2`
-		VERSION=`grep DISTRIB_RELEASE "$UBUNTU_FILE" | cut -d= -f2 | cut -d. -f1`
-		SERVICEPACK=`grep DISTRIB_RELEASE "$UBUNTU_FILE" | cut -d= -f2 | cut -d. -f2`
+		DISTRO=$(grep DISTRIB_ID "$UBUNTU_FILE" | cut -d= -f2)
+		VERSION=$(grep DISTRIB_RELEASE "$UBUNTU_FILE" | cut -d= -f2 | cut -d. -f1)
+		SERVICEPACK=$(grep DISTRIB_RELEASE "$UBUNTU_FILE" | cut -d= -f2 | cut -d. -f2)
 		;;
 	*)
 		DISTRO=Linux
 esac
 
-VERSION=${VERSION:-0}
-SERVICEPACK=${SERVICEPACK:-0}
-KERNEL=`uname -r | cut -d- -f1 | cut -d. -f1-3`
+VERSION="${VERSION:-0}"
+SERVICEPACK="${SERVICEPACK:-0}"
+KERNEL="$(uname -r | cut -d- -f1 | cut -d. -f1-3)"
 
-prefix=''
-while getopts hdvsSpk option; do
-	case ${option} in
+PREFIX=''
+while getopts hdvsSpk OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
-		d) echo -n "${prefix}${DISTRO}"; prefix='-' ;;
-		v) echo -n "${prefix}${VERSION}"; prefix='-' ;;
-		s) echo -n "${prefix}${SERVICEPACK}"; prefix='-' ;;
-		S) echo -n "${prefix}SP${SERVICEPACK}"; prefix='-' ;;
-		k) echo -n "${prefix}${KERNEL}"; prefix='-' ;;
-		p) echo -n "${prefix}${PATCHLEVEL}"; prefix='-' ;;
+		d) echo -n "${PREFIX}${DISTRO}"; PREFIX='-' ;;
+		v) echo -n "${PREFIX}${VERSION}"; PREFIX='-' ;;
+		s) echo -n "${PREFIX}${SERVICEPACK}"; PREFIX='-' ;;
+		S) echo -n "${PREFIX}SP${SERVICEPACK}"; PREFIX='-' ;;
+		k) echo -n "${PREFIX}${KERNEL}"; PREFIX='-' ;;
+		p) echo -n "${PREFIX}${PATCHLEVEL}"; PREFIX='-' ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-if [ -z "$prefix" ]; then
+if [ -z "$PREFIX" ]; then
 	echo "${DISTRO}-${VERSION}"
 else
 	echo
 fi
-

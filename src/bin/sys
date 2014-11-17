@@ -1,12 +1,6 @@
 #!/bin/bash
 
-die()
-{
-	echo "$*"
-	exit 98
-}
-
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="get info about the system."
 
 usage()
@@ -34,15 +28,11 @@ EOF
     exit $1
 }
 
-while getopts h option; do
-	case ${option} in
-		h) usage 0 ;;
-		\?) usage 98 ;;
-	esac
-done
-shift `expr $OPTIND - 1`
-
-[ -n "$1" ] || die "no action"
+die()
+{
+	echo "$*"
+	exit 98
+}
 
 execute()
 {
@@ -51,13 +41,22 @@ execute()
 	"$@"
 }
 
-case $1 in
-	hostname) execute hostname ;;
-	cpus) execute system_cpu_count ;;
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 98 ;;
+	esac
+done
+shift $((OPTIND - 1))
+[ -n "$1" ] || die "no action"
+
+CMD="$1"
+shift
+case "$CMD" in
+	hostname) execute hostname "$@" ;;
+	cpus) execute system_cpu_count "$@" ;;
 	os) uname -s | sed 's:SunOS:Solaris:g' ;;
 	*)
-		cmd=$1
-		shift
-		execute system_${cmd} $@
+		execute "system_${CMD}" "$@"
+		;;
 esac
-

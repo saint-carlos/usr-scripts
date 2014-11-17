@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="prints the platform's word width (32/64 bits)."
 PARAMS=""
 OPTIONS="[-h]"
@@ -25,18 +25,17 @@ EOF
     exit $1
 }
 
-while getopts h option; do
-        case $option in
-                h) usage 0 ;;
-                \?) usage 1 ;;
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
         esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-PLATFORM=`uname -m`
+PLATFORM=$(uname -m)
 if [ $PLATFORM = "x86_64" ]; then
 	echo 64
 elif [ $PLATFORM = "i686" ]; then
 	echo 32
 fi
-
