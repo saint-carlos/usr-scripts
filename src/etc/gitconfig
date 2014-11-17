@@ -84,3 +84,6 @@
 	autosetuprebase = always
 [rebase]
 	autosquash = true
+
+[rerere]
+	enabled = true
