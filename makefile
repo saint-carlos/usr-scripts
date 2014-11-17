@@ -102,6 +102,71 @@ clean: # remove built targets
 mrproper: clean # remove everything generate by any build target from the project's directory
 	rm -f config.sh tags
 
+ifneq ($(shell which yum),)
+progs: # install set of progs required for this project and in general for power users
+	yum install 		\
+		binutils	\
+		dwarves		\
+		tcl		\
+		curl		\
+		nmap		\
+		nc		\
+		screen		\
+		ltrace		\
+		strace		\
+		gdb		\
+		gcc		\
+		glibc-static	\
+		file		\
+		gawk		\
+		bc		\
+		ncurses		\
+		p7zip		\
+		bzip2		\
+		gzip		\
+		xz		\
+		tar		\
+		openssh-clients	\
+		openssh-server	\
+		less		\
+		vim-minimal	\
+		git		\
+		bash		\
+		make
+else
+ifneq ($(shell which apt-get),)
+progs:
+	apt-get install 	\
+		binutils	\
+		dwarves		\
+		tcl8.5		\
+		curl		\
+		nmap		\
+		netcat-openbsd	\
+		screen		\
+		ltrace		\
+		strace		\
+		gdb		\
+		gcc		\
+		file		\
+		gawk		\
+		bc		\
+		ncurses-bin	\
+		p7zip		\
+		xz-utils	\
+		bzip2		\
+		gzip		\
+		tar		\
+		openssh-client	\
+		openssh-server	\
+		less		\
+		vim		\
+		git		\
+		bash		\
+		make
+endif
+endif
+
 # code is ugly, format is pretty
 # first, we find all "hard-coded" targets
 # then, remove everything that doesn't have a comment and remove everything
