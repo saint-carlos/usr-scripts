@@ -1,7 +1,7 @@
 #! /bin/bash
 # #############################################################################
 
-       NAME_=`basename $0`
+       NAME_=$(basename $0)
        HTML_="remove spaces in files"
     PURPOSE_="substitute space in a file and dir name with an _"
    SYNOPSIS_="$NAME_ [-vhl] <file> [file...]"
@@ -25,41 +25,39 @@ Usage: $SYNOPSIS_
 Requires: $REQUIRES_
 Options:
      -v, verbose
-     -h, usage and options (this help)
-     -l, see this script"
+     -h, usage and options (this help)"
     exit 1
 }
 
-# args check
-[ $# -eq 0 ] && { errcho "missing argument, type $NAME_ -h for help"; exit 1; }
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
 
-# var init
-verbose=false
+[ $# -eq 0 ] && die 1 "missing argument, type $NAME_ -h for help"
 
-# option and arg handling
-while getopts vhlr options; do
-
-    case "$options" in
-        v) verbose=true ;;
-        h) usage ;;
-        l) more $0; exit 1 ;;
-       \?) echo invalid argument, type $NAME_ -h for help; exit 1 ;;
-    esac
-
+VERBOSE=false
+while getopts vhlr OPTION; do
+	case $OPTION in
+		v) VERBOSE=true ;;
+		h) usage ;;
+		\?) die 1 "invalid argument, type $NAME_ -h for help" ;;
+	esac
 done
-shift $(( $OPTIND - 1 ))
+shift $((OPTIND - 1))
     
 # main execution
-for a in "$@"; do
-
-    newf=${a// /_}
-    if [[ "$a" == "$newf" ]];then
-        continue # no spaces in file name
-    elif [ -f "$newf" ] || [ -d "$newf" ]; then
-        echo "${NAME_}: not renaming \"$a\" - \"$newf\" already exist" && continue
-    else
-        $verbose && echo "renaming: \"$a\" -> \"$newf\""
-        mv -- "$a" "$newf"
-    fi
-
+for A in "$@"; do
+	NEWF=${A// /_}
+	if [ "$A" = "$NEWF" ];then
+		continue # no spaces in file name
+	elif [ -f "$NEWF" ] || [ -d "$NEWF" ]; then
+		errcho "${NAME_}: not renaming '$A' - '$NEWF' already exist" && continue
+	else
+		$VERBOSE && echo "renaming: '$A' -> '$NEWF'"
+		mv -- "$A" "$NEWF"
+	fi
 done

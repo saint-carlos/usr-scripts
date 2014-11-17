@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="launch vim in xterm"
 PARAMS="[file...]"
 OPTIONS="[-h] [vim-options]"
@@ -25,10 +25,11 @@ EOF
 	exit $1
 }
 
-while getopts h option; do
-	case $option in
+while getopts h OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 	esac
 done
+shift $((OPTIND - 1))
 
 exec urxvt -e vim ${1+"$@"}

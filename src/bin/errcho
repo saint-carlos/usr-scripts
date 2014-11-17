@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="echo to stderr."
 PARAMS=""
 OPTIONS="[-h]"
@@ -21,12 +21,12 @@ EOF
 	exit $1
 }
 
-while getopts nh option; do
-	case $option in
+while getopts nh OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 echo "$@" >&2

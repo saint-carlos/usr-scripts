@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="Generic shell wrapper that performs an operation and logs it."
 PARAMS="file command args..."
 OPTIONS="[-h]"
@@ -24,19 +24,18 @@ EOF
 
     exit $1
 }
-while getopts h option; do
-    case $option in
-        h) usage 0 ;;
-        \?) usage 1 ;;
-    esac
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 LOGFILE=$1
 shift
 if [ "$LOGFILE" = "-" ]
 	then LOGFILE=/dev/stderr
 fi
-echo -e "`date`\t`whoami`: $*" >> $LOGFILE
+echo -e "$(date)\t$(whoami): $*" >> "$LOGFILE"
 exec "$@"
-

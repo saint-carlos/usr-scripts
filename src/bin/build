@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="start the build system."
 PARAMS="[make arguments]"
 OPTIONS="[-hlprs] [-f err-filter]"
-PTS=`tty | xargs basename`
+PTS=$(tty | xargs basename)
 BUILD_LOG_PREFIX=/tmp/buildlog
 ERROR_LOG_PREFIX=/tmp/errlog
 BUILD_LOG="${BUILD_LOG_PREFIX}-pts-${PTS}"
@@ -12,6 +12,10 @@ ERROR_LOG="${ERROR_LOG_PREFIX}-pts-${PTS}"
 STDERR=/proc/$PPID/fd/2
 ERROR_COLOR=red
 STDERR_FAIL=false
+COMMAND=build
+PARALLEL="-j $(system_cpu_count)"
+CLEAN=false
+ERROR_OUTPUT=cat
 
 usage()
 {
@@ -42,11 +46,6 @@ EOF
     exit $1
 }
 
-COMMAND=build
-PARALLEL="-j `system_cpu_count`"
-CLEAN=false
-ERROR_OUTPUT=cat
-
 last_log()
 {
 	echo "$BUILD_LOG"
@@ -54,7 +53,7 @@ last_log()
 
 show_log()
 {
-	less `last_log`
+	less "$(last_log)"
 }
 
 show_problems()
@@ -78,29 +77,31 @@ build()
 	fi
 	$CLEAN && make "$@" clean
 	rm -f "$BUILD_LOG" "$ERROR_LOG"
-	time make ${PARALLEL} "$@" 2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | tee -a "$BUILD_LOG"
-	RETVAL=${PIPESTATUS[0]}
+	time make $PARALLEL "$@" \
+		2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | \
+		tee -a "$BUILD_LOG"
+	RC=${PIPESTATUS[0]}
 	if $STDERR_FAIL; then
-		RETVAL=1
-		PROBLEM_COUNT=`show_problems | wc -l | awk '{ print $1 }'`
+		RC=1
+		PROBLEM_COUNT=$(show_problems | wc -l | awk '{ print $1 }')
 		COLORTERM="$ERROR_COLOR"
 		if [ $PROBLEM_COUNT -eq 0 ]; then
 			PROBLEM_COUNT=no
 			COLORTERM=normal
-			RETVAL=0
+			RC=0
 		fi
 		color_echo -n "$COLORTERM" "there were ${PROBLEM_COUNT} errors/warnings."
 	fi
 	echo " log file: $BUILD_LOG. error log: $ERROR_LOG."
 	beep &
 	if grep 'make returned error' $BUILD_LOG >/dev/null; then
-		RETVAL=`grep 'make returned error' $BUILD_LOG | awk '{print $NF }'`
+		RC=$(grep 'make returned error' $BUILD_LOG | awk '{print $NF }')
 	fi
-	return $RETVAL
+	return $RC
 }
 
-while getopts hlprsf:e option; do
-        case ${option} in
+while getopts hlprsf:e OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		l) COMMAND=show_log ;;
 		p) COMMAND=show_problems ;;
@@ -109,9 +110,8 @@ while getopts hlprsf:e option; do
 		f) ERROR_OUTPUT="$OPTARG" ;;
 		e) STDERR_FAIL=true ;;
 		\?) usage 2 ;;
-        esac
+	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 $COMMAND "$@"
-

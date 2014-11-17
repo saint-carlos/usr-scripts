@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="generic extract from archive."
 PARAMS="file-name"
 OPTIONS="[-h]"
@@ -27,51 +27,48 @@ EOF
     exit $1
 }
 
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
+
 unrpm()
 {
 	RPM=$(readlink -f "$1")
-	DEST_DIR=$(basename ${RPM%.rpm})
-	mkdir "$DEST_DIR" && cd "$DEST_DIR" && rpm2cpio $RPM | cpio -idmv
+	DEST_DIR=$(basename "${RPM%.rpm}")
+	mkdir "$DEST_DIR" && cd "$DEST_DIR" && rpm2cpio "$RPM" | cpio -idmv
 }
 
-extractFile()
-{
-	case "$1" in
-		*.tar.bz2)	tar xvjf "$1" ;;
-		*.tar.xz)	tar xvJf "$1" ;;
-		*.tar.gz)	tar xvzf "$1" ;;
-		*.bz2)		bunzip2 "$1" ;;
-		*.rar)		unrar x "$1" ;;
-		*.ace)		unace x "$1" ;;
-		*.gz)		gunzip "$1" ;;
-		*.tar)		tar xvf "$1" ;;
-		*.tbz2)		tar xvjf "$1" ;;
-		*.tgz)		tar xvzf "$1" ;;
-		*.zip)		unzip "$1" ;;
-		*.Z)		uncompress "$1" ;;
-		*.7z)		7z x "$1" ;;
-		*.xz)		xz -d "$1" ;;
-		*.rpm)		unrpm "$1" ;;
-		*)			echo "$PROGRAM: '$1': extraction tool not found" ; return 1 ;;
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 2 ;;
 	esac
-}
-
-while getopts h option; do
-    case $option in
-        h) usage 0 ;;
-        \?) usage 2 ;;
-    esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-if [ $# -eq 0 ]; then
-	usage 2
-fi
+[ $# -eq 1 ] || usage 2
 
-if [ ! -f "$1" ]; then
-	echo "$PROGRAM: $1 does not exist"
-	exit 3
-fi
+[ -f "$1" ] || die 3 "$PROGRAM: '$1' does not exist"
 
-extractFile "$1"
-
+case "$1" in
+	*.tar.bz2)	tar xvjf "$1" ;;
+	*.tar.xz)	tar xvJf "$1" ;;
+	*.tar.gz)	tar xvzf "$1" ;;
+	*.bz2)		bunzip2 "$1" ;;
+	*.rar)		unrar x "$1" ;;
+	*.ace)		unace x "$1" ;;
+	*.gz)		gunzip "$1" ;;
+	*.tar)		tar xvf "$1" ;;
+	*.tbz2)		tar xvjf "$1" ;;
+	*.tgz)		tar xvzf "$1" ;;
+	*.zip)		unzip "$1" ;;
+	*.Z)		uncompress "$1" ;;
+	*.7z)		7z x "$1" ;;
+	*.xz)		xz -d "$1" ;;
+	*.rpm)		unrpm "$1" ;;
+	*) die 1  "$PROGRAM: '$1': extraction tool not found" ;;
+esac

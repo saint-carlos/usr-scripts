@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="ssh to a VirtualBox vm"
 PARAMS="[name [ssh-args]]"
 OPTIONS="[-hscl]"
@@ -22,7 +22,7 @@ a perliminary setup (-s) is required for the script to work. if you are going to
 without any arguments, the most recent machine is ssh'd.
 
 assumptions:
-* virtual machines are described in ${FILE}.
+* virtual machines are described in $FILE.
 * all VMs are in stored in the same directory.
 * a machine name corresponds to its hostname
 
@@ -50,7 +50,7 @@ vm_avail()
 
 machines_by_time()
 {
-	ls -c ${MACHINES_DIR}/*/${TIMESTAMP} | sed 's:.*/\([^/]*\)/'${TIMESTAMP}':\1:'
+	ls -c "$MACHINES_DIR"/*/$TIMESTAMP | sed 's:.*/\([^/]*\)/'${TIMESTAMP}':\1:'
 }
 
 find_vm()
@@ -58,7 +58,7 @@ find_vm()
 	local NAME=$1
 	if [ -z "$NAME" ]; then
 		MACHINE=$(machines_by_time | head -1)
-	elif [ -d "${MACHINES_DIR}/${NAME}" ]; then
+	elif [ -d "$MACHINES_DIR/$NAME" ]; then
 		MACHINE=${NAME}
 	else
 		MACHINE=$(machines_by_time | grep "$NAME" | head -1)
@@ -81,25 +81,25 @@ connect_ssh()
 
 setup()
 {
-	for MACHINE_DIR in ${MACHINES_DIR}/*; do
-		touch "${MACHINE_DIR}/${TIMESTAMP}"
+	for MACHINE_DIR in "$MACHINES_DIR"/*; do
+		touch "$MACHINE_DIR/$TIMESTAMP"
 	done
 }
 
 cleanup()
 {
-	rm ${MACHINES_DIR}/*/${TIMESTAMP}
+	rm "$MACHINES_DIR"/*/$TIMESTAMP
 }
 
 list_vms()
 {
-	ls "${MACHINES_DIR}"
+	ls "$MACHINES_DIR"
 }
 
 list_running()
 {
-	for MACHINE_DIR in ${MACHINES_DIR}/*; do
-		MACHINE=$(basename $MACHINE_DIR)
+	for MACHINE_DIR in "$MACHINES_DIR"/*; do
+		MACHINE=$(basename "$MACHINE_DIR")
 		vm_avail $MACHINE && echo $MACHINE
 	done
 }
@@ -113,16 +113,16 @@ shutdown()
 
 shutdown_all()
 {
-	for MACHINE_DIR in ${MACHINES_DIR}/*; do
-		MACHINE=$(basename $MACHINE_DIR)
+	for MACHINE_DIR in "$MACHINES_DIR"/*; do
+		MACHINE=$(basename "$MACHINE_DIR")
 		vm_avail $MACHINE || continue;
 		ssh "root@${MACHINE}" $SHUTDOWN
 	done
 }
 
 ACTION=connect_ssh
-while getopts hsclr- option; do
-	case $option in
+while getopts hsclr- OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		s) ACTION=setup ;;
 		c) ACTION=cleanup ;;
@@ -132,7 +132,7 @@ while getopts hsclr- option; do
 		\?) usage 255 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 case "$1" in
 	--shutdown)
 		ACTION=shutdown
@@ -146,5 +146,6 @@ case "$1" in
 		usage 255 ;;
 esac
 
-MACHINES_DIR=$(grep MachineEntry --max-count=1 $FILES 2>/dev/null | sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
+MACHINES_DIR=$(grep MachineEntry --max-count=1 $FILES 2>/dev/null | \
+	sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
 $ACTION "$@"

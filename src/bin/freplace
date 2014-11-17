@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="in-place text replace"
 PARAMS="regexp-to-replace replacement-text file-name..."
 OPTIONS="[-h]"
@@ -27,33 +27,25 @@ EOF
     exit $1
 }
 
-replace()
-{
-    REGEX="$1"
-    shift
-    REPLACEMENT="$1"
-    shift
-    for S in '/' ':' '|' ','; do
-        echo "${REGEX}${REPLACEMENT}" | grep "$S" >/dev/null 2>/dev/null
-        if [ $? -ne 0 ]; then # the SEPARATOR is not in the regex
-            SEPARATOR=$S
-            break;
-        fi
-    done
-    [ -n "$SEPARATOR" ] || return 255
-    sed -i "s${SEPARATOR}${REGEX}${SEPARATOR}${REPLACEMENT}${SEPARATOR}g" "$@"
-}
-
-while getopts h option; do
-    case $option in
-        h) usage 0 ;;
-        \?) usage 1 ;;
-    esac
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
+[ $# -le 2 ] && usage 1
 
-case $# in
-[0-2]) usage 1 ;;
-*) replace "$@" ;;
-esac
-
+REGEX="$1"
+shift
+REPLACEMENT="$1"
+shift
+for S in '/' ':' '|' ','; do
+	echo "${REGEX}${REPLACEMENT}" | grep "$S" >/dev/null 2>/dev/null
+	if [ $? -ne 0 ]; then # the SEPARATOR is not in the regex
+		SEPARATOR=$S
+		break;
+	fi
+done
+[ -n "$SEPARATOR" ] || return 255
+exec sed -i "s${SEPARATOR}${REGEX}${SEPARATOR}${REPLACEMENT}${SEPARATOR}g" "$@"
