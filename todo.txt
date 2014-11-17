@@ -3,7 +3,6 @@
 - vimrc: F8 should also do the mouse, and enter/exit insert mode
 - something in the prompt to remind you you're inside screen
 - make scrolling work in screen
-- help for git-diff-*
 - diff parameters (e.g. -U) for git-diff-*
 - see if __get_working_copy() and friends can use some simplifications
 - try to get title() to get the current title and assign conditionally (based on a switch)

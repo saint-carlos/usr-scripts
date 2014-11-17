@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="sanity test a patchset"
 PARAMS="[revision-range]"
 OPTIONS="[-hpr]"
@@ -51,8 +51,8 @@ tree_dirty()
 
 clean_files()
 {
-	rm $STDERR
-	$PAUSE || rm $REVLIST
+	rm "$STDERR"
+	$PAUSE || rm "$REVLIST"
 }
 
 touch_patch()
@@ -83,9 +83,9 @@ done
 shift `expr $OPTIND - 1`
 
 CPU_COUNT=$(nproc)
-REVLIST=.${PROGRAM}-todo
+REVLIST=".${PROGRAM}-todo"
 STDERR=$(mktemp)
-trap "clean_files" EXIT INT QUIT TERM
+trap clean_files EXIT INT QUIT TERM
 
 HEAD=$(cat .git/HEAD)
 echo "original revision: $HEAD"
@@ -93,18 +93,18 @@ echo "original revision: $HEAD"
 if [ $# -eq 0 ]; then
 	PAUSE=true
 else
-	git log --reverse --format="%H"  "$@" > $REVLIST
+	git log --reverse --format="%H"  "$@" > "$REVLIST"
 fi
 
 BUILD_ERROR=false
-for REVISION in $(cat $REVLIST); do
+for REVISION in $(cat "$REVLIST"); do
 	git checkout $REVISION || exit 1
 	check_patch || exit 2
 	make oldconfig || exit 3
 	make -j $CPU_COUNT || BUILD_ERROR=true
 	touch_patch
-	make -j $CPU_COUNT C=1 fs/ lib/ 2>$STDERR || BUILD_ERROR=true
-	if grep -v 'Nothing to be done for' $STDERR; then
+	make -j $CPU_COUNT C=1 fs/ lib/ 2>"$STDERR" || BUILD_ERROR=true
+	if grep -v 'Nothing to be done for' "$STDERR"; then
 		echo "errors encountered."
 		if $BUILD_ERROR; then
 			exit 4
@@ -113,7 +113,7 @@ for REVISION in $(cat $REVLIST); do
 		fi
 	fi
 	$REVIEW && git show --patch-with-stat --summary -U50
-	sed -i -e "/$REVISION/d" $REVLIST || exit 6
+	sed -i -e "/$REVISION/d" "$REVLIST" || exit 6
 	if $PAUSE; then
 		echo "pausing"
 		exit 0

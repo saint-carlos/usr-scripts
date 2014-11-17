@@ -1,29 +1,58 @@
 #!/bin/bash
 
-if [ $# -ne 2 ] ; then
-	printf "\nUSAGE: gdl <commit-or-range> <commit-or-range>\n\n" 1>&2
-	exit 1
-fi
+#!/bin/bash
 
-from_base=0
-to_base=0
-[[ $1 =~ \.\. ]] && from_base=1
-[[ $2 =~ \.\. ]] && to_base=1
-if (( (from_base + to_base) % 2 != 0 )) ; then
-	printf "\nERROR: one side specifies commit, the other - range\n" 1>&2
-	exit 2
-fi
-if [ $from_base -ne 1 ] ; then
-	base=$(git merge-base $1 $2)
+PROGRAM=$(basename $0)
+DESCRIPTION="diff between logs"
+PARAMS="revision-range revision-range"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+revision-range can be a single commit.
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+254	arguments have no common base
+255	bad arguments
+otherwise same as vimdiff
+EOF
+    exit $1
+}
+
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 255 ;;
+	esac
+done
+shift $((OPTIND - 1))
+[ $# -eq 2 ] || usage 255
+FROM_BASE=0
+TO_BASE=0
+[[ $1 =~ \.\. ]] && FROM_BASE=1
+[[ $2 =~ \.\. ]] && TO_BASE=1
+(( (FROM_BASE + TO_BASE) % 2 == 0 )) || usage 255
+
+if [ $FROM_BASE -ne 1 ] ; then
+	BASE=$(git merge-base $1 $2)
 	if [ $? -ne 0 ] ; then
-		printf "\nERROR: '$1' and '$2' don't seem to have common base!\n" 1>&2
-		exit 2
+		errcho "'$1' and '$2' don't seem to have common base!"
+		exit 254
 	fi
-	from_base=$base^..
-	to_base=$base^..
+	FROM_BASE="${BASE}^.."
+	TO_BASE="${BASE}^.."
 else
-	from_base=
-	to_base=
+	FROM_BASE=""
+	TO_BASE=""
 fi
 
-vimdiff -c 'set diffexpr=GitDiffLog()' <(git log ${from_base}$1) <(git log ${to_base}$2)
+exec vimdiff -c 'set diffexpr=GitDiffLog()' <(git log "${FROM_BASE}$1") <(git log "${TO_BASE}$2")
