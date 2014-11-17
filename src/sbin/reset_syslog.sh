@@ -37,7 +37,7 @@ done
 shift `expr $OPTIND - 1`
 
 old_file="CONFIG_SYSLOG_FILE"
-new_file="${old_file}-`date +%y-%m-%d-%H-%M-%S`"
+new_file="${old_file}-$(timestamp)"
 
 service rsyslog stop
 $KEEP && return
