@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="run a gui program without interrupting the terminal"
 PARAMS="command..."
 OPTIONS="[-h]"
@@ -26,11 +26,13 @@ EOF
     exit $1
 }
 
-while getopts h option; do
-    case $option in
-        h) usage 1 ;;
-    esac
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
 done
+shift $((OPTIND - 1))
 
 < /dev/null "$@" &> /dev/null &
 echo "$! $1"

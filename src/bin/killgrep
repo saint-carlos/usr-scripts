@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="kill a process by grepping its properties."
 PARAMS="text"
 OPTIONS="[-9h] [-s sigspec]"
@@ -31,17 +31,17 @@ EOF
 }
 
 KILLFLAGS=""
-while getopts hs:9 option; do
-	case ${option} in
+while getopts hs:9 OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		s) KILLFLAGS="-s $OPTARG" ;;
 		9) KILLFLAGS="-s KILL" ;;
 		\?) usage 2 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-RES=1
+RC=1
 for TARGET in "$@"; do
 	PROCESSES="$(psgrep -n "$TARGET")"
 	PROCESSES="$(echo "$PROCESSES" | grep -v "^ *$$" | awk '{ print $1 }' | xargs kill $KILLFLAGS)"
@@ -49,7 +49,7 @@ for TARGET in "$@"; do
 	PROCESSES="$(psgrep -n "$TARGET")"
 	echo "$PROCESSES" | grep -v "^ *$$"
 	if [ "$TEMP" -eq 0 ]; then
-		RES=0
+		RC=0
 	fi
 done
-exit $RES
+exit $RC

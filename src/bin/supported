@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="test if an option to a program is supported"
 PARAMS="program options arg..."
 OPTIONS="[-h]"
@@ -33,14 +33,14 @@ EOF
 }
 
 MAX_RETCODE=0
-while getopts hm: option; do
-    case $option in
-        h) usage 0 ;;
+while getopts hm: OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
 		m) MAX_RETCODE="$OPTARG" ;;
-        \?) usage 3 ;;
-    esac
+		\?) usage 3 ;;
+	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 test $# -ge 2 || usage 3
 if cmd_exists "$1"; then

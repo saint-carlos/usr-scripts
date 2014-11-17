@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="execute a command on a remote machine"
 PARAMS="machine-config-file [command [arg...]]"
 OPTIONS="[-hgv]"
@@ -35,14 +35,14 @@ VM_NEEDS_SUSPEND=false
 # @: command to virtual machine
 vmware_command()
 {
-	${IS_VIRTUAL} || return 0
+	$IS_VIRTUAL || return 0
 	ssh $VMSERVER "vmware-cmd '$VMFILE'" "$@" < /dev/null || die 255 "virtual machine on server $VMSERVER: command $* faild"
 }
 
 # VM_NEEDS_SUSPEND: indicates if we need to suspend the current vm.
 suspend_vm()
 {
-	${VM_NEEDS_SUSPEND} || return
+	$VM_NEEDS_SUSPEND || return
 	VM_NEEDS_SUSPEND=false # if suspends recurses to die(), it will not try to suspend again
 	vmware_command suspend hard
 }
@@ -52,16 +52,16 @@ suspend_vm()
 # 2 (optional): message to display upon exit.
 die()
 {
-    local ret_val=$1
+    local RC=$1
 	[ -n "$2" ] && errcho "${PROGRAM}($$): $2"
 	suspend_vm
-    exit $ret_val
+    exit $RC
 }
 
 # return: 0 if the vm is up, 1 if not.
 is_vm_up()
 {
-	${IS_VIRTUAL} || return 0
+	$IS_VIRTUAL || return 0
 	vmware_command getstate | grep "\= on" > /dev/null
 }
 
@@ -69,8 +69,8 @@ is_vm_up()
 # VM_NEEDS_SUSPEND: will contain whether (1) or not (0) the current vm needs to be suspended.
 assure_vm_up()
 {
-	${ASSUME_VM_UP} && return 0
-	${IS_VIRTUAL} || return 0
+	$ASSUME_VM_UP && return 0
+	$IS_VIRTUAL || return 0
 	if is_vm_up; then
 		VM_NEEDS_SUSPEND=false
 	else
@@ -86,24 +86,23 @@ assure_vm_up()
 #####################################################################
 
 ASSUME_VM_UP=true
-while getopts hgv option; do
-	case $option in
+while getopts hgv OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		g) set -x ;;
 		v) ASSUME_VM_UP=false ;;
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
 MACHINE_FILE=$1
 shift
 [ -n "$MACHINE_FILE" ] || die 255 "no machine file given"
 IS_VIRTUAL=false
-source $MACHINE_FILE
+source "$MACHINE_FILE"
 test -n "$VMFILE" && IS_VIRTUAL=true
 assure_vm_up
 ssh root@${IP} $*
 RC=$?
 die $RC "execution on remote machine $MACHINE_FILE ($IP) ended with error code $RC"
-

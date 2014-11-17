@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROGRAM=`basename $0`
+PROGRAM=$(basename $0)
 DESCRIPTION="get process info by part of its name."
 PARAMS="string ..."
 OPTIONS="[-hnd] [-o options]"
@@ -35,8 +35,8 @@ EOF
 SHOW_HEADER=true
 GREP_OPTIONS=""
 DSTATE=false
-while getopts hno:d option; do
-	case ${option} in
+while getopts hno:d OPTION; do
+	case $OPTION in
 		h) usage 0 ;;
 		n) SHOW_HEADER=false ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
@@ -44,9 +44,9 @@ while getopts hno:d option; do
 		\?) usage 1 ;;
 	esac
 done
-shift `expr $OPTIND - 1`
+shift $((OPTIND - 1))
 
-if supported -m 1 grep "--color=auto" .; then
+if supported -m 1 grep --color=auto .; then
 	if [ -t 1 ]; then
 		GREP_OPTIONS="$GREP_OPTIONS --color=always"
 	else
@@ -78,9 +78,9 @@ filter_processes()
 # make sure that while we're executing ps, the only processes which belong to us
 # are ps' process and $$.
 PS_COMMAND='ps -o pid,ppid,user,flags,stat,wchan:16,tty,start,cmd -ww'
-PROCESSES=`$PS_COMMAND -e`
-PROCESSES=`echo "$PROCESSES" | egrep -v -e "^ *\<$$\>" -e "^[0-9]+ +\<$$\>"`
-PROCESSES=`echo "$PROCESSES" | eval tail -n +2 "$DSTATE_FILTER" | filter_processes "$@"`
+PROCESSES=$($PS_COMMAND -e)
+PROCESSES=$(echo "$PROCESSES" | egrep -v -e "^ *\<$$\>" -e "^[0-9]+ +\<$$\>")
+PROCESSES=$(echo "$PROCESSES" | eval tail -n +2 "$DSTATE_FILTER" | filter_processes "$@")
 if [ -n "$PROCESSES" ]; then
 	$SHOW_HEADER && $PS_COMMAND | head -n 1
 	echo "$PROCESSES"
