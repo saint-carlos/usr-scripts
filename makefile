@@ -128,6 +128,8 @@ progs: # install set of progs required for this project and in general for power
 		tar		\
 		openssh-clients	\
 		openssh-server	\
+		diffutils	\
+		patch		\
 		less		\
 		vim-minimal	\
 		git		\
@@ -159,6 +161,8 @@ progs:
 		tar		\
 		openssh-client	\
 		openssh-server	\
+		diffutils	\
+		patch		\
 		less		\
 		vim		\
 		git		\
