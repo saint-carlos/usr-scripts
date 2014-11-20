@@ -55,11 +55,15 @@ number_width()
 {
 	NUM=$1
 	for w in 1 2 4; do
-		if test "$(( $NUM >> (w * 8) ))" -eq 0; then
-			echo "$w"
+		if ((NUM >> (w * 8) == 0)); then
+			echo $w
 			return 0
 		fi
 	done
+	if ((NUM >> (8 * 8) == NUM)); then
+		echo 8
+		return 0
+	fi
 	return 1
 }
 
@@ -88,7 +92,7 @@ NUM="$(($1))"
 RESULT=0
 NUM_WIDTH="$WIDTH"
 if [ "$NUM_WIDTH" -eq 0 ]; then
-	NUM_WIDTH=$(number_width "$NUM")
+	NUM_WIDTH=$(number_width "$NUM") || exit 1
 fi
 i=0
 while [ "$i" -lt "$NUM_WIDTH" ]; do
