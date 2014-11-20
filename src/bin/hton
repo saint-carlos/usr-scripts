@@ -65,10 +65,14 @@ number_width()
 
 ARCH_DEP=false
 WIDTH=0
-while getopts ah1248 OPTION; do
+FMT="%lld"
+while getopts ahoxX1248 OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		a) ARCH_DEP=true ;;
+		o) FMT="%llo" ;;
+		x) FMT="%llx" ;;
+		X) FMT="%llX" ;;
 		1|2|4|8) WIDTH=$OPTION ;;
 		\?) usage 1 ;;
 	esac
@@ -80,7 +84,7 @@ if $ARCH_DEP && arch_differs_net_order; then
 	exit
 fi
 
-NUM="$1"
+NUM="$(($1))"
 RESULT=0
 NUM_WIDTH="$WIDTH"
 if [ "$NUM_WIDTH" -eq 0 ]; then
@@ -92,4 +96,4 @@ while [ "$i" -lt "$NUM_WIDTH" ]; do
 	RESULT=$(( (RESULT << 8) | PART ))
 	((i++))
 done
-echo $RESULT
+printf "${FMT}\n" $RESULT
