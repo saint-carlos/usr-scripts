@@ -65,7 +65,7 @@ number_width()
 
 ARCH_DEP=false
 WIDTH=0
-FMT="%lld"
+FMT="%llu"
 while getopts ahoxX1248 OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
