@@ -152,7 +152,7 @@ __get_working_copy()
 		done
 		WORKING_COPY=$(echo "$LIST" | sed 1q)
 	fi
-	[ -n "$WORKING_COPY" ] && termset $(basename "$WORKING_COPY") > /dev/tty
+	[ -n "$WORKING_COPY" ] && CONFIG_DESKTOP && termset $(basename "$WORKING_COPY")
 	echo "$WORKING_COPY"
 }
 
