@@ -16,20 +16,24 @@ $PROGRAM $OPTIONS $PARAMS
 
 options:
 -h	help: show this help message and exit.
+-s	stdout: don't write the the terminal; just emit the character sequence.
 EOF
 
     exit $1
 }
 
-while getopts h OPTION; do
+TTY=true
+while getopts hs OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
+		s) TTY=false ;;
 		\?) usage 1 ;;
 	esac
 done
 shift $((OPTIND - 1))
 
 TITLE="$*"
+$TTY && exec > /dev/tty
 case $TERM in
 	xterm*|rxvt*) printf "\e]0;${TITLE}\007" ;;
 	screen*) echo -en "\033_${TITLE}\033\\" ;;
