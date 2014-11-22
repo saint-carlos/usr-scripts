@@ -4,3 +4,4 @@
 - something in the prompt to remind you you're inside screen
 - make scrolling work in screen
 - diff parameters (e.g. -U) for git-diff-*
+- findgrep should support spaces
