@@ -105,6 +105,8 @@ mrproper: clean # remove everything generate by any build target from the projec
 ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install 		\
+		cloc		\
+		elfutils	\
 		binutils	\
 		dwarves		\
 		tcl		\
@@ -139,6 +141,8 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		cloc		\
+		elfutils	\
 		binutils	\
 		dwarves		\
 		tcl8.5		\
