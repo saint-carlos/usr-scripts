@@ -21,7 +21,7 @@ VER='1.5'
 DESCRIPTION="print name and description of signal numbers, $VER (stv '95)"
 PARAMS="{number|name|regex} [...]"
 OPTIONS="[-hl]"
-SIGNUMS=/tmp/$PROGRAM
+SIGNUMS=/tmp/${PROGRAM}.cache
 
 usage()
 {
@@ -98,7 +98,7 @@ done
 			    }
 			    print $3 "	" $2 "	" Desc
 			}
-		' | sort -u > "$SIGNUMS"
+		' | colsort -o nu 1 > "$SIGNUMS"
 	[ -s "$SIGNUMS" ] || die 1 "could not find include file(s)"
 }
 

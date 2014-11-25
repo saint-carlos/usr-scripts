@@ -22,7 +22,7 @@ VER='1.5'
 DESCRIPTION="print name and description of error codes, $VER (stv '95)"
 PARAMS="{number|name|regex} [...]"
 OPTIONS="[-hl]"
-ERRNOS=/tmp/$PROGRAM
+ERRNOS=/tmp/${PROGRAM}.cache
 
 usage()
 {
@@ -99,7 +99,7 @@ done
 			    }
 			    print $3 "	" $2 "	" Desc
 			}
-		' | sort -u > "$ERRNOS"
+		' | colsort -o nu 1 > "$ERRNOS"
 	[ -s "$ERRNOS" ] || die 1 "could not find include file(s)"
 }
 
