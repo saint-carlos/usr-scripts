@@ -127,7 +127,7 @@ if $PATCHSET; then
 	sed -i "s|\*\*\* SUBJECT HERE \*\*\*|$SUBJECT|" "$COVER_LETTER"
 	perl -i.bak -pe "s|\*\*\* BLURB HERE \*\*\*|$PULL_REQ|" "$COVER_LETTER"
 	sed -i -e '/Subject:/{n;i\' -e "\nID: $PATCHSET_ID" -e ':a;n;ba;}' "$COVER_LETTER"
-	sed -i -e '/---/{n;i\' -e "\nPatchset: $PATCHSET_ID $SUBJECT\n" -e ':a;n;ba;}' "$PATCHES"
+	sed -i -e '/---/{n;i\' -e "\nPatchset: $PATCHSET_ID $SUBJECT\n" -e ':a;n;ba;}' $PATCHES
 else
 	git format-patch -U15 --stdout \
 		--subject-prefix="PATCH${PREFIX}${VERSION}" \
