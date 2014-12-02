@@ -10,7 +10,7 @@ banner=no
 color_patches=no
 # Sometimes it can be useful to specify which diff command to
 # use: that can be specified here
-diff_cmd=diff
+# diff_cmd=diff
 # 
 # available colours are: white, yellow, green, blue,
 #                        cyan, red, magenta, black,
