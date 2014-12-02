@@ -28,31 +28,45 @@ EOF
     exit $1
 }
 
-while getopts h OPTION; do
-	case $OPTION in
-		h) usage 0 ;;
-		\?) usage 255 ;;
-	esac
-done
-shift $((OPTIND - 1))
-[ $# -eq 2 ] || usage 255
-FROM_BASE=0
-TO_BASE=0
-[[ $1 =~ \.\. ]] && FROM_BASE=1
-[[ $2 =~ \.\. ]] && TO_BASE=1
-(( (FROM_BASE + TO_BASE) % 2 == 0 )) || usage 255
+if [ "$1" = "-h" ]; then
+	usage 0
+fi
+[ $# -ge 2 ] || usage 255
+ARGS=( "$@" )
+LIDX=$(($# - 2))
+RIDX=$(($# - 1))
+LEFT="${ARGS[LIDX]}"
+RIGHT="${ARGS[RIDX]}"
+unset ARGS[LIDX]
+unset ARGS[RIDX]
 
-if [ $FROM_BASE -ne 1 ] ; then
-	BASE=$(git merge-base $1 $2)
+[ $# -ge 2 ] || usage 255
+ARGS=( "$@" )
+LIDX=$(($# - 2))
+RIDX=$(($# - 1))
+LEFT="${ARGS[LIDX]}"
+RIGHT="${ARGS[RIDX]}"
+unset ARGS[LIDX]
+unset ARGS[RIDX]
+LEFT_BASE=0
+RIGHT_BASE=0
+[[ "$LEFT" =~ \.\. ]] && LEFT_BASE=1
+[[ "$RIGHT" =~ \.\. ]] && RIGHT_BASE=1
+[ $LEFT_BASE -eq $RIGHT_BASE ] || usage 255
+
+if [ $LEFT_BASE -ne 1 ] ; then
+	BASE=$(git merge-base "$LEFT" "$RIGHT")
 	if [ $? -ne 0 ] ; then
-		errcho "'$1' and '$2' don't seem to have common base!"
+		errcho "'$LEFT' and '$RIGHT_BASE' don't seem to have common base!"
 		exit 254
 	fi
-	FROM_BASE="${BASE}^.."
-	TO_BASE="${BASE}^.."
+	LEFT_BASE="${BASE}^.."
+	RIGHT_BASE="${BASE}^.."
 else
-	FROM_BASE=""
-	TO_BASE=""
+	LEFT_BASE=""
+	RIGHT_BASE=""
 fi
 
-exec vimdiff -c 'set diffexpr=GitDiffLog()' <(git log "${FROM_BASE}$1") <(git log "${TO_BASE}$2")
+exec vimdiff -c 'set diffexpr=GitDiffLog()' \
+	<(git log "${ARGS[@]}" "${LEFT_BASE}${LEFT}") \
+	<(git log "${ARGS[@]}" "${RIGHT_BASE}${RIGHT}")

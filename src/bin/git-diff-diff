@@ -25,21 +25,26 @@ EOF
     exit $1
 }
 
-while getopts h OPTION; do
-	case $OPTION in
-		h) usage 0 ;;
-		\?) usage 255 ;;
-	esac
-done
-shift $((OPTIND - 1))
-[ $# -eq 2 ] || usage 255
+if [ "$1" = "-h" ]; then
+	usage 0
+fi
+[ $# -ge 2 ] || usage 255
+ARGS=( "$@" )
+LIDX=$(($# - 2))
+RIDX=$(($# - 1))
+LEFT="${ARGS[LIDX]}"
+RIGHT="${ARGS[RIDX]}"
+unset ARGS[LIDX]
+unset ARGS[RIDX]
 
-FROM_CMD=show
-case $1 in
-	*..*) FROM_CMD=diff;;
+case $LEFT in
+	*..*) LEFT_CMD=diff ;;
+	*) LEFT_CMD=show
 esac
-TO_CMD=show
-case $2 in
-	*..*) TO_CMD=diff;;
+case $RIGHT in
+	*..*) RIGHT_CMD=diff ;;
+	*) RIGHT_CMD=show ;;
 esac
-exec vimdiff -c 'set diffexpr=GitDiffDiff()' <(git $FROM_CMD $1) <(git $TO_CMD $2)
+exec vimdiff -c 'set diffexpr=GitDiffDiff()' \
+	<(git $LEFT_CMD "${ARGS[@]}" "$LEFT") \
+	<(git $RIGHT_CMD "${ARGS[@]}" "$RIGHT")
