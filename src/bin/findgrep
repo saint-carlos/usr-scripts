@@ -70,10 +70,10 @@ shift $((OPTIND - 1))
 [ $# -ge 1 ] || usage 2
 TEXT="$1"
 shift
-# SEARCHDIRS=${$*:-$SEARCHDIRS} # handle spaces in dirnames
 if [ $# -gt 0 ]; then
-	SEARCHDIRS="$@"
+	SEARCHDIRS=("$@")
 fi
+SEARCHDIRS=("${SEARCHDIRS[@]// /\\ }")
 
 BLACKLIST_FILTER="mfilter -v ${BLACKLIST}"
 BUILTIN_GREP_FLAGS="-n"
@@ -85,7 +85,7 @@ if [ -n "$CRITERIA" ]; then
 	CRITERIA="'(' -inum 0 $CRITERIA ')'" # "inum 0" is used as "false"
 fi
 
-eval find "$SEARCHDIRS" -type f $CRITERIA | \
+eval find "${SEARCHDIRS[@]}" -type f $CRITERIA | \
 	eval $BLACKLIST_FILTER | \
 	awk '{ print "\"" $0 "\"" }' | \
 	xargs grep $GREP_OPTIONS $BUILTIN_GREP_FLAGS "$TEXT" /dev/null
