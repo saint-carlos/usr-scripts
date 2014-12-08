@@ -1,0 +1,93 @@
+#!/bin/bash -e
+
+PROGRAM=$(basename $0)
+DESCRIPTION="push a rewritten branch"
+PARAMS="repository refspec"
+OPTIONS="[-hvc]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+force-push a rewritten branch, and save its old version in a tag.
+the tag pattern is branch-name-vN, where N is the latest version.
+if the tag already exists - that is, if the remote branch is already tagged with the given pattern - nothing is pushed except for the requested branch, unless -c was given.
+
+options:
+-h	help: show this help message and exit.
+-v	verbose: use verbose git push.
+-c	current: tag the current version as well.
+
+exit status:
+0:	success
+255:	bad arguments
+otherwise, exit status from git-push
+EOF
+	exit $1
+}
+
+VERBOSE=""
+CURRENT=false
+PREV=true
+while getopts hvc option; do
+	case $option in
+		h) usage 0 ;;
+		v) VERBOSE="--verbose" ;;
+		c) CURRENT=true ;;
+		\?) usage 255 ;;
+	esac
+done
+shift $(($OPTIND - 1))
+[ $# -eq 2 ] || usage 255
+REPO="$1"
+REFSPEC="$2"
+
+case "$REFSPEC" in
+	*:*) BRANCH="${REFSPEC#*:}"; LOCAL_BRANCH="${REFSPEC%%:*}" ;;
+	*) BRANCH="$REFSPEC"; LOCAL_BRANCH="$REFSPEC" ;;
+esac
+BRANCH="${BRANCH#refs/heads/}"
+LOCAL_HASH=$(git rev-parse "$LOCAL_BRANCH")
+REMOTE_BRANCH="refs/remotes/$REPO/$BRANCH"
+REMOTE_HASH=$(git rev-parse "$REMOTE_BRANCH")
+[ "$REMOTE_HASH" = "$LOCAL_HASH" ] && CURRENT=false
+
+BASENAME_PREFIX="${BRANCH}-v"
+PREFIX="refs/tags/$BASENAME_PREFIX"
+REMOTE_TAG_LAST=$(git ls-remote --tags "$REPO" | \
+	cut -f 2- | \
+	grep "^${PREFIX}[0-9][0-9]*" | \
+	sort -rn --key 1.$((${#PREFIX} + 1)) |
+	head -n 1)
+if [ -n "$REMOTE_TAG_LAST" ]; then
+	LAST_REMOTE_VERSION=${REMOTE_TAG_LAST#${PREFIX}}
+	LAST_HASH=$(git rev-parse "$REMOTE_TAG_LAST");
+	[ "$REMOTE_HASH" = "$LAST_HASH" ] && PREV=false
+	[ "$LOCAL_HASH" = "$LAST_HASH" ] && CURRENT=false
+else
+	LAST_REMOTE_VERSION=0
+fi
+
+LAST_TAGGED_VERSION=$LAST_REMOTE_VERSION
+if $PREV; then
+	LAST_TAGGED_VERSION=$((LAST_TAGGED_VERSION + 1))
+	PREV_TAG="${BASENAME_PREFIX}${LAST_TAGGED_VERSION}"
+	git tag "$PREV_TAG" "$REMOTE_BRANCH"
+else
+	PREV_TAG=""
+	PREV_REFSPEC=""
+fi
+if $CURRENT; then
+	LAST_TAGGED_VERSION=$((LAST_TAGGED_VERSION + 1))
+	CURRENT_TAG="${BASENAME_PREFIX}${LAST_TAGGED_VERSION}"
+	git tag "$CURRENT_TAG" "$LOCAL_BRANCH"
+else
+	CURRENT_TAG=""
+	CURRENT_REFSPEC=""
+fi
+
+exec git push $VERBOSE --force $REPO $REFSPEC $PREV_TAG $CURRENT_TAG

@@ -39,6 +39,38 @@ _git_make_patchset()
 		elif [ $__ARG -eq 3 ]; then
 			__gitcomp_nl "$(__git_remotes)"
 		fi
+}
+
+_git_push_rewrite()
+{
+	if [[ "$cur" =~ ^- ]]; then
+		GETOPT=""
+		COMPREPLY=()
+		for OPT in h v c; do
+			if [ "$cur" = "-$OPT" ]; then
+				COMPREPLY=("$cur")
+				return
+			fi
+			COMPREPLY+=("-$OPT")
+			GETOPT+=$OPT
+		done
+
+		ALL_FORMATTED=$(echo "${COMPREPLY[@]}" | tr ' ' '\n' | sort)
+		OPT_FORMATTED=$(getopt -o $GETOPT -- ${words[@]} | tr ' ' '\n' | sort)
+		COMPREPLY=($(comm -23 <(echo "$ALL_FORMATTED") <(echo "$OPT_FORMATTED")))
+	else
+		for ((__i=$((${#words[@]})); __i >= 2; __i--)); do
+			[[ "${words[__i]}" =~ ^- ]] && break
+		done
+		__ARG=$((cword - __i))
+		case "$__ARG,$cur" in
+			1,*) __gitcomp_nl "$(__git_remotes)" ;;
+			2,*:*) __HEADS="$(git ls-remote --heads "$prev" | \
+					cut -f2- | cut -d/ -f3-)"
+				__gitcomp_nl "$__HEADS" "" "${cur#*:}"
+				;;
+			2,*) __gitcomp_nl "$(__git_refs)" ;;
+		esac
 	fi
 }
 
