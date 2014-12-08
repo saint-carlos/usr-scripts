@@ -5,6 +5,7 @@ DESCRIPTION="grep the dictionary the dictionary"
 PARAMS="word"
 OPTIONS="[-h]"
 DICTS=(/usr/share/dict/words)
+LTR_DICTS=(CONFIG_SHARE/hebrew.txt)
 
 usage()
 {
@@ -42,4 +43,6 @@ if [ $# -ne 1 ]; then
 fi
 
 grep -x --no-filename "$1" "${DICTS[@]}" && exit 0
+grep -x --no-filename "$1" "${LTR_DICTS[@]}" | rev
+[ ${PIPESTATUS[0]} -eq 0 ] && exit 0
 exit 1

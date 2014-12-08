@@ -18,6 +18,7 @@ FILES := $(patsubst src/%, %, $(wildcard \
 
 DESKTOP_FILES :=		\
 	bin/dlookup		\
+	share/hebrew.txt.xz	\
 	bin/icat		\
 	bin/myip		\
 	bin/permute		\
@@ -135,6 +136,7 @@ progs: # install set of progs required for this project and in general for power
 		diffutils	\
 		patch		\
 		less		\
+		util-linux	\
 		vim-minimal	\
 		git		\
 		bash		\
@@ -170,6 +172,7 @@ progs:
 		diffutils	\
 		patch		\
 		less		\
+		util-linux	\
 		vim		\
 		git		\
 		bash		\
