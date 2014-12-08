@@ -1,9 +1,10 @@
 #!/bin/bash
 
 PROGRAM=$(basename $0)
-DESCRIPTION="test whether or not a word is in the dictionary"
+DESCRIPTION="grep the dictionary the dictionary"
 PARAMS="word"
 OPTIONS="[-h]"
+DICT=/usr/share/dict/words
 
 usage()
 {
@@ -13,6 +14,9 @@ usage()
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
+the the entire word is grepped, so words containing the given word are not printed.
+regular expressions may be used.
+the dictionary is assumed to be at $DICT.
 
 options:
 -h	help: show this help message and exit.
@@ -37,4 +41,4 @@ if [ $# -ne 1 ]; then
 	usage 2
 fi
 
-exec look "$1" | grep -q "$1\$"
+exec grep -x "$1" "$DICT"
