@@ -13,6 +13,7 @@ FILES := $(patsubst src/%, %, $(wildcard \
 	src/etc/*			\
 	src/lib/vim/*/*			\
 	src/lib/urxvt/*			\
+	src/share/*			\
 ))
 
 DESKTOP_FILES :=		\
