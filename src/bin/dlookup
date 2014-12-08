@@ -4,7 +4,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="grep the dictionary the dictionary"
 PARAMS="word"
 OPTIONS="[-h]"
-DICT=/usr/share/dict/words
+DICTS=(/usr/share/dict/words)
 
 usage()
 {
@@ -41,4 +41,5 @@ if [ $# -ne 1 ]; then
 	usage 2
 fi
 
-exec grep -x "$1" "$DICT"
+grep -x --no-filename "$1" "${DICTS[@]}" && exit 0
+exit 1
