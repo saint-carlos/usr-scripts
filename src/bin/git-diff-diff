@@ -2,8 +2,8 @@
 
 PROGRAM=$(basename $0)
 DESCRIPTION="diff between diffs"
-PARAMS="revision-range revision-range"
-OPTIONS="[-h]"
+PARAMS="revision-range revision-range [--] [path...]"
+OPTIONS="[-h] [git-diff-options]"
 DIFF_OPTS="--patch-with-stat --summary"
 
 usage()

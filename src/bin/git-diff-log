@@ -4,8 +4,8 @@
 
 PROGRAM=$(basename $0)
 DESCRIPTION="diff between logs"
-PARAMS="revision-range revision-range"
-OPTIONS="[-h]"
+PARAMS="revision-range revision-range [--] [path...]"
+OPTIONS="[-h] [git-log-options]"
 GIT_LOG="git log --stat --summary"
 
 usage()

@@ -76,12 +76,12 @@ _git_push_rewrite()
 
 _git_diff_diff()
 {
-	__git_complete_revlist
+	_git_diff "$@"
 }
 
 _git_diff_log()
 {
-	__git_complete_revlist
+	_git_diff "$@"
 }
 
 __external_root_executable()
