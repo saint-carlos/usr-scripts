@@ -46,7 +46,7 @@ unset ARGS[RIDX]
 
 case $LEFT in
 	*..*) LEFT_CMD=diff ;;
-	*) LEFT_CMD=show
+	*) LEFT_CMD=show ;;
 esac
 case $RIGHT in
 	*..*) RIGHT_CMD=diff ;;
