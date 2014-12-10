@@ -6,6 +6,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="diff between logs"
 PARAMS="revision-range revision-range"
 OPTIONS="[-h]"
+GIT_LOG="git log --stat --summary"
 
 usage()
 {
@@ -67,5 +68,5 @@ else
 fi
 
 exec vimdiff -c 'set diffexpr=GitDiffLog()' \
-	<(git log "${ARGS[@]:0:${START}}" "${LEFT_BASE}${LEFT}" "${ARGS[@]:${END}}") \
-	<(git log "${ARGS[@]:0:${START}}" "${RIGHT_BASE}${RIGHT}" "${ARGS[@]:${END}}")
+	<($GIT_LOG "${ARGS[@]:0:${START}}" "${LEFT_BASE}${LEFT}" "${ARGS[@]:${END}}") \
+	<($GIT_LOG "${ARGS[@]:0:${START}}" "${RIGHT_BASE}${RIGHT}" "${ARGS[@]:${END}}")

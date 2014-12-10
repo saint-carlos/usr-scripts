@@ -4,6 +4,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="diff between diffs"
 PARAMS="revision-range revision-range"
 OPTIONS="[-h]"
+DIFF_OPTS="--patch-with-stat --summary"
 
 usage()
 {
@@ -48,10 +49,12 @@ case $LEFT in
 	*..*) LEFT_CMD=diff ;;
 	*) LEFT_CMD=show ;;
 esac
+LEFT_CMD="git $LEFT_CMD $DIFF_OPTS"
 case $RIGHT in
 	*..*) RIGHT_CMD=diff ;;
 	*) RIGHT_CMD=show ;;
 esac
+RIGHT_CMD="git $RIGHT_CMD $DIFF_OPTS"
 exec vimdiff -c 'set diffexpr=GitDiffDiff()' \
-	<(git $LEFT_CMD "${ARGS[@]:0:${START}}" "$LEFT" "${ARGS[@]:${END}}") \
-	<(git $RIGHT_CMD "${ARGS[@]:0:${START}}" "$RIGHT" "${ARGS[@]:${END}}")
+	<($LEFT_CMD "${ARGS[@]:0:${START}}" "$LEFT" "${ARGS[@]:${END}}") \
+	<($RIGHT_CMD "${ARGS[@]:0:${START}}" "$RIGHT" "${ARGS[@]:${END}}")
