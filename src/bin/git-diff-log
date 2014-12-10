@@ -40,14 +40,6 @@ RIGHT="${ARGS[RIDX]}"
 unset ARGS[LIDX]
 unset ARGS[RIDX]
 
-[ $# -ge 2 ] || usage 255
-ARGS=( "$@" )
-LIDX=$(($# - 2))
-RIDX=$(($# - 1))
-LEFT="${ARGS[LIDX]}"
-RIGHT="${ARGS[RIDX]}"
-unset ARGS[LIDX]
-unset ARGS[RIDX]
 LEFT_BASE=0
 RIGHT_BASE=0
 [[ "$LEFT" =~ \.\. ]] && LEFT_BASE=1
