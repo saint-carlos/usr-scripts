@@ -28,14 +28,21 @@ EOF
 if [ "$1" = "-h" ]; then
 	usage 0
 fi
-[ $# -ge 2 ] || usage 255
 ARGS=( "$@" )
-LIDX=$(($# - 2))
-RIDX=$(($# - 1))
+for ((i=0; i < ${#ARGS[@]}; i++)); do
+	[ "${ARGS[i]}" = '--' ] && break
+done
+[ $i -ge 2 ] || usage 255
+LIDX=$((i - 2))
+RIDX=$((i - 1))
+START=$LIDX
+END=$i
 LEFT="${ARGS[LIDX]}"
 RIGHT="${ARGS[RIDX]}"
 unset ARGS[LIDX]
 unset ARGS[RIDX]
+[[ "$LEFT" =~ ^- ]] && usage 255
+[[ "$RIGHT" =~ ^- ]] && usage 255
 
 case $LEFT in
 	*..*) LEFT_CMD=diff ;;
@@ -46,5 +53,5 @@ case $RIGHT in
 	*) RIGHT_CMD=show ;;
 esac
 exec vimdiff -c 'set diffexpr=GitDiffDiff()' \
-	<(git $LEFT_CMD "${ARGS[@]}" "$LEFT") \
-	<(git $RIGHT_CMD "${ARGS[@]}" "$RIGHT")
+	<(git $LEFT_CMD "${ARGS[@]:0:${START}}" "$LEFT" "${ARGS[@]:${END}}") \
+	<(git $RIGHT_CMD "${ARGS[@]:0:${START}}" "$RIGHT" "${ARGS[@]:${END}}")
