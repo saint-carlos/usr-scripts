@@ -141,6 +141,8 @@ progs: # install set of progs required for this project and in general for power
 		git		\
 		bash		\
 		make
+	${CONFIG_DESKTOP} && yum install \
+		rxvt-unicode
 else
 ifneq ($(shell which apt-get),)
 progs:
@@ -177,6 +179,8 @@ progs:
 		git		\
 		bash		\
 		make
+	${CONFIG_DESKTOP} && yum install \
+		rxvt-unicode
 endif
 endif
 
