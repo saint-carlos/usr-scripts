@@ -10,3 +10,5 @@ core.*
 bin/
 tgt/
 obj/
+tags
+cscope.*
