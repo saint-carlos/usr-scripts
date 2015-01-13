@@ -158,6 +158,7 @@ progs:
 		screen		\
 		ltrace		\
 		strace		\
+		pstack		\
 		gdb		\
 		gcc		\
 		file		\
