@@ -133,6 +133,8 @@ progs: # install set of progs required for this project and in general for power
 		tar		\
 		openssh-clients	\
 		openssh-server	\
+		cscope		\
+		ctags		\
 		diffutils	\
 		patch		\
 		less		\
@@ -172,6 +174,8 @@ progs:
 		tar		\
 		openssh-client	\
 		openssh-server	\
+		cscope		\
+		exuberant-ctags	\
 		diffutils	\
 		patch		\
 		less		\
