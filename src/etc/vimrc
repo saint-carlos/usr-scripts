@@ -143,6 +143,17 @@ imap <F7> <C-o><F7>
 noremap <silent> <F8> :setlocal paste! \| setlocal number!<CR>
 imap <F8> <C-o><F8>
 
+" default readline bindings
+inoremap <C-a> <C-o>^
+inoremap <C-e> <End>
+inoremap <M-b> <C-o>b
+inoremap <M-f> <C-o>e<Right>
+inoremap <C-k> <C-o>d$
+inoremap <C-u> <C-o>d0
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-k> <C-f>D<C-c><C-c>:<Up>
+
 " these turned out to be annoying
 " imap ( ()<left>
 " imap [ []<left>
