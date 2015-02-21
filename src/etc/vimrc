@@ -251,7 +251,7 @@ nnoremap <S-Tab> :Tbbp<CR>
 let g:fsnonewfiles = 1
 augroup FSwitch
 	autocmd!
-	autocmd Filetype c,cpp noremap <buffer> <C-h> :FSHere<CR>
+	autocmd Filetype c,cpp,h,hpp noremap <buffer> <C-h> :FSHere<CR>
 augroup END
 
 "	}}}
