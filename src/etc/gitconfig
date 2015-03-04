@@ -54,7 +54,7 @@
 	cmessage = log -1 --format="%s%n%n%b"
 
 [pretty]
-	neat = %C(cyan bold)%h %C(red bold)%ad %an %Creset%s%C(cyan bold)%d
+	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
 
 #[difftool "diffmerge"]
 #	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
