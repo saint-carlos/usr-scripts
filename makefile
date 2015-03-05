@@ -109,6 +109,22 @@ mrproper: clean # remove everything generate by any build target from the projec
 ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install 		\
+		net-tools	\
+		man-pages	\
+		m4		\
+		ncurses-devel	\
+		git-email	\
+		autoconf	\
+		libtool		\
+		flex		\
+		bison		\
+		gpg		\
+		wget		\
+		perf		\
+		sparse		\
+		valgrind	\
+		time		\
+		lsof		\
 		psmisc		\
 		cloc		\
 		elfutils	\
@@ -151,6 +167,12 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		wget		\
+		perf		\
+		sparse		\
+		valgrind	\
+		time		\
+		lsof		\
 		psmisc		\
 		cloc		\
 		elfutils	\
