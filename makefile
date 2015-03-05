@@ -33,7 +33,10 @@ DESKTOP_FILES :=		\
 		src/lib/urxvt/*		\
 	))
 ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
+	CONFIG_DESKTOP := false
 	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
+else
+	CONFIG_DESKTOP := true
 endif
 
 PD_FILES :=			\
@@ -161,8 +164,9 @@ progs: # install set of progs required for this project and in general for power
 		git		\
 		bash		\
 		make
-	${CONFIG_DESKTOP} && yum install \
-		rxvt-unicode
+	if ${CONFIG_DESKTOP}; then yum install \
+		rxvt-unicode	\
+	; fi
 else
 ifneq ($(shell which apt-get),)
 progs:
@@ -209,8 +213,9 @@ progs:
 		git		\
 		bash		\
 		make
-	${CONFIG_DESKTOP} && yum install \
-		rxvt-unicode
+	if ${CONFIG_DESKTOP}; then yum install \
+		rxvt-unicode	\
+	; fi
 endif
 endif
 
