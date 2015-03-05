@@ -160,7 +160,7 @@ progs: # install set of progs required for this project and in general for power
 		patch		\
 		less		\
 		util-linux	\
-		vim-minimal	\
+		vim		\
 		git		\
 		bash		\
 		make
