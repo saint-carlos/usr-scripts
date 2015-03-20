@@ -1,0 +1,72 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="capitalize first letters"
+PARAMS="[file...]"
+OPTIONS="[-hi]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-i	in-place: edit files in place
+-h	help: show this help message and exit.
+
+exit status:
+255	some options are bad
+otherwise it is the exit status from sed(1).
+EOF
+
+    exit $1
+}
+
+capitalize_first_file_letter()
+{
+	sed -i '1s/^\s*./\U&\E/g' "$@"
+}
+
+capitalize_letters_after_dot()
+{
+	sed -i 's/[\.!?]\s*./\U&\E/g' "$@"
+}
+
+capitalize_after_line_end()
+{
+	NEXT_LINE=0
+	cat $@ | while read CURLINE ;do
+		((NEXT_LINE++))
+		LAST_CHAR=${CURLINE#${CURLINE%?}}
+		case "$LAST_CHAR" in
+			"."|"!"|"?") sed -i "$((NEXT_LINE+1))s/^\s*./\U&\E/g" "$@" || return $?
+		esac
+	done
+}
+
+STDOUT=true
+while getopts hi OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		i) STDOUT=false ;;
+		\?) usage 255 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if $STDOUT; then
+	OUT=$(mktemp)
+	cat "$@" > "$OUT"
+	set -- "$OUT"
+fi
+capitalize_first_file_letter "$@" || exit $?
+capitalize_letters_after_dot "$@" || exit $?
+capitalize_after_line_end "$@" || exit $?
+if $STDOUT; then
+	cat "$OUT"
+	rm "$OUT"
+fi
