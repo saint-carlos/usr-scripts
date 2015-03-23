@@ -1,0 +1,104 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="send a patchset to reviewboard"
+PARAMS="from-rev to-rev [remote-name]"
+OPTIONS="[-hr] -s subject"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+send a patchset to ReviewBoard using rbtools. each patch will be seen as an
+update. commit messages will be listed in the description.
+
+NOTE! the patchset will be automatically published!
+
+the description can be edited before posting.
+
+options:
+-h	help: show this help message and exit.
+-s	summary: summary line of the request
+-r	rfc: prefix the summary line with "RFC".
+
+if [remote-name] is given, the description will contain a reference to the
+branch where the code can be pulled from.
+
+the description will be edited using the default editor, which is defined
+similar to less(1): if the VISUAL environment variable is defined, it will be
+used. otherwise, if the EDITOR environment variable is defined, it will be
+used. otherwise, if vim(1) is in the path, it will be used. otherwise, vi(1)
+will be used.
+
+exit status:
+0:	success
+1:	failure
+255:	bad arguments
+EOF
+	exit $1
+}
+
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
+
+PREFIX=""
+SUBJECT=""
+while getopts hp:rv:s:o:e option; do
+	case $option in
+		h) usage 0 ;;
+		r) PREFIX="[RFC] " ;;
+		s) SUBJECT="$OPTARG" ;;
+		\?) usage 254 ;;
+	esac
+done
+shift $(($OPTIND - 1))
+(( 2 <= $# && $# <= 3 )) || usage 254
+[ -n "$SUBJECT" ] || usage 254
+FROM_REV="$1"
+TO_REV="$2"
+REMOTE="$3"
+RANGE="${FROM_REV}..${TO_REV}"
+SUBJECT="${PREFIX}${SUBJECT}"
+
+: ${VISUAL:=$EDITOR}
+[ -z "$VISUAL" ] && type vim &>/dev/null && VISUAL=vim
+: ${VISUAL:=vi}
+
+if [ -n "$REMOTE" ]; then
+	REMOTE_URL=$(git remote show -n $REMOTE | grep 'Fetch URL' | awk '{ print $NF }') || exit 1
+	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV | head -11) || exit 1
+	if ! grep -q "for you to fetch changes up to" <<< "$PULL_REQ"; then
+		PULL_REQ=$(head -7 <<< "$PULL_REQ")
+	fi
+else
+	PULL_REQ=""
+fi
+
+NREV=$(git log --oneline "$RANGE" | wc -l)
+[ "$NREV" -ge 1 ] || exit 1
+
+DESC=$(mktemp)
+printf "%s\n\n" "$PULL_REQ" >> "$DESC"
+git log --reverse --stat --summary "$RANGE" >> "$DESC"
+$VISUAL "$DESC" || exit 1
+[ -s "$DESC" ] || exit 1
+
+set +xv # dont show passwords
+read -s -p "password: " PASSWORD
+
+OUT=$(rbt post --password "$PASSWORD" -p --summary "$SUBJECT" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
+REQNO=$(echo "$OUT" | head -1 | grep -o '#[0-9]*' | cut -c2-)
+
+for ((i=NREV-2; i >= 0; i--)); do
+	rbt post --password "$PASSWORD" -u -r $REQNO -p "${FROM_REV}..${TO_REV}~${i}"
+done
+rm "$DESC"
