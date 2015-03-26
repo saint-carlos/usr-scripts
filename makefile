@@ -152,6 +152,7 @@ progs: # install set of progs required for this project and in general for power
 		gzip		\
 		xz		\
 		tar		\
+		bash-completion	\
 		openssh-clients	\
 		openssh-server	\
 		cscope		\
@@ -201,6 +202,7 @@ progs:
 		bzip2		\
 		gzip		\
 		tar		\
+		bash-completion	\
 		openssh-client	\
 		openssh-server	\
 		cscope		\
