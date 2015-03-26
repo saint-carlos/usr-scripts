@@ -137,6 +137,7 @@ progs: # install set of progs required for this project and in general for power
 		curl		\
 		nmap		\
 		nc		\
+		traceroute	\
 		screen		\
 		ltrace		\
 		strace		\
@@ -187,6 +188,7 @@ progs:
 		curl		\
 		nmap		\
 		netcat-openbsd	\
+		traceroute	\
 		screen		\
 		ltrace		\
 		strace		\
