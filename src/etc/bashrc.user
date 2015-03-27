@@ -16,7 +16,7 @@ cmd_exists htop && alias top='htop'
 __COREUTILS_FLAGS="-v"
 alias du='du -hs'
 alias df='df -h'
-alias findc='findgrep -c'
+alias findc='findgrep -c -t cpp -t cc -t hpp'
 if cmd_exists colordiff; then
 	alias diff='colordiff -U20'
 else
