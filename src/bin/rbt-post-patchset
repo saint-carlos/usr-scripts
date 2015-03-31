@@ -75,10 +75,7 @@ SUBJECT="${PREFIX}${SUBJECT}"
 
 if [ -n "$REMOTE" ]; then
 	REMOTE_URL=$(git remote show -n $REMOTE | grep 'Fetch URL' | awk '{ print $NF }') || exit 1
-	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV | head -11) || exit 1
-	if ! grep -q "for you to fetch changes up to" <<< "$PULL_REQ"; then
-		PULL_REQ=$(head -7 <<< "$PULL_REQ")
-	fi
+	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV) || exit 1
 else
 	PULL_REQ=""
 fi
