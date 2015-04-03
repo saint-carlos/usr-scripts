@@ -83,7 +83,7 @@ fi
 NREV=$(git log --oneline "$RANGE" | wc -l)
 [ "$NREV" -ge 1 ] || exit 1
 
-DESC=$(mktemp)
+DESC=$(mktemp 2>/dev/null || mktemp -t 'mytmpdir')
 printf "%s\n\n" "$PULL_REQ" >> "$DESC"
 git log --reverse --stat --summary "$RANGE" >> "$DESC"
 $VISUAL "$DESC" || exit 1
