@@ -91,6 +91,7 @@ $VISUAL "$DESC" || exit 1
 
 set +xv # dont show passwords
 read -s -p "password: " PASSWORD
+echo
 
 OUT=$(rbt post --password "$PASSWORD" -p --summary "$SUBJECT" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
 REQNO=$(echo "$OUT" | head -1 | grep -o '#[0-9]*' | cut -c2-)
