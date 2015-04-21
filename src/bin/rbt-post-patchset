@@ -84,6 +84,7 @@ NREV=$(git log --oneline "$RANGE" | wc -l)
 [ "$NREV" -ge 1 ] || exit 1
 
 DESC=$(mktemp 2>/dev/null || mktemp -t 'mytmpdir')
+trap "rm $DESC" EXIT INT QUIT TERM
 printf "%s\n\n" "$PULL_REQ" >> "$DESC"
 git log --reverse --stat --summary "$RANGE" >> "$DESC"
 $VISUAL "$DESC" || exit 1
@@ -99,4 +100,3 @@ REQNO=$(echo "$OUT" | head -1 | grep -o '#[0-9]*' | cut -c2-)
 for ((i=NREV-2; i >= 0; i--)); do
 	rbt post --password "$PASSWORD" -u -r $REQNO -p "${FROM_REV}..${TO_REV}~${i}"
 done
-rm "$DESC"
