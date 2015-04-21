@@ -50,6 +50,11 @@ die()
 	exit $RC
 }
 
+rbt_post()
+{
+	rbt post --password "$PASSWORD" "$@"
+}
+
 PREFIX=""
 SUBJECT=""
 while getopts hp:rv:s:o:e option; do
@@ -94,9 +99,9 @@ set +xv # dont show passwords
 read -s -p "password: " PASSWORD
 echo
 
-OUT=$(rbt post --password "$PASSWORD" -p --summary "$SUBJECT" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
+OUT=$(rbt_post -p --summary "$SUBJECT" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
 REQNO=$(echo "$OUT" | head -1 | grep -o '#[0-9]*' | cut -c2-)
 
 for ((i=NREV-2; i >= 0; i--)); do
-	rbt post --password "$PASSWORD" -u -r $REQNO -p "${FROM_REV}..${TO_REV}~${i}"
+	rbt_post -u -r $REQNO -p "${FROM_REV}..${TO_REV}~${i}"
 done
