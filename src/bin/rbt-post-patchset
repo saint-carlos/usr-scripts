@@ -3,7 +3,9 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="send a patchset to reviewboard"
 PARAMS="from-rev to-rev [remote-name]"
-OPTIONS="[-hr] -s subject"
+OPTIONS="[-hr] -s subject [-- rbt-options]"
+RBT_ARGS=""
+PASSWORD=""
 
 usage()
 {
@@ -24,6 +26,10 @@ options:
 -h	help: show this help message and exit.
 -s	summary: summary line of the request
 -r	rfc: prefix the summary line with "RFC".
+supported rbt options:
+--repository <repo-name>
+--tracking-branch <trunk-tracking-branch>
+note that rbt options must come after the regular options.
 
 if [remote-name] is given, the description will contain a reference to the
 branch where the code can be pulled from.
@@ -52,7 +58,7 @@ die()
 
 rbt_post()
 {
-	rbt post --password "$PASSWORD" "$@"
+	rbt post $RBT_ARGS --password "$PASSWORD" "$@"
 }
 
 PREFIX=""
@@ -66,8 +72,17 @@ while getopts hp:rv:s:o:e option; do
 	esac
 done
 shift $(($OPTIND - 1))
+while [ $# -gt 0 ]; do
+	case "$1" in
+		--repository|--tracking-branch) RBT_ARGS+=" $1 $2"; shift 2 ;;
+		--) shift; break ;;
+		--*) return usage 254 ;;
+		*) break ;;
+	esac
+done
 (( 2 <= $# && $# <= 3 )) || usage 254
 [ -n "$SUBJECT" ] || usage 254
+
 FROM_REV="$1"
 TO_REV="$2"
 REMOTE="$3"
