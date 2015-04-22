@@ -46,7 +46,7 @@ check_patch()
 
 tree_dirty()
 {
-	git status --porcelain | grep -v '\?\?'
+	git status --porcelain | grep -v '^??'
 }
 
 clean_files()
