@@ -61,7 +61,7 @@ die()
 
 rbt_post()
 {
-	rbt post $RBT_ARGS --password "$PASSWORD" "$@"
+	rbt post --debug $RBT_ARGS --password "$PASSWORD" "$@"
 }
 
 PREFIX=""
