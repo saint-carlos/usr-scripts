@@ -5,6 +5,7 @@ DESCRIPTION="send a patchset to reviewboard"
 PARAMS="from-rev to-rev [remote-name]"
 OPTIONS="[-hr] -s subject [-- rbt-options]"
 RBT_ARGS=""
+TESTING=""
 PASSWORD=""
 
 usage()
@@ -29,6 +30,8 @@ options:
 supported rbt options:
 --repository <repo-name>
 --tracking-branch <trunk-tracking-branch>
+--testing-done <testing-desc>
+--target-people username[,...]
 note that rbt options must come after the regular options.
 
 if [remote-name] is given, the description will contain a reference to the
@@ -74,7 +77,8 @@ done
 shift $(($OPTIND - 1))
 while [ $# -gt 0 ]; do
 	case "$1" in
-		--repository|--tracking-branch) RBT_ARGS+=" $1 $2"; shift 2 ;;
+		--repository|--tracking-branch|--target-people) RBT_ARGS+=" $1 $2"; shift 2 ;;
+		--testing-done) TESTING="$2"; shift 2 ;;
 		--) shift; break ;;
 		--*) return usage 254 ;;
 		*) break ;;
@@ -114,7 +118,7 @@ set +xv # dont show passwords
 read -s -p "password: " PASSWORD
 echo
 
-OUT=$(rbt_post -p --summary "$SUBJECT" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
+OUT=$(rbt_post -p --summary "$SUBJECT" --testing-done "$TESTING" --description "$(cat "$DESC")" "${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
 REQNO=$(echo "$OUT" | head -1 | grep -o '#[0-9]*' | cut -c2-)
 
 for ((i=NREV-2; i >= 0; i--)); do
