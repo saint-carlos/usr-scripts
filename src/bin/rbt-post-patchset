@@ -80,7 +80,7 @@ while [ $# -gt 0 ]; do
 		--repository|--tracking-branch|--target-people) RBT_ARGS+=" $1 $2"; shift 2 ;;
 		--testing-done) TESTING="$2"; shift 2 ;;
 		--) shift; break ;;
-		--*) return usage 254 ;;
+		--*) usage 254 ;;
 		*) break ;;
 	esac
 done
