@@ -208,8 +208,8 @@ if has("cscope")
 		nnoremap <localleader>c6 :cs find e <C-R>=expand("<cword>")<CR><CR>
 		nnoremap <localleader>cf :cs find f <C-R>=expand("<cfile>")<CR><CR>
 		nnoremap <localleader>c7 :cs find f <C-R>=expand("<cfile>")<CR><CR>
-		nnoremap <localleader>ci :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
-		nnoremap <localleader>c8 :cs find i ^<C-R>=expand("<cfile>")<CR>$<CR>
+		nnoremap <localleader>ci :cs find i <C-R>=expand("<cfile>")<CR><CR>
+		nnoremap <localleader>c8 :cs find i <C-R>=expand("<cfile>")<CR><CR>
 	endif
 endif
 
