@@ -1,0 +1,5 @@
+set print pretty
+set prompt \033[96mgdb$ \033[0m
+set $USECOLOR = 1
+set history filename ~/.gdb_history
+set history save
