@@ -109,6 +109,7 @@ mrproper: clean # remove everything generate by any build target from the projec
 ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install 		\
+		psmisc		\
 		cloc		\
 		elfutils	\
 		binutils	\
@@ -150,6 +151,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		psmisc		\
 		cloc		\
 		elfutils	\
 		binutils	\
