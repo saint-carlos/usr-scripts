@@ -11,6 +11,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="output stdin to stdout, in color."
 PARAMS="color"
 OPTIONS="[-h]"
+ETC=CONFIG_ETC
 
 usage()
 {
@@ -43,12 +44,12 @@ shift $((OPTIND - 1))
 
 [ $# -eq 1 ] || usage 255
 
+source "$ETC/colorsrc"
+
 # the simplistic implementation would be
 # __color_seq <color>; cat; __color_seq normal
 # however, we only want to colorize one stream - our stdout. other streams may
 # be intermingled and multiplexed to the terminal. nothing sophisticated is
 # implemented at the moment, but a good approximation is that every line
 # belongs to one stream, so we color our output line-by-line.
-while read LINE; do
-	color_echo "$1" "$LINE" 
-done
+sed "s/^.*$/$(__color_seq "$1")&$(__color_seq normal)/"
