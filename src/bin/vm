@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="ssh to a VirtualBox vm"
 PARAMS="[name [ssh-args]]"
-OPTIONS="[-hscl]"
+OPTIONS="[-hscl] [--shutdown|--shutdown-all]"
 FILES="$HOME/.config/VirtualBox/VirtualBox.xml $HOME/.VirtualBox/VirtualBox.xml"
 TIMESTAMP=.vmssh
 SSH_PORT=22
