@@ -33,7 +33,7 @@ capitalize_first_paragraph_char()
 
 capitalize_new_sentence()
 {
-	sed -i 's,[\.!?]\s*.,\U&\E,g' "$@"
+	sed -i 's,[\.!?;]\s*.,\U&\E,g' "$@"
 }
 
 STDOUT=true
