@@ -26,26 +26,14 @@ EOF
     exit $1
 }
 
-capitalize_first_file_letter()
+capitalize_first_paragraph_char()
 {
-	sed -i '1s/^\s*./\U&\E/g' "$@"
+	sed -i 's,^[^[:alnum:]]*.,\U&\E,g' "$@"
 }
 
-capitalize_letters_after_dot()
+capitalize_new_sentence()
 {
-	sed -i 's/[\.!?]\s*./\U&\E/g' "$@"
-}
-
-capitalize_after_line_end()
-{
-	NEXT_LINE=0
-	cat $@ | while read CURLINE ;do
-		((NEXT_LINE++))
-		LAST_CHAR=${CURLINE#${CURLINE%?}}
-		case "$LAST_CHAR" in
-			"."|"!"|"?") sed -i "$((NEXT_LINE+1))s/^\s*./\U&\E/g" "$@" || return $?
-		esac
-	done
+	sed -i 's,[\.!?]\s*.,\U&\E,g' "$@"
 }
 
 STDOUT=true
@@ -63,9 +51,8 @@ if $STDOUT; then
 	cat "$@" > "$OUT"
 	set -- "$OUT"
 fi
-capitalize_first_file_letter "$@" || exit $?
-capitalize_letters_after_dot "$@" || exit $?
-capitalize_after_line_end "$@" || exit $?
+capitalize_first_paragraph_char "$@" || exit $?
+capitalize_new_sentence "$@" || exit $?
 if $STDOUT; then
 	cat "$OUT"
 	rm "$OUT"
