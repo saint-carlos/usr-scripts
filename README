@@ -1,0 +1,8 @@
+instructions:
+
+- make config
+- edit config.sh
+- make
+- make install (will install the scripts & config files to a path configured in config.sh, but will not update PATH)
+- 'make install_user' will update the user configuration to accommodate the installed scripts/config files.
+- 'make help' for other option.
