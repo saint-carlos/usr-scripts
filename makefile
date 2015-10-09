@@ -239,7 +239,7 @@ help: # this message
 		sed 's/\(^[^:]*$$\)/ :&/' |			\
 		column -s : -t
 
-test: # dump configuration
+test: ${ALL_CONFIG_VARS} # dump configuration
 	@echo "files:"
 	@echo "${FILES}"
 	@echo
