@@ -85,7 +85,7 @@ ${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE}
 install: build tgt ${CONFIG_FILE} # install configured scripts/config files from tgt/
 	${BUILD}/install.sh ${CONFIG_FILE} tgt ${FILES}
 
-install_user: build tgt ${CONFIG_FILE} # update the user configuration to accommodate an installed scripts/config files
+install_user: build tgt ${CONFIG_FILE} # update the user configuration to accommodate installed scripts/config files
 	${BUILD}/install_user.sh ${CONFIG_FILE}
 
 install_all: install install_user # install configured scripts/config files and update the user configuration to accommodate them
@@ -93,9 +93,9 @@ install_all: install install_user # install configured scripts/config files and 
 uninstall: ${CONFIG_FILE} # remove the scripts/config files from the user configuration and delete them
 	${BUILD}/uninstall.sh ${CONFIG_FILE}
 
-update: uninstall install_all # update a user configuration from the repository
+update: uninstall install_all # update the user configuration from the repository (equivalent to uninstall and then install_all)
 
-import: ${CONFIG_FILE} tgt build # import changes from the current user
+import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
 	# do it in reverse order such that it's easier to patch
 	(eval $$(grep CONFIG_VROOT ${CONFIG_FILE}) && cd tgt && (diff -ur $$CONFIG_VROOT . || true)) > tmp/$@.patch
 	patch --directory=src --reverse -p0 --merge < tmp/$@.patch
