@@ -122,6 +122,7 @@ progs: # install set of progs required for this project and in general for power
 		flex		\
 		bison		\
 		gpg		\
+		tcpdump		\
 		wget		\
 		perf		\
 		sparse		\
@@ -173,6 +174,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		tcpdump		\
 		wget		\
 		perf		\
 		sparse		\
