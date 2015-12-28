@@ -28,6 +28,7 @@ DESKTOP_FILES :=		\
 	etc/xdefaults		\
 	bin/vm			\
 	bin/mvspc		\
+	bin/lspkg		\
 	$(patsubst src/%, %, $(wildcard	\
 		src/lib/urxvt/*		\
 	))
