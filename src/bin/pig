@@ -26,15 +26,35 @@ EOF
     exit $1
 }
 
-capitalize_first_paragraph_char()
-{
-	sed -i 's,^[^[:alnum:]]*.,\U&\E,g' "$@"
-}
+# rules:
+# * only capialize all-lowercase words. if it has mixed case or numbers assume
+# it's some identifier that shouldn't be touched.
+# * a sentence begins with a newline or after a [.!?;] and at least one space.
+# list numbering can be 1, 2, 3... or A, B, C... or a, b, c... - don't capitalize
+# the latter.
+# * list numbers can be denoted as "a. ", "a) ", or "(a) ".
+# * there are no one-letter sentences. the sentence "I." is an exception and
+# it's so uncommon that we don't care about it.
+# some words look like "e.g." or "i.e." do not denote end of sentence - a
+# sentence ends with a word without a dot in the middle.
 
-capitalize_new_sentence()
-{
-	sed -i 's,[\.!?;]\s*.,\U&\E,g' "$@"
-}
+SENTENCE_DELIM='[\.!?;]'
+BREAK="[\"'),-:]"
+NUMBERED_BULLET="([[:alnum:]]?[[:punct:]][[:space:]]?)*"
+SENTENCE_END="${SENTENCE_DELIM}($|[[:space:]]+)"
+WORD_END="($|[[:space:]]+|${BREAK}|${SENTENCE_END})"
+SENTENCE_LAST_WORD='(^|[[:space:]][^\.[:space:]]+)'
+__SENTENCE_START="(^|${SENTENCE_LAST_WORD}${SENTENCE_DELIM}[[:space:]]+)"
+SENTENCE_START="(${__SENTENCE_START}${NUMBERED_BULLET})"
+CAPITALIZE_ME="([[:lower:]])"
+REST_CAPPED_WORD="([[:space:]]+|[[:lower:]]+${WORD_END})"
+UPPERCASE_EXP='\1\U\5\E\6'
+
+SED_SCRIPT="
+	:do
+	s,${SENTENCE_START}${CAPITALIZE_ME}${REST_CAPPED_WORD},${UPPERCASE_EXP},
+	t do
+"
 
 STDOUT=true
 while getopts hi OPTION; do
@@ -51,8 +71,7 @@ if $STDOUT; then
 	cat "$@" > "$OUT"
 	set -- "$OUT"
 fi
-capitalize_first_paragraph_char "$@" || exit $?
-capitalize_new_sentence "$@" || exit $?
+sed -i --regexp-extended -e "$SED_SCRIPT" "$@" || exit $?
 if $STDOUT; then
 	cat "$OUT"
 	rm "$OUT"
