@@ -3,24 +3,37 @@ a. river
 b. river.
 c. river. d. river.
 e. riv3r
+ f. river.
 1) river
 a) river
 b) river.
 c) river. d) river.
 e) riv3r
+ f) river.
 (1) river
 (a) river
 (b) river.
 (c) river (d) river
 (e) river. (f) river.
 (g) riv3r
+ (h) river.
++ river
+ + river
+$ river
+ $ river
+(a) "cry me a river"
 this is rigorous. so very rigorous. yes, indeed rigorous.
+this is rigorous? so very rigorous! yes, indeed rigorous.
+I thinks it is rigorous; he doesn't.
+he thinks it is rigorous; i don't.
 this1 is rigorous.
-this is rigorous. this1 is my rigorous.
+this is rigorous. this1 is very rigorous.
 this is rigorous (e.g. river). river (rigorous?). just rigorous.
 this is rigorous (e.g. river and stuff).
 this is rigorous (there is e.g. river).
+this is rigorous (there is e.g. river) above and beyond.
 there it is: i.
+there it is: j.
 i.
 j.
 river.com
@@ -28,6 +41,24 @@ my email is river@river.com
 my email is river@river.com, mind you
 where? river.com, mind you
 there.
+hey, what's up?
+everybody say: "hey"
+everybody say: "hey!"
+everybody say: "hey ho"
+everybody say: "hi" to john.
+everybody say: "hi!" to john
+everybody say: "hi john!" to john
+"hello"
+"hello!"
+"hello to you"
+however... there was a surprise.
+"there, 10 o'clock"
+he said: "hi". "hi", she answered back
+he said: "irrigardless". she said "irrigardless" isn't a word.
+he said: "irrigardless". "irrigardless" isn't a word.
+it's called "fashion", look it up.
+"it's my duty"
 e.g. river.
 a.b. my bullet.
+him and i.
 a change.
