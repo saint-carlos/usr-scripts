@@ -112,6 +112,7 @@ mrproper: clean # remove everything generate by any build target from the projec
 ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install 		\
+		tree		\
 		net-tools	\
 		man-pages	\
 		m4		\
@@ -174,6 +175,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		tree		\
 		tcpdump		\
 		wget		\
 		perf		\
