@@ -46,6 +46,7 @@ ulimit -c unlimited
 
 export PAGER=less
 
+shopt -s cmdhist
 export HISTTIMEFORMAT='%F %T '
 export HISTCONTROL=ignorespace # don't ignore dups, it might be useful when printing history with timestamps
 export HISTSIZE=20000
