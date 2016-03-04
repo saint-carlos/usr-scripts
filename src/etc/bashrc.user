@@ -23,6 +23,10 @@ else
 	alias diff='diff -U20'
 fi
 
+shopt -s dirspell
+bind "set completion-ignore-case on"
+bind "set completion-map-case on"
+
 export LESS='--LONG-PROMPT --RAW-CONTROL-CHARS --ignore-case --window=-4 --jump-target=4 -Pm?c<--%c-- .[ ?f"%f":<PIPE>. | Ln %lt?L of %L. | Pg %db?B of %D.?e | 100\%:?pm | %Pm\%.. ]' # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
 
