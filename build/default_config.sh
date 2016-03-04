@@ -1,7 +1,7 @@
 CONFIG_VROOT=$HOME/vroot
 CONFIG_USER_NAME="$USER"
 CONFIG_USER_FULL_NAME="$(getent passwd "${USER}" | cut -d: -f5 | cut -d, -f1)"
-CONFIG_DOMAIN="$(hostname -d)"
+CONFIG_DOMAIN="$(hostname -d || echo localhost)"
 CONFIG_USER_EMAIL="${CONFIG_USER_NAME}@${CONFIG_DOMAIN}"
 CONFIG_WORKSPACE=$HOME/workspace
 CONFIG_REPO_DIRS=""
