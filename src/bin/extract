@@ -70,5 +70,7 @@ case "$1" in
 	*.7z)		7z x "$1" ;;
 	*.xz)		xz -d "$1" ;;
 	*.rpm)		unrpm "$1" ;;
+	*.deb)		dpkg-deb -x "$1" . ;;
+	*.pax)		pax -r -f "$1" ;;
 	*) die 1  "$PROGRAM: '$1': extraction tool not found" ;;
 esac
