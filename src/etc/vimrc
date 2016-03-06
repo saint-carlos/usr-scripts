@@ -259,7 +259,6 @@ augroup END
 "	Man {{{
 
 runtime ftplugin/man.vim
-nnoremap K :Man <cword><CR>
 
 "	}}}
 
