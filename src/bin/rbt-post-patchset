@@ -111,8 +111,10 @@ SUBJECT="${PREFIX}${SUBJECT}"
 if [ -n "$REMOTE" ]; then
 	REMOTE_URL=$(git remote show -n $REMOTE | grep 'Fetch URL' | awk '{ print $NF }') || exit 1
 	PULL_REQ=$(git request-pull $FROM_REV $REMOTE_URL $TO_REV) || exit 1
+	REMOTE_BRANCH=$(grep "$REMOTE_URL" <<< "$PULL_REQ" | awk '{ print $2 }')
 else
 	PULL_REQ=""
+	REMOTE_BRANCH=""
 fi
 
 NREV=$(git log --oneline "$RANGE" | wc -l)
@@ -131,6 +133,7 @@ echo
 
 OUT=$(rbt_post -p \
 	--summary "$SUBJECT" \
+	--branch "$REMOTE/$REMOTE_BRANCH" \
 	--testing-done "$TESTING" \
 	--description "$(cat "$DESC")" \
 	"${FROM_REV}..${TO_REV}~$((NREV-1))") || exit 1
