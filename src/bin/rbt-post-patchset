@@ -25,7 +25,7 @@ the description can be edited before posting.
 
 options:
 -h	help: show this help message and exit.
--s	summary: summary line of the request
+-s	summary: summary line of the request (required for multi-patch posts)
 -r	rfc: prefix the summary line with "RFC".
 supported rbt options:
 --repository <repo-name>
@@ -85,12 +85,19 @@ while [ $# -gt 0 ]; do
 	esac
 done
 (( 2 <= $# && $# <= 3 )) || usage 254
-[ -n "$SUBJECT" ] || usage 254
 
 FROM_REV="$1"
 TO_REV="$2"
 REMOTE="$3"
 RANGE="${FROM_REV}..${TO_REV}"
+if [ -z "$SUBJECT" ]; then
+	COUNT=$(git rev-list --count "${FROM_REV}..${TO_REV}") || exit 1
+	if [ $COUNT = 1 ]; then
+		SUBJECT=$(git log -1 --format=%s $TO_REV) || exit 1
+	else
+		usage 254
+	fi
+fi
 SUBJECT="${PREFIX}${SUBJECT}"
 
 : ${VISUAL:=$EDITOR}
