@@ -179,7 +179,7 @@ progs:
 		tree		\
 		tcpdump		\
 		wget		\
-		perf		\
+		linux-tools-common \
 		sparse		\
 		valgrind	\
 		time		\
