@@ -222,7 +222,7 @@ progs:
 		git		\
 		bash		\
 		make
-	if ${CONFIG_DESKTOP}; then yum install \
+	if ${CONFIG_DESKTOP}; then apt-get install \
 		rxvt-unicode	\
 	; fi
 endif
