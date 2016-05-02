@@ -113,6 +113,7 @@ ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install 		\
 		epel-release	\
+		htop		\
 		tree		\
 		net-tools	\
 		man-pages	\
@@ -176,6 +177,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		htop		\
 		tree		\
 		tcpdump		\
 		wget		\
