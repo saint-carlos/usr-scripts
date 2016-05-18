@@ -33,6 +33,7 @@ supported rbt options:
 --testing-done <testing-desc>
 --target-people username[,...]
 --bugs-closed <bug-id>[,...]
+--depends-on <ID>[,...]
 note that rbt options must come after the regular options.
 
 if [remote-name] is given, the description will contain a reference to the
@@ -78,7 +79,7 @@ done
 shift $(($OPTIND - 1))
 while [ $# -gt 0 ]; do
 	case "$1" in
-		--repository|--tracking-branch|--target-people|--bugs-closed)
+		--repository|--tracking-branch|--target-people|--bugs-closed|--depends-on)
 			RBT_ARGS+=" $1 $2"
 			shift 2
 			;;
