@@ -81,6 +81,8 @@
 
 [branch]
 	autosetuprebase = always
+[push]
+	default = nothing
 [rebase]
 	autosquash = true
 
