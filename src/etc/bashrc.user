@@ -26,6 +26,9 @@ fi
 shopt -s dirspell
 bind "set completion-ignore-case on"
 bind "set completion-map-case on"
+bind "set match-hidden-files off"
+bind "set visible-stats on"
+bind "set completion-prefix-display-length 5"
 
 export LESS='--LONG-PROMPT --RAW-CONTROL-CHARS --ignore-case --window=-4 --jump-target=4 -Pm?c<--%c-- .[ ?f"%f":<PIPE>. | Ln %lt?L of %L. | Pg %db?B of %D.?e | 100\%:?pm | %Pm\%.. ]' # default LESS configuration
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
