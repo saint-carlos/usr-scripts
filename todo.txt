@@ -1,5 +1,0 @@
-- vim extended bad-whitespace plugin
--- filetypes excluded from bad whitespace: help, diff
-- vimrc: F8 should also do the mouse, and enter/exit insert mode
-- something in the prompt to remind you you're inside screen
-- make scrolling work in screen
