@@ -24,7 +24,7 @@ $ river
 (a) "cry me a river"
 this is rigorous. so very rigorous. yes, indeed rigorous.
 this is rigorous? so very rigorous! yes, indeed rigorous.
-I thinks it is rigorous; he doesn't.
+i think it is rigorous; he doesn't.
 he thinks it is rigorous; i don't.
 this1 is rigorous.
 this is rigorous. this1 is very rigorous.
@@ -61,4 +61,12 @@ it's called "fashion", look it up.
 e.g. river.
 a.b. my bullet.
 him and i.
+him and i will change the world.
 a change.
+when you ingest, i.e. when you eat, you get full
+b-i-n-g-o
+this was written in vi
+this was written in vi.
+chapter v.i. of the book
+chapter v.i.
+him and i. him and i will change the world. using vi, i.e. by writing.

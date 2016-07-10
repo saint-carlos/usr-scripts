@@ -45,6 +45,7 @@ SENTENCE_DELIM='[\.!?]'
 BREAK="[\"),-:;]"
 BULLET='([[:alnum:]]?[()*#$+\-\.:][[:space:]]?)'
 __WORD_END="(${BREAK}|${SENTENCE_DELIM})"
+WORD_BEGIN="(^|[\"([:space:]])"
 WORD_END="(${__WORD_END}?$|${__WORD_END}?[[:space:]]+|${__WORD_END}{2})"
 SENTENCE_LAST_WORD='(^|[[:space:]][^\.[:space:]]+)'
 SENTENCE_END="(${SENTENCE_LAST_WORD}${SENTENCE_DELIM}[[:space:]]+)"
@@ -54,10 +55,17 @@ SENTENCE_START="(${__SENTENCE_START}|${QUOTE_START})"
 CAPITALIZE_ME="([[:lower:]])"
 REST_CAPPED_WORD="([[:space:]]+|[[:lower:]']+${WORD_END})"
 UPPERCASE_EXP='\1\U\7\E\8'
+UPPERCASE_EXP_I='\1\U\2\E\3'
 
 SED_SCRIPT="
 	:do
 	s,${SENTENCE_START}${CAPITALIZE_ME}${REST_CAPPED_WORD},${UPPERCASE_EXP},
+	t do
+"
+
+SED_SCRIPT_I="
+	:do
+	s,${WORD_BEGIN}(i)${WORD_END},${UPPERCASE_EXP_I},
 	t do
 "
 
@@ -77,7 +85,7 @@ if $STDOUT; then
 	set -- "$OUT"
 fi
 sed -i --regexp-extended -e "$SED_SCRIPT" "$@" || exit $?
-sed -i --regexp-extended 's/\<i\>/I/' "$@" || exit $?
+sed -i --regexp-extended -e "$SED_SCRIPT_I" "$@" || exit $?
 if $STDOUT; then
 	cat "$OUT"
 	rm "$OUT"
