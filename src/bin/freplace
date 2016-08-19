@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="in-place text replace"
 PARAMS="regexp-to-replace replacement-text file-name..."
-OPTIONS="[-h]"
+OPTIONS="[-hw]"
 
 usage()
 {
@@ -16,6 +16,7 @@ $PROGRAM $OPTIONS $PARAMS
 
 options:
 -h	help: show this help message and exit.
+-w	word: partial words are not matched for replacement.
 
 exit status:
 1	arguments are bad
@@ -27,9 +28,11 @@ EOF
     exit $1
 }
 
-while getopts h OPTION; do
+WORD_MATCH=false
+while getopts hw OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
+		w) WORD_MATCH=true ;;
 		\?) usage 1 ;;
 	esac
 done
@@ -40,6 +43,11 @@ REGEX="$1"
 shift
 REPLACEMENT="$1"
 shift
+
+if $WORD_MATCH; then
+	REGEX="\\<${REGEX}\\>"
+fi
+
 for S in '/' ':' '|' ','; do
 	echo "${REGEX}${REPLACEMENT}" | grep "$S" >/dev/null 2>/dev/null
 	if [ $? -ne 0 ]; then # the SEPARATOR is not in the regex
@@ -48,4 +56,4 @@ for S in '/' ':' '|' ','; do
 	fi
 done
 [ -n "$SEPARATOR" ] || return 255
-exec sed -i "s${SEPARATOR}${REGEX}${SEPARATOR}${REPLACEMENT}${SEPARATOR}g" "$@"
+exec sed $SED_ARGS -i "s${SEPARATOR}${REGEX}${SEPARATOR}${REPLACEMENT}${SEPARATOR}g" "$@"
