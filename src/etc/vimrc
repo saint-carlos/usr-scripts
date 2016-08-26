@@ -90,6 +90,21 @@ set nospell
 noremap <silent> <F6> :setlocal spell!<CR>
 imap <F6> <C-o><F6>
 
+hi ColorColumn guibg=#303030 ctermbg=4
+let s:color_column_old = 81
+function! s:ToggleColorColumn()
+    if s:color_column_old == 0
+        let s:color_column_old = &colorcolumn
+        let &colorcolumn = 0
+    else
+        let &colorcolumn=s:color_column_old
+        let s:color_column_old = 0
+    endif
+endfunction
+noremap <silent> <F2> :call <SID>ToggleColorColumn()<CR>
+imap <F2> <C-o><F2>
+
+
 " }}}
 
 " formatting {{{
