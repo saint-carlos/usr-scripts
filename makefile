@@ -225,6 +225,7 @@ progs:
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
+		dict dictd dict-gcide \
 		rxvt-unicode	\
 	; fi
 endif
