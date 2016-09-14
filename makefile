@@ -101,7 +101,7 @@ import: ${CONFIG_FILE} tgt build # import changes to the currently installed scr
 	patch --directory=src --reverse -p0 --merge < tmp/$@.patch
 
 tags:: # create tags
-	ctags -R --language-force=sh .
+	ctags -R --language-force=sh --exclude tgt .
 
 clean: # remove built targets
 	rm -rf tgt tmp
