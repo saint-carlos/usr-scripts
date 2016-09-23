@@ -1,0 +1,43 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="transform gdb's thread stacks output to a scannable format"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+2	some options are bad
+EOF
+
+    exit $1
+}
+
+while getopts h OPTION; do
+	case OPTION in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+sed 's/.* in \([^(]*\).*/\1/' | \
+	sed 's/(Thread.*/:/' | \
+	tr '\n' '<' | \
+	sed 's/ *< */ < /g' | \
+	sed 's/Thread [0-9]\+/\n&/g' | \
+	sed 's/ *: *< */: /' | \
+	sed 's/ *< *$//'
+echo
