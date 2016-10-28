@@ -158,6 +158,7 @@ progs: # install set of progs required for this project and in general for power
 		xz		\
 		tar		\
 		bash-completion	\
+		bash-completion-extras \
 		openssh-clients	\
 		openssh-server	\
 		cscope		\
