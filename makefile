@@ -174,6 +174,7 @@ progs: # install set of progs required for this project and in general for power
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then yum install \
+		xsel		\
 		rxvt-unicode	\
 	; fi
 else
@@ -229,6 +230,7 @@ progs:
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
 		dict dictd dict-gcide \
+		xsel		\
 		rxvt-unicode	\
 	; fi
 endif
