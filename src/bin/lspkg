@@ -21,6 +21,11 @@ EOF
     exit $1
 }
 
+lspkg_dpkg()
+{
+	dpkg --get-selections | grep -w install | awk '{ print $1 }'
+}
+
 while getopts he OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
@@ -28,4 +33,5 @@ while getopts he OPTION; do
 	esac
 done
 shift $((OPTIND - 1))
-exec dpkg --get-selections | grep -w install | awk '{ print $1 }'
+
+lspkg_dpkg
