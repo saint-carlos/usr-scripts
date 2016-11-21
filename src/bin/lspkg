@@ -26,6 +26,11 @@ lspkg_dpkg()
 	dpkg --get-selections | grep -w install | awk '{ print $1 }'
 }
 
+lspkg_rpm()
+{
+	rpm --query --all --queryformat '%{NAME}\n'
+}
+
 while getopts he OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
@@ -34,4 +39,8 @@ while getopts he OPTION; do
 done
 shift $((OPTIND - 1))
 
-lspkg_dpkg
+if which rpm &> /dev/null; then
+	lspkg_rpm
+else
+	lspkg_dpkg
+fi
