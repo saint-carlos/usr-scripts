@@ -1,0 +1,37 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="return the length, in characters, of the argument"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	all OK
+2	argument are bad
+EOF
+
+	exit $1
+}
+
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+[ $# -eq 1 ] || usage 2
+
+echo -n "$1" | wc -c
