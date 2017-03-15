@@ -277,8 +277,8 @@ endfunction
 "
 augroup fswitch_au_group
     au!
-    au BufEnter *.h,*.hpp call s:SetVariables('c,cpp', 'reg:|.*|\*\*|')
-    au BufEnter *.c,*.cpp call s:SetVariables('h,hpp', 'reg:|.*|\*\*|')
+    au BufEnter *.h,*.hpp call s:SetVariables('c,cpp,cc', 'reg:|.*|\*\*|')
+    au BufEnter *.c,*.cpp,*.cc call s:SetVariables('h,hpp', 'reg:|.*|\*\*|')
 augroup END
 
 "
