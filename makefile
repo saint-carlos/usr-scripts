@@ -165,6 +165,7 @@ progs: # install set of progs required for this project and in general for power
 		openssh-server	\
 		cscope		\
 		ctags		\
+		colordiff	\
 		diffutils	\
 		patch		\
 		less		\
@@ -221,6 +222,7 @@ progs:
 		openssh-server	\
 		cscope		\
 		exuberant-ctags	\
+		colordiff	\
 		diffutils	\
 		patch		\
 		less		\
