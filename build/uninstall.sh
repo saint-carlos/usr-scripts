@@ -17,9 +17,8 @@ restore_backup()
 {
 	FILE=$1
 	BACKUP_FILE=$(make_backup_file $FILE)
-	rm -f "$FILE"
 	if [ -f "$BACKUP_FILE" ]; then
-		mv "$BACKUP_FILE" "$FILE"
+		mv -f "$BACKUP_FILE" "$FILE"
 	fi
 }
 
