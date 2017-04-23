@@ -71,5 +71,6 @@ fi
 
 if [ $UID -eq 0 ]; then
 	backup /etc/rsyslog.conf
-	ln -sf  "$CONFIG_ETC/rsyslog.conf" /etc/rsyslog.conf
+	# we can't link it because rsyslog is stupid
+	cp  "$CONFIG_ETC/rsyslog.conf" /etc/rsyslog.conf
 fi
