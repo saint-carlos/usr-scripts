@@ -1,0 +1,19 @@
+#!/usr/bin/python
+
+import argparse
+
+def auto_int(x):
+    return int(x, 0)
+
+parser = argparse.ArgumentParser( description='''print out bit numbers of input''')
+parser.add_argument('number', type=auto_int, help='number to convert, e.g. 20, 071, 0x3d9, 0b1101')
+args=parser.parse_args()
+
+args = parser.parse_args()
+num = args.number
+i = 0
+while num:
+    if num & 0b1:
+        print i
+    i += 1
+    num = num >> 1
