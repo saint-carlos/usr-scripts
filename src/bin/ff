@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="find a file by name pattern"
 PARAMS="name-pattern [where...]"
-OPTIONS="[-he]"
+OPTIONS="[-he0]"
 
 usage()
 {
@@ -17,6 +17,7 @@ $PROGRAM $OPTIONS $PARAMS
 options:
 -h	help: show this help message and exit.
 -e	exact: search for exact file name.
+-0	null: terminate results with null instead of newline
 
 exit status:
 255	if some arguments are bad
@@ -27,10 +28,12 @@ EOF
 }
 
 TEST=iname DECORATION="*"
-while getopts he OPTION; do
+PRINT=""
+while getopts he0 OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		e) TEST=name DECORATION="" ;;
+		0) PRINT="-print0" ;;
 		\?) usage 255 ;;
 	esac
 done
@@ -41,4 +44,4 @@ if [ $# -eq 0 ]; then
 	set .
 fi
 
-exec find "$@" -type f "-${TEST}" "${DECORATION}${WHAT}${DECORATION}"
+exec find "$@" -type f "-${TEST}" "${DECORATION}${WHAT}${DECORATION}" $PRINT
