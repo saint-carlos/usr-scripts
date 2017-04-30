@@ -6,9 +6,9 @@ ETC="CONFIG_ETC"
 BIN="CONFIG_BIN"
 SBIN="CONFIG_SBIN"
 
-export PATH="$PATH:$BIN"
+export PATH="${BIN}:${PATH}"
 if [ $UID -eq 0 ]; then
-	export PATH="$PATH:$SBIN"
+	export PATH="${SBIN}:${PATH}"
 fi
 
 source $ETC/bash_completion
