@@ -112,6 +112,7 @@ ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install epel-release
 	yum install 		\
+		moreutils	\
 		man-db		\
 		man-pages	\
 		man-pages-overrides \
@@ -182,6 +183,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		moreutils	\
 		man-db		\
 		htop		\
 		tree		\
