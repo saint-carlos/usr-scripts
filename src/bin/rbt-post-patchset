@@ -68,7 +68,7 @@ rbt_post()
 
 PREFIX=""
 SUBJECT=""
-while getopts hp:rv:s:o:e option; do
+while getopts hrs: option; do
 	case $option in
 		h) usage 0 ;;
 		r) PREFIX="[RFC] " ;;
