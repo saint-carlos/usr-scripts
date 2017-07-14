@@ -1,14 +1,9 @@
 .*
+!.gitignore
 ~
-*.a
-*.o
-*.so
 *.rej
 *.orig
 core
 core.*
-bin/
-tgt/
-obj/
 tags
 cscope.*
