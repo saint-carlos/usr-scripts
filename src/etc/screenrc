@@ -7,7 +7,7 @@ altscreen on
 defflow off
 deflogin off
 vbell off
-defscrollback 1024
+defscrollback CONFIG_SCROLLBACK
 
 # ------------------------------------------------------------------------------
 # SCREEN KEYBINDINGS
