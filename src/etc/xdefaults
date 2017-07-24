@@ -42,6 +42,8 @@
 *URxvt*secondaryScroll:	false
 *URxvt*selection*pattern-0:		([[:word:]-,./?%&#_=+@~]+)
 *URxvt*selection*pattern-1:		([[:word:]-,./?%&#:_=+@~]+)
+*URxvt*.iso14755:	false
+*URxvt*.iso14755_52:	false
 
 ! RENDERING & FONT
 
