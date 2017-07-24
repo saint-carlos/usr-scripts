@@ -48,6 +48,8 @@ export REPOSITORY_ROOTS
 
 __UNDERLINE="$(tput smul)"
 __NOUNDERLINE="$(tput rmul)"
+__STANDOUT="$(tput smso)"
+__NOSTANDOUT="$(tput rmso)"
 __PROMPT_ERROR_COLOR="$(__color_seq red)"
 if [ -n "${SSH_CLIENT-}" ]; then
 	__MAKE_UNDERLINE='\['"$__UNDERLINE"'\]'
@@ -55,6 +57,13 @@ if [ -n "${SSH_CLIENT-}" ]; then
 else
 	__MAKE_UNDERLINE=""
 	__MAKE_NOUNDERLINE=""
+fi
+if [ "$TERM" = "screen" ]; then
+	__MAKE_STANDOUT='\['"$__STANDOUT"'\]'
+	__MAKE_NOSTANDOUT='\['"$__NOSTANDOUT"'\]'
+else
+	__MAKE_STANDOUT=""
+	__MAKE_NOSTANDOUT=""
 fi
 __USER=""
 if CONFIG_PROMPT_USERNAME; then
@@ -135,7 +144,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}\h${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
