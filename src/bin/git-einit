@@ -1,0 +1,54 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="Create an empty Git repository with an empty initial commit"
+PARAMS=""
+OPTIONS="[-hs]"
+GIT_DIR=".git"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-s	signoff: sign-off on the empty commit
+
+exit status:
+0	if all arguments are OK
+1	repo cration failed
+2	bad arguments
+3	directory already a repo
+EOF
+
+    exit $1
+}
+
+INIT_ARGS=""
+COMMIT_ARGS=""
+
+while getopts hs OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+	s) COMMIT_ARGS+="--signoff" ;;
+        \?) usage 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ -d "$GIT_DIR" ]; then
+	errcho "already a git repo, please delete '$GIT_DIR'."
+	exit 3
+fi
+git init $INIT_ARGS || exit 1
+git commit -m "Initial empty commit" --edit --allow-empty $COMMIT_ARGS
+if [ $? -ne 0 ]; then
+	rm -rf "$GIT_DIR"
+	exit 1
+fi
+exit 0
