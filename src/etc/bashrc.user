@@ -46,15 +46,15 @@ for REPO_ROOT in "$WORKSPACE" CONFIG_REPO_DIRS; do
 done
 export REPOSITORY_ROOTS
 
-__BOLD="$(tput smul)"
-__UNBOLD="$(tput rmul)"
+__UNDERLINE="$(tput smul)"
+__NOUNDERLINE="$(tput rmul)"
 __PROMPT_ERROR_COLOR="$(__color_seq red)"
 if [ -n "${SSH_CLIENT-}" ]; then
-	__MAKE_BOLD='\['"$__BOLD"'\]'
-	__MAKE_UNBOLD='\['"$__UNBOLD"'\]'
+	__MAKE_UNDERLINE='\['"$__UNDERLINE"'\]'
+	__MAKE_NOUNDERLINE='\['"$__NOUNDERLINE"'\]'
 else
-	__MAKE_BOLD=""
-	__MAKE_UNBOLD=""
+	__MAKE_UNDERLINE=""
+	__MAKE_NOUNDERLINE=""
 fi
 __USER=""
 if CONFIG_PROMPT_USERNAME; then
@@ -126,8 +126,8 @@ __set_prompt()
 	__PROMPT_BG_JOBS_SET=""
 	__PROMPT_BG_JOBS_RESET=""
 	if jobs | grep -q .; then
-		__PROMPT_BG_JOBS_SET="$__BOLD"
-		__PROMPT_BG_JOBS_RESET="$__UNBOLD"
+		__PROMPT_BG_JOBS_SET="$__UNDERLINE"
+		__PROMPT_BG_JOBS_RESET="$__NOUNDERLINE"
 	fi
 
 	# my shell ignores the return value of this function rather than
@@ -135,7 +135,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${__MAKE_BOLD}\h${__MAKE_UNBOLD}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}\h${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
