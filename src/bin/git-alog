@@ -1,0 +1,51 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="git llog proportional to terminal lines"
+PARAMS="[lines-fraction [git-log args]]"
+OPTIONS="[-h]"
+DEFAULT_FRACTION="1/4"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+lines-fraction is something like 2/3, 1/4 etc.
+the default is $DEFAULT_FRACTION.
+
+options:
+-h	help: show this help message and exit.
+-s	signoff: sign-off on the empty commit
+
+exit status:
+0	if all arguments are OK
+2	bad arguments
+otherwise it is the exit status from git-llog.
+EOF
+
+    exit $1
+}
+
+while getopts hs OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -ge 1 ]; then
+	FRACTION="$1"
+	shift
+else
+	FRACTION="$DEFAULT_FRACTION"
+fi
+set | grep HEIGHT
+LINES=$(tput lines)
+N=$(($LINES * $FRACTION))
+exec git llog -$N "$@"
