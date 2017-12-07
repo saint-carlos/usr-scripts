@@ -120,10 +120,9 @@ progs: # install set of progs required for this project and in general for power
 		htop		\
 		tree		\
 		net-tools	\
-		man-pages	\
 		m4		\
 		ncurses-devel	\
-		git-email	\
+		ncurses		\
 		autoconf	\
 		libtool		\
 		flex		\
@@ -155,14 +154,11 @@ progs: # install set of progs required for this project and in general for power
 		file		\
 		gawk		\
 		bc		\
-		ncurses		\
 		p7zip		\
 		bzip2		\
 		gzip		\
 		xz		\
 		tar		\
-		bash-completion	\
-		bash-completion-extras \
 		openssh-clients	\
 		openssh-server	\
 		cscope		\
@@ -173,7 +169,10 @@ progs: # install set of progs required for this project and in general for power
 		less		\
 		util-linux	\
 		vim		\
+		git-email	\
 		git		\
+		bash-completion	\
+		bash-completion-extras \
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then yum install \
@@ -220,7 +219,6 @@ progs:
 		bzip2		\
 		gzip		\
 		tar		\
-		bash-completion	\
 		openssh-client	\
 		openssh-server	\
 		cscope		\
@@ -232,6 +230,7 @@ progs:
 		util-linux	\
 		vim		\
 		git		\
+		bash-completion	\
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
