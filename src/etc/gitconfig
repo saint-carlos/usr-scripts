@@ -85,3 +85,9 @@
 
 [rerere]
 	enabled = true
+
+[http]
+	sslVerify = false
+[credential]
+	# cache for 12 hours
+	helper = cache --timeout=43200
