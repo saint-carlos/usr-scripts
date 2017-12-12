@@ -12,7 +12,6 @@
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
 
 [merge]
-#	tool = kdiff3
 	tool = bc3
 
 [mergetool "bc3"]
@@ -56,14 +55,11 @@
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
 
-#[difftool "diffmerge"]
-#	cmd = diffmerge \"$LOCAL\" \"$REMOTE\"
 
 [diff]
 	tool = bc3
 	mnemonicprefix = true
 	renames = copy
-#	tool = diffmerge
 [gc]
 	reflogexpire = 180
 	reflogexpireunreachable = 180
