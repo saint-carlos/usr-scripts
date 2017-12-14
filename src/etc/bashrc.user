@@ -70,6 +70,16 @@ if CONFIG_PROMPT_USERNAME; then
 	__USER='\u@'
 fi
 
+if ! declare -F __git_ps1 > /dev/null; then
+	if [ -f /usr/lib/git-core/git-sh-prompt ]; then
+		# ubuntu 14.04
+		source /usr/lib/git-core/git-sh-prompt
+	elif [ -f /usr/share/git-core/contrib/completion/git-prompt.sh ]; then
+		# centos 7.3
+		source /usr/share/git-core/contrib/completion/git-prompt.sh
+	fi
+fi
+
 __set_prompt()
 {
 	__STATUS=$? # must be first line ever of this function
@@ -80,7 +90,7 @@ __set_prompt()
 	if [ -n "$GIT_REPO" ]; then
 		GIT_REPO="$(basename "$GIT_REPO")"
 		local GIT_HEAD=$(__git_ps1 "%s" 2>/dev/null)
-		__LOCATION_ROOT="${GIT_REPO}[${GIT_HEAD}]"
+		__LOCATION_ROOT="${GIT_REPO}${GIT_HEAD:+[${GIT_HEAD}]}"
 		__LOCATION=$(git rev-parse --show-prefix)
 		__LOCATION="${__LOCATION%/}"
 		local TOTAL_LEN=$((${#__LOCATION}  + ${#__LOCATION_ROOT}))
