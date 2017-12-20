@@ -69,7 +69,7 @@
 
 ! BUFFER
 
-*URxvt*saveLines:	CONFIG_SCROLLBACK
+*URxvt*saveLines:	CONFIG_TERMINAL_SCROLLBACK
 *URxvt*print-pipe:	cat > /tmp/urxvt-$PPID
 *URxvt*searchable-scrollback:		M-f
 
