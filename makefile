@@ -39,13 +39,6 @@ else
 	CONFIG_DESKTOP := true
 endif
 
-PD_FILES :=			\
-	bin/git-check-patchset	\
-	etc/bash_completion.pd
-ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_PD))
-	FILES := $(filter-out ${PD_FILES},${FILES})
-endif
-
 SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
