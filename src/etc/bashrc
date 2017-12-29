@@ -17,11 +17,7 @@ shopt -s hostcomplete
 
 source $ETC/colorsrc
 
-if [ $UID -eq 0 ]; then
-	__PROMPT_COLOR_SET="\[$(__color_seq CONFIG_ROOT_PROMPT_COLOR)\]"
-else
-	__PROMPT_COLOR_SET="\[$(__color_seq CONFIG_USER_PROMPT_COLOR)\]"
-fi
+__PROMPT_COLOR_SET="\[$(__color_seq CONFIG_PROMPT_COLOR)\]"
 __PROMPT_COLOR_RESET="\[$(__color_seq normal)\]"
 PS1="${__PROMPT_COLOR_SET}\u@\h:\w\\\$${__PROMPT_COLOR_RESET} "
 
