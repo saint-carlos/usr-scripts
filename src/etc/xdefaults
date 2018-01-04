@@ -75,13 +75,20 @@
 
 ! PERL
 
+! urxvt works (copy, paste, selection, middle click) with the PRIMARY buffer.
+! all the clipboard handling is meant to make PRIMARY (almost) interchangable
+! with CLIPBOARD.
+
 *URxvt*perl-lib:	CONFIG_LIB/urxvt
-*URxvt*perl-ext:	default,clipboard,keyboard-select,font-size
+*URxvt*perl-ext:	default,selection-to-clipboard,clipboard,keyboard-select,font-size
+
+*URxvt*keysym*S-Insert:	perl:clipboard:paste
+
 *URxvt*keysym*M-s:	perl:keyboard-select:activate
+
 *URxvt*keysym*M-C-Up:	perl:font-size:increase
 *URxvt*keysym*M-C-Down:	perl:font-size:decrease
 *URxvt*font-size*step:	1
-*URxvt*clipboard*autocopy:		true
 
 ! XTERM KEYSYMS
 
@@ -108,8 +115,7 @@
 *URxvt*keysym*F4:		\033OS
 
 ! Shift
-! paste conflict
-! *URxvt*keysym*S-Insert:	\033[2;2~
+! *URxvt*keysym*S-Insert:	\033[2;2~ ! see above
 ! *URxvt*keysym*S-Delete:	\033[3;2~
 ! *URxvt*keysym*S-Home:		\033[1;2H
 ! *URxvt*keysym*S-End:		\033[1;2F
