@@ -1,0 +1,81 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="print name and description of http error codes"
+PARAMS="{number|regex} [...]"
+OPTIONS="[-hlvH]"
+CODES=CONFIG_SHARE/http.db
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+number:	HTTP status code, e.g. 204
+name:	system error name, e.g. "No Content"
+regex:	string to grep for
+
+options:
+-l	list: list all error codes.
+-v	verbose: emit a more verbose explanation for codes.
+-H	no headers: do look up headers e.g. "4xx".
+-h	help: show this help message and exit.
+EOF
+
+    exit $1
+}
+
+die()
+{
+	RC=$1
+	shift
+	errcho "$*"
+	exit $RC
+}
+
+shorten()
+{
+	cut -d: -f1 "$@"
+}
+
+no_headers()
+{
+	grep -v '^[0-9]xx'
+}
+
+LIST=false
+TRANSFORM=shorten
+FILTER=cat
+while getopts hlvH OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		l) LIST=true ;;
+		v) TRANSFORM=cat ;;
+		H) FILTER=no_headers ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if $LIST; then
+	set -- .
+fi
+
+[ $# -ge 1 ] || usage 1
+
+# Search "database" for given strings
+exec < "$CODES"
+$TRANSFORM | $FILTER | for i in "$@"; do
+	case "$i" in
+	[0-9]*)
+		COL=1 ;;
+	*)
+		# No number: just grep for pattern
+		grep -i "$i"
+		continue ;;
+	esac
+	awk '$'$COL' == "'$i'"'
+done
