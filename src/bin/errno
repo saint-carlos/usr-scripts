@@ -19,7 +19,7 @@
 
 PROGRAM=$(basename $0)
 VER='1.5'
-DESCRIPTION="print name and description of error codes, $VER (stv '95)"
+DESCRIPTION="print name and description of unix error codes, $VER (stv '95)"
 PARAMS="{number|name|regex} [...]"
 OPTIONS="[-hl]"
 ERRNOS=/tmp/${PROGRAM}.cache
@@ -32,8 +32,8 @@ usage()
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
-number:	system error number, i.e. 10
-name:	system error name, i.e. EPERM
+number:	unix error number, e.g. 10
+name:	unix error name, e.g. EPERM
 regex:	string to grep for
 
 options:
