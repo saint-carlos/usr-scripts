@@ -35,6 +35,8 @@ fu! s:ignore()
 		\ '#.+#$',
 		\ '[._].*\.swp$',
 		\ 'core\.\d+$',
+		\ '\.class',
+		\ '\.jar',
 		\ '\.exe$',
 		\ '\.so$',
 		\ '\.bak$',
@@ -49,7 +51,14 @@ fu! s:ignore()
 		\ 'dir': '\v[\/]('.join(igdirs, '|').')$',
 		\ 'file': '\v'.join(igfiles, '|'),
 		\ }
+
 endf
+" let g:ctrlp_custom_ignore = {
+"   \ 'dir':  '\v[\/]\.(git|hg|svn)$',
+"   \ 'file': '\v\.(exe|so|dll)$',
+"   \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+"   \ }
+
 " Script local vars {{{2
 let [s:pref, s:bpref, s:opts, s:new_opts, s:lc_opts] =
 	\ ['g:ctrlp_', 'b:ctrlp_', {
@@ -72,7 +81,7 @@ let [s:pref, s:bpref, s:opts, s:new_opts, s:lc_opts] =
 	\ 'match_window_bottom':   ['s:mwbottom', 1],
 	\ 'match_window_reversed': ['s:mwreverse', 1],
 	\ 'max_depth':             ['s:maxdepth', 40],
-	\ 'max_files':             ['s:maxfiles', 10000],
+	\ 'max_files':             ['s:maxfiles', 50000],
 	\ 'max_height':            ['s:mxheight', 10],
 	\ 'max_history':           ['s:maxhst', exists('+hi') ? &hi : 20],
 	\ 'mruf_default_order':    ['s:mrudef', 0],
@@ -100,6 +109,8 @@ let [s:pref, s:bpref, s:opts, s:new_opts, s:lc_opts] =
 	\ 'user_command':          's:usrcmd',
 	\ 'working_path_mode':     's:pathmode',
 	\ }]
+
+" let g:ctrlp_max_files = 10000
 
 " Global options
 let s:glbs = { 'magic': 1, 'to': 1, 'tm': 0, 'sb': 1, 'hls': 0, 'im': 0,
