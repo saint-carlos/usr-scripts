@@ -1,96 +1,223 @@
 export PROJECT	:= usr_scripts
+THIS_MAKEFILE	:= $(firstword ${MAKEFILE_LIST})
 BUILD 		:= ./build
 CONFIG_FILE	:= config.sh
 TMP_CFG		:= tmp/cfg
 VALID_CONFIG	:= ${TMP_CFG}/valid_config
 DEFAULT_CONFIG_FILE	:= ${BUILD}/default_config.sh
 ALL_CONFIG_VARS		:= ${TMP_CFG}/config_vars.all.txt
-CURRENT_CONFIG_VARS	:= ${TMP_CFG}/config_vars.current.txt
 
-FILES := $(patsubst src/%, %, $(wildcard \
-	src/bin/*			\
-	src/sbin/*			\
-	src/etc/*			\
-	src/lib/vim/*/*.*		\
-	src/lib/vim/*/*/*.*		\
-	src/lib/urxvt/*			\
-	src/share/*			\
-))
+EFFECTIVE_CONF	:= $(shell if [ -f ${CONFIG_FILE} ]; then echo ${CONFIG_FILE}; else echo ${BUILD}/default_config.sh; fi)
 
+CONFIG_DESKTOP	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_DESKTOP)
+CONFIG_VROOT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_VROOT)
+
+findsrc = $(shell find $(addprefix src/,$1) -type f)
+insrc = $(patsubst src/%, %, $1)
+srcfiles = $(call insrc,$(call findsrc,$1))
+
+LUSER_FILES :=			\
+	bin/allfiles		\
+	bin/ascii		\
+	bin/base		\
+	bin/binary		\
+	bin/blockgrep		\
+	bin/build		\
+	bin/calc		\
+	bin/callchain		\
+	bin/cmd_exists		\
+	bin/color		\
+	bin/color_echo		\
+	bin/color_stderr	\
+	bin/colsort		\
+	bin/errcho		\
+	bin/errno		\
+	bin/extract		\
+	bin/ff			\
+	bin/findgrep		\
+	bin/freplace		\
+	bin/getbit		\
+	bin/git-alog		\
+	bin/git-diff-diff	\
+	bin/git-diff-log	\
+	bin/git-einit		\
+	bin/git-make-patchset	\
+	bin/git-push-rewrite	\
+	bin/gstack		\
+	bin/highlight		\
+	bin/hton		\
+	bin/killgrep		\
+	bin/ldir		\
+	bin/log			\
+	bin/lspkg		\
+	bin/make.debug		\
+	bin/mfilter		\
+	bin/msg			\
+	bin/num2ip		\
+	bin/parallelize		\
+	bin/pig			\
+	bin/psgrep		\
+	bin/randomstr		\
+	bin/remote_execute.sh	\
+	bin/signum		\
+	bin/stacklines		\
+	bin/strlen		\
+	bin/supported		\
+	bin/sys			\
+	bin/system_arch		\
+	bin/system_bits		\
+	bin/system_cpu_count	\
+	bin/system_ip		\
+	bin/system_platform	\
+	bin/system_user		\
+	bin/system_version	\
+	bin/termset		\
+	bin/timestamp		\
+	bin/vmore		\
+	etc/bash_completion	\
+	etc/bashrc		\
+	etc/bashrc.user		\
+	etc/colordiffrc		\
+	etc/colorsrc		\
+	etc/gdbinit		\
+	etc/gitconfig		\
+	etc/gitignore		\
+	etc/screenrc		\
+	etc/vimrc		\
+$(call srcfiles,		\
+	lib/vim/		\
+)
+
+ifeq (${CONFIG_DESKTOP},true)
 DESKTOP_FILES :=		\
 	bin/dlookup		\
-	share/hebrew.txt.xz	\
 	bin/icat		\
+	bin/gui			\
 	bin/myip		\
 	bin/permute		\
 	bin/stopwatch		\
 	bin/xvim		\
-	etc/xdefaults		\
 	bin/vm			\
 	bin/mvspc		\
 	bin/trans		\
-	$(patsubst src/%, %, $(wildcard	\
-		src/lib/urxvt/*		\
-	))
-ifeq (false,$(shell ${BUILD}/config.sh ${CONFIG_FILE} CONFIG_DESKTOP))
-	CONFIG_DESKTOP := false
-	FILES := $(filter-out ${DESKTOP_FILES},${FILES})
-else
-	CONFIG_DESKTOP := true
+	etc/xdefaults		\
+	share/hebrew.txt.xz
+LUSER_FILES += ${DESKTOP_FILES}
 endif
 
+SUPER_FILES :=			\
+	etc/rsyslog.conf	\
+$(call srcfiles,		\
+	sbin/			\
+)
+
+ALL_FILES := ${LUSER_FILES} ${SUPER_FILES}
 SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
 
-build: $(addprefix tgt/,${FILES}) # create configured scripts/config files in tgt/, ready to be installed
+build: $(addprefix tgt/,${ALL_FILES}) # create configured scripts/config files in tgt/, ready to be installed
 
-config: ${VALID_CONFIG} # update or create a config file from the default settings
+config: ${VALID_CONFIG} # upgrade or create a config file from the default settings
+	@echo --------------------------------
+	@echo config file written to '${CONFIG_FILE}'
+	@echo please review the configuration:
+	@echo --------------------------------
+	@bash ${BUILD}/config_dump_vals.sh ${CONFIG_FILE}
 
-basedir = $(shell basename $(dir $1))
-tmpdir = tmp/$(call basedir,$1)
+tmpfile = $(subst tgt/,tmp/,$1)
+tgt/%: src/% ${BUILD}/make_sed_commands.sh ${ALL_CONFIG_VARS} ${CONFIG_FILE}
+	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
+	cp -f $< "$(call tmpfile,$@)"
+	${BUILD}/binary $@ || sed -i "${SED_COMMANDS}" "$(call tmpfile,$@)"
+	mv "$(call tmpfile,$@)" $@
 
-tgt/%: src/% ${BUILD}/make_sed_commands.sh ${CONFIG_FILE} ${VALID_CONFIG}
-	mkdir -p $(dir $@) $(call tmpdir,$@)
-	cp -f $< $(call tmpdir,$@)
-	${BUILD}/binary $@ || sed -i "${SED_COMMANDS}" $(call tmpdir,$@)/$(notdir $@)
-	mv $(call tmpdir,$@)/$(notdir $@) $@
+define mkvroot =
+	mkdir -p ${CONFIG_VROOT}
+endef
+define rmvroot =
+	[ ! -d "${CONFIG_VROOT}" ] || find "${CONFIG_VROOT}" -type d -empty -delete
+endef
+
+define installexec =
+	mkdir -p $(dir $@)
+	install -m 755 -D $< $@
+endef
+define installdata =
+	mkdir -p $(dir $@)
+	install -m 644 -D $< $@
+endef
+
+${CONFIG_VROOT}:
+	mkdir $@
+
+${CONFIG_VROOT}/bin/%: tgt/bin/% ${CONFIG_VROOT}
+	$(installexec)
+
+${CONFIG_VROOT}/sbin/%: tgt/sbin/% ${CONFIG_VROOT}
+	$(installexec)
+
+${CONFIG_VROOT}/etc/%: tgt/etc/% ${CONFIG_VROOT}
+	$(installdata)
+
+${CONFIG_VROOT}/lib/%: tgt/lib/% ${CONFIG_VROOT}
+	$(installdata)
+
+${CONFIG_VROOT}/share/%: tgt/share/% ${CONFIG_VROOT}
+	$(installdata)
 
 ${VALID_CONFIG}: ${CONFIG_FILE}
 	rm -rf tgt tmp
-	sh -e $<
+	bash -e $<
 	mkdir -p $(dir $@)
 	touch $@
 
 ${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE} ${ALL_CONFIG_VARS}
-	: > ${CURRENT_CONFIG_VARS}
-	test ! -f $@ || cut -d= -f1 $@ | sort > ${CURRENT_CONFIG_VARS}
-	comm -23 ${ALL_CONFIG_VARS} ${CURRENT_CONFIG_VARS} | xargs -L 1 -I @ grep ^@= ${DEFAULT_CONFIG_FILE} > ${TMP_CFG}/config.unsorted
-	: > ${TMP_CFG}/config.dependent
-	grep '\$$.*CONFIG' ${TMP_CFG}/config.unsorted > ${TMP_CFG}/config.dependent || true
-	comm -23 ${TMP_CFG}/config.unsorted ${TMP_CFG}/config.dependent > ${TMP_CFG}/config.tmp
-	cat ${TMP_CFG}/config.tmp ${TMP_CFG}/config.dependent >> $@
+	bash ${BUILD}/touch_config.sh $@ $^ ${TMP_CFG}
 
-${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE}
+${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE} ${THIS_MAKEFILE}
 	mkdir -p $(dir $@)
-	cut -d= -f1 $< | sort > $@
+	grep -v '+=' $< | cut -d= -f1 -s | sort -u > $@
 
-install: build tgt ${CONFIG_FILE} # install configured scripts/config files from tgt/
-	${BUILD}/install.sh ${CONFIG_FILE} tgt ${FILES}
+u_suffix = $(word 2, $(subst _, ,$1))
+define mkversion =
+	cp ${CONFIG_FILE} "${CONFIG_VROOT}/config-$(call u_suffix,$@)"
+	git rev-parse HEAD > "${CONFIG_VROOT}/version-$(call u_suffix,$@)"
+endef
+define rmversion =
+	rm -f "${CONFIG_VROOT}/version-$(call u_suffix,$@)"
+	rm -f "${CONFIG_VROOT}/config-$(call u_suffix,$@)"
+	$(rmvroot)
+endef
 
-install_user: build tgt ${CONFIG_FILE} # update the user configuration to accommodate installed scripts/config files
-	${BUILD}/install_user.sh ${CONFIG_FILE}
+INSTALLED_LUSER_FILES = $(addprefix ${CONFIG_VROOT}/,${LUSER_FILES})
+INSTALLED_SUPER_FILES = $(addprefix ${CONFIG_VROOT}/,${SUPER_FILES})
 
-install_all: install install_user # install configured scripts/config files and update the user configuration to accommodate them
+install_luser: ${CONFIG_FILE} ${INSTALLED_LUSER_FILES}
+	bash ${BUILD}/luser.sh install ${CONFIG_FILE}
+	$(mkversion)
 
-uninstall: ${CONFIG_FILE} # remove the scripts/config files from the user configuration and delete them
-	${BUILD}/uninstall.sh ${CONFIG_FILE}
+uninstall_luser: # uninstall scripts and config of current user
+	bash ${BUILD}/luser.sh uninstall ${CONFIG_FILE}
+	rm -f ${INSTALLED_LUSER_FILES}
+	$(rmversion)
 
-update: uninstall install_all # update the user configuration from the repository (equivalent to uninstall and then install_all)
+upgrade_luser: uninstall_luser install_luser # install/upgrade scripts and config of current user
+
+install_super: ${CONFIG_FILE} ${INSTALLED_SUPER_FILES}
+	bash ${BUILD}/super.sh install ${CONFIG_FILE}
+	$(mkversion)
+
+uninstall_super: # uninstall administrative scripts and config
+	rm -f ${INSTALLED_SUPER_FILES}
+	bash ${BUILD}/super.sh uninstall ${CONFIG_FILE}
+	$(rmversion)
+
+upgrade_super: uninstall_super install_super # install/upgrade administrative scripts and config
 
 import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
 	# do it in reverse order such that it's easier to patch
-	(eval $$(grep CONFIG_VROOT ${CONFIG_FILE}) && cd tgt && (diff -ur $$CONFIG_VROOT . || true)) > tmp/$@.patch
+	-(cd tgt && diff -ur ${CONFIG_VROOT} .) > tmp/$@.patch
 	patch --directory=src --reverse -p0 --merge < tmp/$@.patch
 
 tags:: # create tags
@@ -108,14 +235,12 @@ progs: # install set of progs required for this project and in general for power
 	yum install 		\
 		moreutils	\
 		man-db		\
-		man-pages	\
-		man-pages-overrides \
+		man-pages man-pages-overrides \
 		htop		\
 		tree		\
 		net-tools	\
 		m4		\
-		ncurses-devel	\
-		ncurses		\
+		ncurses ncurses-devel \
 		autoconf	\
 		libtool		\
 		flex		\
@@ -142,8 +267,7 @@ progs: # install set of progs required for this project and in general for power
 		ltrace		\
 		strace		\
 		gdb		\
-		gcc		\
-		glibc-static	\
+		gcc glibc-static \
 		file		\
 		gawk		\
 		bc		\
@@ -152,8 +276,7 @@ progs: # install set of progs required for this project and in general for power
 		gzip		\
 		xz		\
 		tar		\
-		openssh-clients	\
-		openssh-server	\
+		openssh-clients	openssh-server \
 		cscope		\
 		ctags		\
 		colordiff	\
@@ -162,10 +285,8 @@ progs: # install set of progs required for this project and in general for power
 		less		\
 		util-linux	\
 		vim		\
-		git-email	\
-		git		\
-		bash-completion	\
-		bash-completion-extras \
+		git git-email	\
+		bash-completion	bash-completion-extras \
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then yum install \
@@ -212,8 +333,7 @@ progs:
 		bzip2		\
 		gzip		\
 		tar		\
-		openssh-client	\
-		openssh-server	\
+		openssh-client openssh-server \
 		cscope		\
 		exuberant-ctags	\
 		colordiff	\
@@ -244,15 +364,18 @@ endif
 # then format it to columns
 # see? it wasn't that bad... right? right?!
 help: # this message
-	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${MAKEFILE_LIST} |	\
+	@egrep '^[a-zA-Z0-9_]*::?( |$$)' ${THIS_MAKEFILE} |	\
 		sed '/:[^#]*$$/d; s/:.*# /:/' |			\
 		fold -s -w 65 |					\
 		sed 's/\(^[^:]*$$\)/ :&/' |			\
 		column -s : -t
 
-test: ${ALL_CONFIG_VARS} # dump configuration
-	@echo "files:"
-	@echo "${FILES}"
+test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
+	@echo "luser files:"
+	@echo "${LUSER_FILES}"
+	@echo
+	@echo "super files:"
+	@echo "${SUPER_FILES}"
 	@echo
 	@echo "all config vars:"
 	@cat ${ALL_CONFIG_VARS}
@@ -262,8 +385,7 @@ test: ${ALL_CONFIG_VARS} # dump configuration
 	@echo
 	@echo "sed commands:"
 	@echo " ${SED_COMMANDS}" | tr ';' '\n'
-	@echo
-	@echo basedir: "$(call basedir,tgt/dir/test)"
-	@echo tmpdir: "$(call tmpdir,tgt/dir/test)"
 
-.PHONY: clean build all install install_user install_all uninstall tgt help test config mrproper
+.PHONY: clean build all help test config mrproper
+.PHONY: install_luser uninstall_luser upgrade_luser
+.PHONY: install_super uninstall_super upgrade_super
