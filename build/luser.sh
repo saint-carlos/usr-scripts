@@ -46,11 +46,15 @@ install()
 	fi
 
 	xz -d "$CONFIG_SHARE/hebrew.txt.xz"
+
+	install_optional_dir "$CONFIG_WORKSPACE"
 }
 
 uninstall()
 {
 	rm -f "$CONFIG_SHARE/hebrew.txt"
+
+	uninstall_optional_dir "$CONFIG_WORKSPACE"
 
 	rm -f "$CONFIG_LIB/vim/doc/tags"
 

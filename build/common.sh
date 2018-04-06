@@ -105,3 +105,13 @@ safe_edit()
 	"${@/@@@/$DST}" || return 1
 	rmbackup "$DST"
 }
+
+install_optional_dir()
+{
+	mkdir -p "$@"
+}
+
+uninstall_optional_dir()
+{
+	rmdir --ignore-fail-on-non-empty "$@" || true
+}
