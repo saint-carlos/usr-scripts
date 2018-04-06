@@ -84,6 +84,7 @@ LUSER_FILES :=			\
 	etc/gitignore		\
 	etc/screenrc		\
 	etc/vimrc		\
+	etc/htoprc		\
 $(call srcfiles,		\
 	lib/vim/		\
 )

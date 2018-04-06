@@ -19,6 +19,8 @@ install()
 		ln -sf "$CONFIG_ETC/gitconfig" @@@
 	safe_replace $HOME/.colordiffrc \
 		ln -sf "$CONFIG_ETC/colordiffrc" @@@
+	safe_replace $HOME/.config/htop/htoprc \
+		ln -sf "$CONFIG_ETC/htoprc" @@@
 
 	safe_edit $HOME/.screenrc \
 		mksource 'source' "$CONFIG_ETC/screenrc" @@@ '#'
@@ -57,6 +59,7 @@ uninstall()
 	rmsource $HOME/.bashrc
 	rmsource $HOME/.vimrc
 	rmsource $HOME/.screenrc
+	restore_backup $HOME/.config/htop/htoprc
 	restore_backup $HOME/.colordiffrc
 	restore_backup $HOME/.gitconfig
 }
