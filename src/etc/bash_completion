@@ -84,6 +84,11 @@ _git_diff_log()
 	_git_diff "$@"
 }
 
+_git_alog()
+{
+	_git_log "$@"
+}
+
 __external_root_executable()
 {
 	[ "$COMP_CWORD" -eq 1 ] || return 1
