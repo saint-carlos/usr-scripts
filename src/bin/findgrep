@@ -85,7 +85,7 @@ if [ -n "$CRITERIA" ]; then
 	CRITERIA="'(' -inum 0 $CRITERIA ')'" # "inum 0" is used as "false"
 fi
 
-eval find "${SEARCHDIRS[@]}" -type f $CRITERIA | \
-	eval $BLACKLIST_FILTER | \
-	awk '{ print "\"" $0 "\"" }' | \
-	xargs grep $GREP_OPTIONS $BUILTIN_GREP_FLAGS "$TEXT" /dev/null
+eval find "${SEARCHDIRS[@]}" -type f $CRITERIA \
+	| eval $BLACKLIST_FILTER \
+	| awk '{ print "\"" $0 "\"" }' \
+	| xargs grep $GREP_OPTIONS $BUILTIN_GREP_FLAGS "$TEXT" /dev/null

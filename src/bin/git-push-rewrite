@@ -58,11 +58,11 @@ REMOTE_HASH=$(git rev-parse "$REMOTE_BRANCH")
 
 BASENAME_PREFIX="${BRANCH}-v"
 PREFIX="refs/tags/$BASENAME_PREFIX"
-REMOTE_TAG_LAST=$(git ls-remote --tags "$REPO" | \
-	cut -f 2- | \
-	grep "^${PREFIX}[0-9][0-9]*" | \
-	sort -rn --key 1.$((${#PREFIX} + 1)) |
-	head -n 1)
+REMOTE_TAG_LAST=$(git ls-remote --tags "$REPO" \
+	| cut -f 2- \
+	| grep "^${PREFIX}[0-9][0-9]*" \
+	| sort -rn --key 1.$((${#PREFIX} + 1)) \
+	| head -n 1)
 if [ -n "$REMOTE_TAG_LAST" ]; then
 	LAST_REMOTE_VERSION=${REMOTE_TAG_LAST#${PREFIX}}
 	LAST_HASH=$(git rev-parse "$REMOTE_TAG_LAST");

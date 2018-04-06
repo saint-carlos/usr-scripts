@@ -78,8 +78,9 @@ build()
 	$CLEAN && make "$@" clean
 	rm -f "$BUILD_LOG" "$ERROR_LOG"
 	time make $PARALLEL "$@" \
-		2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" | color "$ERROR_COLOR" > $STDERR) | \
-		tee -a "$BUILD_LOG"
+		2> >(tee -a "$BUILD_LOG" "$ERROR_LOG" \
+				| color "$ERROR_COLOR" > $STDERR) \
+		| tee -a "$BUILD_LOG"
 	RC=${PIPESTATUS[0]}
 	if $STDERR_FAIL; then
 		RC=1

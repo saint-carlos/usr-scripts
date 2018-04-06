@@ -148,6 +148,7 @@ case "$1" in
 		usage 255 ;;
 esac
 
-MACHINES_DIR=$(grep MachineEntry --max-count=1 $FILES 2>/dev/null | \
-	sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' | head -1)
+MACHINES_DIR=$(grep MachineEntry --max-count=1 $FILES 2>/dev/null \
+	| sed 's:.*src="\(.*\)/[^/]*/[^/]*.vbox.*:\1:' \
+	| head -1)
 $ACTION "$@"

@@ -16,11 +16,12 @@ vim_exec()
 install()
 {
 	safe_replace $HOME/.gitconfig \
-			ln -sf "$CONFIG_ETC/gitconfig" @@@
+		ln -sf "$CONFIG_ETC/gitconfig" @@@
 	safe_replace $HOME/.colordiffrc \
-			ln -sf "$CONFIG_ETC/colordiffrc" @@@
+		ln -sf "$CONFIG_ETC/colordiffrc" @@@
+
 	safe_edit $HOME/.screenrc \
-			mksource 'source' "$CONFIG_ETC/screenrc" @@@ '#'
+		mksource 'source' "$CONFIG_ETC/screenrc" @@@ '#'
 
 	safe_edit $HOME/.vimrc \
 			mksource 'source' "$CONFIG_ETC/vimrc" @@@ '"'
@@ -32,7 +33,7 @@ install()
 			mksource 'source' "$CONFIG_ETC/bashrc" @@@ '#'
 	if [ ! -f $HOME/.bash_profile ] && [ ! -f $HOME/.profile ]; then
 		safe_edit $HOME/.bash_profile \
-				mksource 'source' '$HOME/.bashrc' @@@
+			mksource 'source' '$HOME/.bashrc' @@@
 	fi
 
 	if $CONFIG_DESKTOP; then
