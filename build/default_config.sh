@@ -22,7 +22,6 @@ CONFIG_REPO_DIRS=""
 
 # prompt color; pick from colorsrc
 CONFIG_PROMPT_COLOR=$([ $UID -eq 0 ] && echo yellow || echo green)
-CONFIG_SYSLOG_FILE=/var/log/messages
 # spell out username in prompt?
 CONFIG_PROMPT_USERNAME=true
 # if prompt-length/terminal-width > this-percentage, abbreviate pwd in prompt
