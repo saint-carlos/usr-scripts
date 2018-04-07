@@ -248,6 +248,9 @@ uninstall_desktoprefresh: # uninstall graphical settings, takes effect immediate
 
 upgrade_desktoprefresh: uninstall_desktoprefresh install_desktoprefresh # install/upgrade graphical settings, takes effect immediately
 
+install_desktopinit: ${CONFIG_FILE} # initialize desktop-related applications, can be done only if not already initialized
+	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+
 mksudo: # set current user as system administrator
 	$(mkvroot)
 	@echo root password required:
@@ -450,3 +453,4 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
 .PHONY: install_luser uninstall_luser upgrade_luser
 .PHONY: install_super uninstall_super upgrade_super mksudo rmsudo
 .PHONY: install_desktoprefresh uninstall_desktoprefresh upgrade_desktoprefresh
+.PHONY: install_desktopinit

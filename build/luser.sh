@@ -279,4 +279,51 @@ uninstall_desktoprefresh()
 	fi
 }
 
+clone_dssktopinit()
+{
+	local TARGET="$1"
+	local DESKTOPINIT_SRC="https://github.com/saint-carlos/desktopinit.git/"
+	git clone "$DESKTOPINIT_SRC" "$TARGET" || return 1
+}
+
+extract()
+{
+	local DIR="$1"
+	local ARCHIVE="$2"
+	pushd "$DIR"
+	xz --decompress "$ARCHIVE" || return 1
+	ARCHIVE="${ARCHIVE%%.xz}"
+	tar xf "$ARCHIVE" || return 1
+	popd
+}
+
+install_desktopinit()
+{
+	local DIR="tmp/desktopinit"
+	mkdir -p "$DIR" || return 1
+	clone_dssktopinit "$DIR"|| return 1
+
+	local FIREFOX_BASE="$HOME/.mozilla/firefox"
+	if [ -e "$FIREFOX_BASE" ]; then
+		echo "WARNING! '$FIREFOX_BASE' exists, not touching it" >&2
+	else
+		ensure_dir "$FIREFOX_BASE" || return 1
+		cp -r "$DIR/mozilla/firefox" "$FIREFOX_BASE" || return 1
+		extract "$FIREFOX_BASE" "main.tar.xz" || return 1
+	fi
+
+	local CHROMIUM_BASE="$HOME/.config/chromium"
+	if [ -e "$CHROMIUM_BASE" ]; then
+		echo "WARNING! '$CHROMIUM_BASE' exists, not touching it" >&2
+	else
+		ensure_dir "$CHROMIUM_BASE" || return 1
+		cp -r "$DIR/chromium" "$CHROMIUM_BASE" || return 1
+		extract "$CHROMIUM_BASE" "default.tar.xz" || return 1
+		mv "$CHROMIUM_BASE/default"/* "$CHROMIUM_BASE" || return 1
+		rmdir "$CHROMIUM_BASE/default" || return 1
+	fi
+
+	rm -rf "$DIR"
+}
+
 "$FUNCTION"
