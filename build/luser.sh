@@ -201,7 +201,9 @@ install()
 		popd
 	fi
 
-	xz -d "$CONFIG_SHARE/hebrew.txt.xz"
+	if grep "hebrew" <<< "$CONFIG_RTL_DICTIONARIES"; then
+		xz -d "$CONFIG_SHARE/hebrew.txt.xz"
+	fi
 
 	install_optional_dir "$CONFIG_WORKSPACE"
 }
