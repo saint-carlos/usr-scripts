@@ -45,9 +45,9 @@ CONFIG_REPO_DIRS=""
 # prompt color; pick from colorsrc
 CONFIG_PROMPT_COLOR=$([ $UID -eq 0 ] && echo yellow || echo green)
 # spell out username in prompt?
-CONFIG_PROMPT_USERNAME=true
+CONFIG_PROMPT_USERNAME=false
 # if prompt-length/terminal-width > this-percentage, abbreviate pwd in prompt
-CONFIG_PWD_SCREEN_PERCENT=100
+CONFIG_PWD_SCREEN_PERCENT=30
 
 # number of lines in terminal scrollback buffer
 CONFIG_TERMINAL_SCROLLBACK=500000
