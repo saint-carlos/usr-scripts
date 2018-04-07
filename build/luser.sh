@@ -100,6 +100,46 @@ uninstall_startup_file()
 	return 0
 }
 
+make_fimmutable()
+{
+	local DST="$1"
+	ensure_dir "$DST" || return 1
+	rm -f "$DST" || return 1
+	mkdir -p "$DST" || return 1
+	touch "$DST/0" || return 1
+	echo "disabled" > "$DST/0" || return 1
+	return 0
+}
+
+make_dimmutable()
+{
+	local DST="$1"
+	ensure_dir "$DST" || return 1
+	rm -r "$DST" || ! test -d "$DST" || return 1
+	touch "$DST" || return 1
+	echo "disabled" > "$DST" || return 1
+	return 0
+}
+
+make_fmutable()
+{
+	local DST="$1"
+	test -d "$DST" || return 0
+	rm "$DST/0" || return 1
+	rmdir "$DST" || return 1
+	touch "$DST" || return 1
+	return 0
+}
+
+make_dmutable()
+{
+	local DST="$1"
+	test -f "$DST" || return 0
+	rm -f "$DST" || return 1
+	mkdir "$DST" || return 1
+	return 0
+}
+
 install()
 {
 	safe_replace $HOME/.gitconfig \
@@ -152,6 +192,15 @@ install()
 			install_desktop_file
 	fi
 
+	if $CONFIG_DESKTOP && $CONFIG_SECURE; then
+		pushd $HOME
+		for_each "$CONFIG_DISABLE_CACHE_FILES" ':' \
+			make_fimmutable
+		for_each "$CONFIG_DISABLE_CACHE_DIRS" ':' \
+			make_dimmutable
+		popd
+	fi
+
 	xz -d "$CONFIG_SHARE/hebrew.txt.xz"
 
 	install_optional_dir "$CONFIG_WORKSPACE"
@@ -169,6 +218,15 @@ uninstall()
 	popd
 
 	uninstall_optional_dir "$CONFIG_WORKSPACE"
+
+	if $CONFIG_DESKTOP && $CONFIG_SECURE; then
+		pushd $HOME
+		for_each "$CONFIG_DISABLE_CACHE_FILES" ':' \
+			make_fmutable
+		for_each "$CONFIG_DISABLE_CACHE_DIRS" ':' \
+			make_dmutable
+		popd
+	fi
 
 	for_each_desktop_file \
 		uninstall_desktop_file

@@ -15,6 +15,24 @@ CONFIG_DOMAIN="$([ -n "$(dnsdomainname)" ] && dnsdomainname || hostname -f)"
 # user's email
 CONFIG_USER_EMAIL="${CONFIG_USER_NAME}@${CONFIG_DOMAIN}"
 
+# whether or not we care about security on this machine
+CONFIG_SECURE=true
+# disable unencrypted caches (files or directories); colon separated
+# this is for privacy, since those caches are accessible and aren't purged
+# this may cause some applications (e.g. mplayer) to crash or malfunction
+CONFIG_DISABLE_CACHE_FILES=""
+CONFIG_DISABLE_CACHE_FILES+=":.local/share/recently-used.xbel"
+CONFIG_DISABLE_CACHE_FILES+=":.config/geeqie/history"
+CONFIG_DISABLE_CACHE_FILES+=":.config/gnome-mplayer/gnome-mplayer.db"
+CONFIG_DISABLE_CACHE_FILES+=":.local/share/gthumb/catalogs/Command Line.catalog"
+CONFIG_DISABLE_CACHE_FILES+=":.local/share/beatbox/beatbox.db"
+CONFIG_DISABLE_CACHE_FILES+=":.kinorc"
+CONFIG_DISABLE_CACHE_FILES+=":.audacity-data/audacity.cfg"
+CONFIG_DISABLE_CACHE_DIRS=""
+CONFIG_DISABLE_CACHE_DIRS+=":.thumbnails"
+CONFIG_DISABLE_CACHE_DIRS+=":.kde/share/apps/RecentDocuments"
+CONFIG_DISABLE_CACHE_DIRS+=":.icedtea/cache"
+
 # main working directory, for the 'j' command
 CONFIG_WORKSPACE="$HOME/workspace"
 # additional working directories, for the 'j' command
