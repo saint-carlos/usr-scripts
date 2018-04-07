@@ -18,6 +18,8 @@ CONFIG_USER_EMAIL="${CONFIG_USER_NAME}@${CONFIG_DOMAIN}"
 
 # whether or not we care about security on this machine
 CONFIG_SECURE=true
+# how often you have to type password in sudo
+CONFIG_SUDO_TIMEOUT_MINS=15
 # groups to which to add the user (for mksudo); see /etc/group
 # user will be added to group only if group exists
 CONFIG_NONDEFAULT_GROUPS="docker:vboxusers:libvirtd"

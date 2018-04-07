@@ -11,6 +11,7 @@ EFFECTIVE_CONF	:= $(shell if [ -f ${CONFIG_FILE} ]; then echo ${CONFIG_FILE}; el
 
 CONFIG_DESKTOP	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_DESKTOP)
 CONFIG_MINT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_MINT)
+CONFIG_SECURE	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_SECURE)
 CONFIG_VROOT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_VROOT)
 
 findsrc = $(shell find $(addprefix src/,$1) -type f)
@@ -127,7 +128,13 @@ LUSER_FILES += ${MINT_FILES}
 endif
 
 SUPER_FILES :=			\
+	etc/login.defs		\
+	etc/pam.conf		\
 	etc/rsyslog.conf	\
+	etc/selinux.conf	\
+	etc/sshd_config		\
+	etc/sudoers		\
+	etc/sysctl.conf		\
 $(call srcfiles,		\
 	sbin/			\
 )
@@ -345,6 +352,9 @@ progs: # install set of progs required for this project and in general for power
 		xclip		\
 		rxvt-unicode	\
 	; fi
+	if ${CONFIG_SECURE}; then yum install \
+		selinux-policy	\
+	; fi
 else
 ifneq ($(shell which apt-get),)
 progs:
@@ -419,6 +429,9 @@ progs:
 		mate-panel mate-panel-common \
 		mate-applets mate-applets-common \
 		mintmenu	\
+	; fi
+	if ${CONFIG_SECURE}; then apt-get install \
+		selinux-policy-default	\
 	; fi
 endif
 endif

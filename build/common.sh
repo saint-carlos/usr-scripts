@@ -122,6 +122,15 @@ safe_edit()
 	rmbackup "$DST"
 }
 
+comment_out()
+{
+	local EXPRESSION="$1"
+	local DST="$2"
+	local CMT_PRE="$3"
+	local CMT_POST="$4"
+	sed -i "s/^${EXPRESSION}\$/${CMT_PRE}&${CMT_PRE} edited by $PROJECT/" "$DST"
+}
+
 install_optional_dir()
 {
 	mkdir -p "$@"

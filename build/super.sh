@@ -12,6 +12,52 @@ ADM_GROUP=adm
 SUDO_GROUP=sudo
 GROUPDB="$CONFIG_ETC/gpasswd"
 
+link_secure()
+{
+	local SRC="$1"
+	local DST="$2"
+	# for security reasons, we copy the file rather than link it
+	mkbackup "$DST" || return 1
+	local BACKUP_FILE="$(make_backup_filename "$DST")"
+	cp "$SRC" "$DST" || return 1
+	chmod --reference="$BACKUP_FILE" "$DST" || return 1
+	return 0
+}
+
+unlink_secure()
+{
+	restore_backup "$1"
+}
+
+pam_setup()
+{
+	cp "$CONFIG_ETC/pam.conf" "/etc/pam.d/$PROJECT" || return 1
+	return 0
+}
+
+pam_teardown()
+{
+	rm -f "/etc/pam.d/$PROJECT" || return 1
+	return 0
+}
+
+pam_edit()
+{
+	local DST_FILE="$1"
+	local PAM_CMT='#'
+	mkbackup "$DST_FILE"
+	comment_out '\s*session.*pam_motd.so.*' "$DST_FILE" "$PAM_CMT" || return 1
+	comment_out '\s*session.*pam_lastlog.*' "$DST_FILE" "$PAM_CMT" || return 1
+	mksource "@include" $PROJECT "$DST_FILE" "$PAM_CMT" || return 1
+	return 0
+}
+
+pam_unedit()
+{
+	local DST_FILE="$1"
+	restore_backup "$DST_FILE"
+}
+
 mkgroupdb()
 {
 	if [ -d "$GROUPDB" ]; then
@@ -77,6 +123,21 @@ install()
 	# we can't link it because rsyslog is stupid
 	safe_replace /etc/rsyslog.conf \
 		cp "$CONFIG_ETC/rsyslog.conf" @@@
+
+	pam_setup
+
+	pam_edit /etc/pam.d/login
+
+	link_secure "$CONFIG_ETC/sshd_config" /etc/ssh/sshd_config
+	mkdir -p /run/sshd
+	pam_edit /etc/pam.d/sshd
+
+	link_secure "$CONFIG_ETC/sudoers" /etc/sudoers
+	link_secure "$CONFIG_ETC/login.defs" /etc/login.defs
+	link_secure "$CONFIG_ETC/sysctl.conf" /etc/sysctl.conf
+	if [ -f /etc/selinux/config ]; then
+		link_secure "$CONFIG_ETC/selinux.conf" /etc/selinux/config
+	fi
 }
 
 uninstall()
@@ -84,15 +145,26 @@ uninstall()
 	[ $UID -eq 0 ] || return 1
 
 	restore_backup /etc/rsyslog.conf
+	unlink_secure /etc/selinux/config
+	unlink_secure /etc/sysctl.conf
+	unlink_secure /etc/login.defs
+	unlink_secure /etc/sudoers
+	unlink_secure /etc/ssh/sshd_config
+	pam_unedit /etc/pam.d/login
+	pam_unedit /etc/pam.d/sshd
+	pam_teardown
+	# rmdir /run/sshd # that would be more annoying than useful
 }
 
 mksudo()
 {
 	[ $UID -eq 0 ] || return 1
 
-	echo "sudo timeout is $CONFIG_SUDO_TIMEOUT_MINS > 0:"
-	add_user_to_group $CONFIG_USER_NAME $ADM_GROUP
-	add_user_to_group $CONFIG_USER_NAME $SUDO_GROUP
+	if [ $CONFIG_SUDO_TIMEOUT_MINS -gt 0 ]; then
+		echo "sudo timeout is $CONFIG_SUDO_TIMEOUT_MINS > 0:"
+		add_user_to_group $CONFIG_USER_NAME $ADM_GROUP
+		add_user_to_group $CONFIG_USER_NAME $SUDO_GROUP
+	fi
 	for_each $CONFIG_NONDEFAULT_GROUPS ':' \
 		add_user_to_group $CONFIG_USER_NAME
 }
