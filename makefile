@@ -102,7 +102,16 @@ DESKTOP_FILES :=		\
 	bin/mvspc		\
 	bin/trans		\
 	etc/xdefaults		\
-	share/hebrew.txt.xz
+	share/hebrew.txt.xz	\
+	etc/desktop/gnome2/genius \
+$(call srcfiles,		\
+	etc/desktop/config/caja	\
+	etc/desktop/config/audacious \
+	etc/desktop/config/geeqie \
+	etc/desktop/config/kupfer \
+	etc/desktop/config/vlc	\
+	lib/urxvt/		\
+)
 LUSER_FILES += ${DESKTOP_FILES}
 endif
 
@@ -348,6 +357,14 @@ progs:
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
+		gnome-genius	\
+		geeqie		\
+		vlc		\
+		kupfer		\
+		audacious	\
+		vim-gtk		\
+		firefox		\
+		chromium-browser \
 		dict dictd dict-gcide \
 		xsel		\
 		rxvt-unicode	\
