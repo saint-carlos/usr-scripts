@@ -248,4 +248,33 @@ uninstall()
 	restore_backup $HOME/.gitconfig
 }
 
+install_desktoprefresh()
+{
+	if $CONFIG_MINT; then
+		BACKUP_FILE=$(make_backup_filename $HOME/.config/dconf/user)
+		dconf dump / > "$BACKUP_FILE"
+		cp $CONFIG_ETC/dconf_user.ini $CONFIG_ETC/dconf_user.final.ini
+		if [ $CONFIG_NUM_MONITORS -ge 2 ]; then
+			cat $CONFIG_ETC/dconf_user.2.ini >> \
+				$CONFIG_ETC/dconf_user.final.ini
+		fi
+		# we don't reset the rest of the config, we
+		# only touch what we care about
+		dconf load / < "$CONFIG_ETC/dconf_user.final.ini"
+	fi
+}
+
+uninstall_desktoprefresh()
+{
+	if $CONFIG_MINT; then
+		BACKUP_FILE=$(make_backup_filename $HOME/.config/dconf/user)
+		if [ -f "$BACKUP_FILE" ]; then
+			dconf reset -f / || echo "dconf reset failed, loading anyway"
+			dconf load / < "$BACKUP_FILE" || return 1
+		fi
+		rm -f "$CONFIG_ETC/dconf_user.final.ini"
+
+	fi
+}
+
 "$FUNCTION"

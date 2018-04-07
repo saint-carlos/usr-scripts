@@ -56,6 +56,14 @@ CONFIG_MAIL_SMTP_ENCRYPT="plain"
 
 # mostly GUI stuff
 CONFIG_DESKTOP=false
+# number of workspaces
+CONFIG_NUM_WORKSPACES=1
+# for clock applet: list of locations
+# colon separated, prefix one with '~' for current location
+# example: "Berlin:~San Francisco:London"
+CONFIG_CITIES=""
+# colon separated, first is default; pick from ISO 639-1
+CONFIG_LANGUAGES="us"
 # directory containing stuff displayed on the desktop
 CONFIG_DESKTOP_DIR=".desktop"
 # personal temporary directory, also used for downloads

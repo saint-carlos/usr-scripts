@@ -128,7 +128,11 @@ $(call srcfiles,		\
 	sbin/			\
 )
 
-ALL_FILES := ${LUSER_FILES} ${SUPER_FILES}
+DESKTOPREFRESH_FILES :=		\
+	etc/dconf_user.ini	\
+	etc/dconf_user.2.ini	\
+
+ALL_FILES := ${LUSER_FILES} ${SUPER_FILES} ${DESKTOPREFRESH_FILES}
 SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
@@ -209,6 +213,7 @@ endef
 
 INSTALLED_LUSER_FILES = $(addprefix ${CONFIG_VROOT}/,${LUSER_FILES})
 INSTALLED_SUPER_FILES = $(addprefix ${CONFIG_VROOT}/,${SUPER_FILES})
+INSTALLED_DESKTOPREFRESH_FILES = $(addprefix ${CONFIG_VROOT}/,${DESKTOPREFRESH_FILES})
 
 install_luser: ${CONFIG_FILE} ${INSTALLED_LUSER_FILES}
 	bash ${BUILD}/luser.sh install ${CONFIG_FILE}
@@ -231,6 +236,17 @@ uninstall_super: # uninstall administrative scripts and config
 	$(rmversion)
 
 upgrade_super: uninstall_super install_super # install/upgrade administrative scripts and config
+
+install_desktoprefresh: ${CONFIG_FILE} ${INSTALLED_DESKTOPREFRESH_FILES}
+	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+	$(mkversion)
+
+uninstall_desktoprefresh: # uninstall graphical settings, takes effect immediately
+	rm -f ${INSTALLED_DESKTOPREFRESH_FILES}
+	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+	$(rmversion)
+
+upgrade_desktoprefresh: uninstall_desktoprefresh install_desktoprefresh # install/upgrade graphical settings, takes effect immediately
 
 import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
 	# do it in reverse order such that it's easier to patch
@@ -376,6 +392,12 @@ progs:
 		xsel		\
 		rxvt-unicode	\
 	; fi
+	if ${CONFIG_MINT}; then apt-get install \
+		dconf-cli	\
+		mate-panel mate-panel-common \
+		mate-applets mate-applets-common \
+		mintmenu	\
+	; fi
 endif
 endif
 
@@ -402,6 +424,9 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
 	@echo "super files:"
 	@echo "${SUPER_FILES}"
 	@echo
+	@echo "desktoprefresh files:"
+	@echo "${DESKTOPREFRESH_FILES}"
+	@echo
 	@echo "all config vars:"
 	@cat ${ALL_CONFIG_VARS}
 	@echo
@@ -414,3 +439,4 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
 .PHONY: clean build all help test config mrproper
 .PHONY: install_luser uninstall_luser upgrade_luser
 .PHONY: install_super uninstall_super upgrade_super
+.PHONY: install_desktoprefresh uninstall_desktoprefresh upgrade_desktoprefresh
