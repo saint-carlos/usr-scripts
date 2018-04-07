@@ -2,6 +2,7 @@
 # you can run advanced assignment constructs
 # or shell commands to generate values for variables
 # better not run commands with side effects!
+# replace relative variables like $HOME and $USER, otherwise it doesn't work with sudo
 
 # where everything is installed
 CONFIG_VROOT="$HOME/vroot"
@@ -17,6 +18,9 @@ CONFIG_USER_EMAIL="${CONFIG_USER_NAME}@${CONFIG_DOMAIN}"
 
 # whether or not we care about security on this machine
 CONFIG_SECURE=true
+# groups to which to add the user (for mksudo); see /etc/group
+# user will be added to group only if group exists
+CONFIG_NONDEFAULT_GROUPS="docker:vboxusers:libvirtd"
 # disable unencrypted caches (files or directories); colon separated
 # this is for privacy, since those caches are accessible and aren't purged
 # this may cause some applications (e.g. mplayer) to crash or malfunction

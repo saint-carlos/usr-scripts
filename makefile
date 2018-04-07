@@ -248,6 +248,16 @@ uninstall_desktoprefresh: # uninstall graphical settings, takes effect immediate
 
 upgrade_desktoprefresh: uninstall_desktoprefresh install_desktoprefresh # install/upgrade graphical settings, takes effect immediately
 
+mksudo: # set current user as system administrator
+	$(mkvroot)
+	@echo root password required:
+	su -c "bash ${BUILD}/super.sh $@ ${CONFIG_FILE}"
+
+rmsudo: # unset current user as system administrator
+	@echo root password required:
+	su -c "bash ${BUILD}/super.sh $@ ${CONFIG_FILE}"
+	$(rmvroot)
+
 import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
 	# do it in reverse order such that it's easier to patch
 	-(cd tgt && diff -ur ${CONFIG_VROOT} .) > tmp/$@.patch
@@ -438,5 +448,5 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
 
 .PHONY: clean build all help test config mrproper
 .PHONY: install_luser uninstall_luser upgrade_luser
-.PHONY: install_super uninstall_super upgrade_super
+.PHONY: install_super uninstall_super upgrade_super mksudo rmsudo
 .PHONY: install_desktoprefresh uninstall_desktoprefresh upgrade_desktoprefresh
