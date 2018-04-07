@@ -71,6 +71,18 @@ install()
 			mksource 'source' '$HOME/.bashrc' @@@
 	fi
 
+	if $CONFIG_MINT; then
+		DEFAULT_USER_DIRS="$(grep '=' /etc/xdg/user-dirs.defaults \
+			| cut -d= -f2 -s)"
+		pushd $HOME
+		uninstall_optional_dir $DEFAULT_USER_DIRS || true
+		install_optional_dir "$CONFIG_DESKTOP_DIR" "$CONFIG_HOME_TMP_DIR"
+		popd
+
+		safe_replace "$HOME/.config/user-dirs.dirs" \
+			ln -sf "$CONFIG_ETC/user-dirs.dirs" @@@
+	fi
+
 	if $CONFIG_DESKTOP; then
 		test -d "$CONFIG_SHARE" || exit 1
 
@@ -89,6 +101,13 @@ install()
 uninstall()
 {
 	rm -f "$CONFIG_SHARE/hebrew.txt"
+
+	restore_backup "$HOME/.config/user-dirs.dirs"
+	pushd $HOME
+	uninstall_optional_dir \
+		"$CONFIG_DESKTOP_DIR" \
+		"$CONFIG_HOME_TMP_DIR"
+	popd
 
 	uninstall_optional_dir "$CONFIG_WORKSPACE"
 

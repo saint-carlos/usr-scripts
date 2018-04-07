@@ -10,6 +10,7 @@ ALL_CONFIG_VARS		:= ${TMP_CFG}/config_vars.all.txt
 EFFECTIVE_CONF	:= $(shell if [ -f ${CONFIG_FILE} ]; then echo ${CONFIG_FILE}; else echo ${BUILD}/default_config.sh; fi)
 
 CONFIG_DESKTOP	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_DESKTOP)
+CONFIG_MINT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_MINT)
 CONFIG_VROOT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_VROOT)
 
 findsrc = $(shell find $(addprefix src/,$1) -type f)
@@ -113,6 +114,12 @@ $(call srcfiles,		\
 	lib/urxvt/		\
 )
 LUSER_FILES += ${DESKTOP_FILES}
+endif
+
+ifeq (${CONFIG_MINT},true)
+MINT_FILES :=			\
+	etc/user-dirs.dirs
+LUSER_FILES += ${MINT_FILES}
 endif
 
 SUPER_FILES :=			\

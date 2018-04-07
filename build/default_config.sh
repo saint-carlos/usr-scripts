@@ -38,3 +38,7 @@ CONFIG_MAIL_SMTP_ENCRYPT="plain"
 
 # mostly GUI stuff
 CONFIG_DESKTOP=false
+# directory containing stuff displayed on the desktop
+CONFIG_DESKTOP_DIR=".desktop"
+# personal temporary directory, also used for downloads
+CONFIG_HOME_TMP_DIR="tmp"
