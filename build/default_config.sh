@@ -42,3 +42,21 @@ CONFIG_DESKTOP=false
 CONFIG_DESKTOP_DIR=".desktop"
 # personal temporary directory, also used for downloads
 CONFIG_HOME_TMP_DIR="tmp"
+# enable or disable specific startup applications
+# colon separated; pick from /etc/xdg/autostart and /usr/share/applications
+# unlisted applications will be left untouched
+CONFIG_AUTOSTART_ENABLE=""
+CONFIG_AUTOSTART_ENABLE+=":kupfer"
+CONFIG_AUTOSTART_ENABLE+=":mate-screensaver"
+CONFIG_AUTOSTART_ENABLE+=":mate-volume-control-applet"
+CONFIG_AUTOSTART_ENABLE+=":nm-applet"
+CONFIG_AUTOSTART_ENABLE+=":pulseaudio"
+CONFIG_AUTOSTART_DISABLE=""
+CONFIG_AUTOSTART_DISABLE+=":mintupdate"
+CONFIG_AUTOSTART_DISABLE+=":mintupload"
+CONFIG_AUTOSTART_DISABLE+=":mintwelcome"
+CONFIG_AUTOSTART_DISABLE+=":onboard-autostart"
+CONFIG_AUTOSTART_DISABLE+=":user-dirs-update-gtk"
+CONFIG_AUTOSTART_DISABLE+=":mint-ctrl-alt-backspace"
+CONFIG_AUTOSTART_DISABLE+=":vino-server"
+CONFIG_AUTOSTART_DISABLE+=":mate-at-session"

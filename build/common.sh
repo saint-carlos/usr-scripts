@@ -19,6 +19,22 @@ ensure_dir()
 	mkdir -p $(dirname "$1")
 }
 
+for_each()
+{
+	local LIST=$1
+	local DELIM=$2
+	shift 2
+
+	(
+		IFS="$DELIM"
+		while read -d "$DELIM" X; do
+			if [ -n "$X" ]; then
+				"$@" "$X" || return 1
+			fi
+		done
+	) <<< "$LIST"
+}
+
 mkbackup()
 {
 	local FILE="$1"

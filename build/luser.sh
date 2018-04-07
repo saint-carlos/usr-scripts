@@ -46,6 +46,60 @@ uninstall_desktop_file()
 	restore_backup "$DST"
 }
 
+install_startup_file()
+{
+	local ENABLED=$1
+	local BASE="${2}.desktop"
+	local INSTALLED_DIR="$CONFIG_ETC/autostart"
+	local INSTALLED_CONF="$INSTALLED_DIR/$BASE"
+	local LOCAL_CONF="$HOME/.config/autostart/$BASE"
+	local XDG_GLOBAL_CONF="/etc/xdg/autostart/$BASE"
+	local APP_GLOBAL_CONF="/usr/share/applications/$BASE"
+
+	if [ -f "$LOCAL_CONF" ];then
+		mkbackup "$LOCAL_CONF" || return 1
+		ensure_dir "$INSTALLED_CONF" || return 1
+		mv "$LOCAL_CONF" "$INSTALLED_CONF" || return 1
+	elif [ -f "$XDG_GLOBAL_CONF" ]; then
+		ensure_dir "$INSTALLED_CONF" || return 1
+		cp "$XDG_GLOBAL_CONF" "$INSTALLED_CONF" || return 1
+	elif [ -f "$APP_GLOBAL_CONF" ]; then
+		ensure_dir "$INSTALLED_CONF" || return 1
+		cp "$APP_GLOBAL_CONF" "$INSTALLED_CONF" || return 1
+	else
+		return 0
+	fi
+
+	# for some reason, adding "X-MATE-Autostart-enabled=false" leaves the
+	# thing enabled. to work around it, we remove any enabled line and only
+	# add one back if it's really enabled.
+	sed -i '/Autostart-enabled/d' "$INSTALLED_CONF" || return 1
+	if ! $ENABLED; then
+		local LINE="X-MATE-Autostart-enabled=${ENABLED}"
+		add_projline "$INSTALLED_CONF" "$LINE" '#' || return 1
+	fi
+	ensure_dir "$LOCAL_CONF" || return 1
+	ln -s "$INSTALLED_CONF" "$LOCAL_CONF" || return 1
+	return 0
+}
+
+uninstall_startup_file()
+{
+	local BASE="${1}.desktop"
+	local INSTALLED_DIR="$CONFIG_ETC/autostart"
+	local INSTALLED_CONF="$INSTALLED_DIR/$BASE"
+	local LOCAL_CONF="$HOME/.config/autostart/$BASE"
+	if [ -L "$LOCAL_CONF" ]; then
+		local DST=$(readlink "$LOCAL_CONF")
+		if [ "$DST" = "$INSTALLED_CONF" ]; then
+			unlink "$LOCAL_CONF" || return 1
+		fi
+	fi
+	restore_backup "$LOCAL_CONF" || return 1
+	rm -f "$INSTALLED_CONF" || return 1
+	return 0
+}
+
 install()
 {
 	safe_replace $HOME/.gitconfig \
@@ -81,6 +135,11 @@ install()
 
 		safe_replace "$HOME/.config/user-dirs.dirs" \
 			ln -sf "$CONFIG_ETC/user-dirs.dirs" @@@
+
+		for_each "$CONFIG_AUTOSTART_DISABLE" ':' \
+			install_startup_file false
+		for_each "$CONFIG_AUTOSTART_ENABLE" ':' \
+			install_startup_file true
 	fi
 
 	if $CONFIG_DESKTOP; then
@@ -113,6 +172,11 @@ uninstall()
 
 	for_each_desktop_file \
 		uninstall_desktop_file
+
+	for_each "$CONFIG_AUTOSTART_DISABLE" ':' \
+		uninstall_startup_file
+	for_each "$CONFIG_AUTOSTART_ENABLE" ':' \
+		uninstall_startup_file
 
 	rm -f "$CONFIG_LIB/vim/doc/tags"
 
