@@ -15,11 +15,12 @@ elif [ -s "$CONFIG_FILE" ]; then
 	CURRENT_CONFIG_VARS="$TMP_CFG/config_vars.current.txt"
 	cut -d= -f1 "$CONFIG_FILE" | sort > "$CURRENT_CONFIG_VARS"
 	comm -23 "$ALL_CONFIG_VARS" "$CURRENT_CONFIG_VARS" \
-		| xargs -L 1 -I @ grep ^@= "$DEFAULT_CONFIG_FILE" \
-		> "$TMP_CFG/config.unsorted"
-	grep '\$$.*CONFIG' "$TMP_CFG/config.unsorted" \
+		| xargs -L 1 -I @ grep --extended-regexp '^@\+?=' "$DEFAULT_CONFIG_FILE" \
+		| sort \
+		> "$TMP_CFG/config.preliminary"
+	grep '\$$.*CONFIG' "$TMP_CFG/config.preliminary" \
 		> "$TMP_CFG/config.dependent" || true
-	comm -23 "$TMP_CFG/config.unsorted" "$TMP_CFG/config.dependent" \
+	comm -23 "$TMP_CFG/config.preliminary" "$TMP_CFG/config.dependent" \
 		> "$TMP_CFG/config.tmp"
 	echo "# configuration automatically added, see $DEFAULT_CONFIG_FILE" \
 		>> "$CONFIG_FILE"
