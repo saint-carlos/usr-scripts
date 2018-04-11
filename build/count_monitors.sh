@@ -2,7 +2,7 @@
 
 if xrandr -q &> /dev/null; then
 	xrandr -q \
-		| grep connected \
+		| grep -w connected \
 		| wc -l
 elif which nvidia-xconfig &> /dev/null; then
 	nvidia-xconfig --query-gpu-info \
