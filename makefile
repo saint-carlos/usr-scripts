@@ -400,6 +400,7 @@ progs:
 		vlc		\
 		kupfer		\
 		audacious	\
+		easytag		\
 		vim-gtk		\
 		firefox		\
 		chromium-browser \
