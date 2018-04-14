@@ -1,12 +1,102 @@
-﻿[alsa] # ALSA audio output
+﻿##
+##  vlc 2.2.2
+##
+
+##
+## lines beginning with a '#' character are comments
+##
+
+[alsa] # ALSA audio output
 
 # Audio output device (string)
 alsa-audio-device=pulse
 
-[main] # main program
+[xcb_x11] # X11 video output (XCB)
+
+[qt4] # Qt interface
+
+# Start in minimal view (without menus) (boolean)
+qt-minimal-view=0
+
+# Systray icon (boolean)
+qt-system-tray=0
+
+# Show notification popup on track change (integer)
+qt-notification=1
+
+# Start VLC with only a systray icon (boolean)
+qt-start-minimized=0
+
+# Pause the video playback when minimized (boolean)
+qt-pause-minimized=0
+
+# Windows opacity between 0.1 and 1 (float)
+qt-opacity=1.000000
+
+# Fullscreen controller opacity between 0.1 and 1 (float)
+qt-fs-opacity=0.800000
+
+# Resize interface to the native video size (boolean)
+qt-video-autoresize=1
+
+# Show playing item name in window title (boolean)
+qt-name-in-title=1
+
+# Show a controller in fullscreen mode (boolean)
+qt-fs-controller=1
+
+# Save the recently played items in the menu (boolean)
+qt-recentplay=0
+
+# List of words separated by | to filter (string)
+qt-recentplay-filter=
+
+# Continue playback? (integer)
+qt-continue=0
+
+# Embed the file browser in open dialog (boolean)
+qt-embedded-open=1
+
+# Show advanced preferences over simple ones (boolean)
+qt-advanced-pref=1
+
+# Show unimportant error and warnings dialogs (boolean)
+qt-error-dialogs=1
+
+# Define the colors of the volume slider  (string)
+qt-slider-colours=153;210;153;20;210;20;255;199;15;245;39;29
+
+# Ask for network policy at start (boolean)
+qt-privacy-ask=0
+
+# Define which screen fullscreen goes (integer)
+qt-fullscreen-screennumber=-1
+
+# Load extensions on startup (boolean)
+qt-autoload-extensions=1
+
+# Display background cone or art (boolean)
+qt-bgcone=1
+
+# Expanding background cone or art. (boolean)
+qt-bgcone-expands=0
+
+# Allow automatic icon changes (boolean)
+qt-icon-change=1
+
+# Maximum Volume displayed (integer)
+qt-max-volume=200
+
+# Fullscreen controller mouse sensitivity (integer)
+qt-fs-sensitivity=3
+
+[core] # core program
 
 # Enable audio (boolean)
 audio=1
+
+# Audio gain (float)
+gain=1.000000
 
 # Audio output volume step (float)
 volume-step=12.800000
@@ -14,15 +104,47 @@ volume-step=12.800000
 # Remember the audio volume (boolean)
 volume-save=1
 
+# Force detection of Dolby Surround (integer)
+force-dolby-surround=0
+
+# Stereo audio output mode (integer)
+stereo-mode=1
+
+# Audio output module (string)
+aout=
+
+# Audio filters (string)
+audio-filter=
+
 # Audio visualizations (string)
+audio-visual=none
+
 # Enable video (boolean)
 video=1
+
+# Grayscale video output (boolean)
+grayscale=0
+
+# Fullscreen video output (boolean)
+fullscreen=0
+
+# Embedded video (boolean)
+embedded-video=1
 
 # Key press events (boolean)
 keyboard-events=1
 
+# Mouse events (boolean)
+mouse-events=1
+
 # Overlay video output (boolean)
 overlay=1
+
+# Always on top (boolean)
+video-on-top=0
+
+# Enable wallpaper mode  (boolean)
+video-wallpaper=0
 
 # Disable screensaver (boolean)
 disable-screensaver=1
@@ -39,6 +161,9 @@ video-title-position=8
 # Hide cursor and fullscreen controller after x milliseconds (integer)
 mouse-hide-timeout=1000
 
+# Video snapshot directory (or filename) (string)
+snapshot-path=CONFIG_HOME_TMP_DIR
+
 # Video snapshot file prefix (string)
 snapshot-prefix=vlcsnap-
 
@@ -51,11 +176,41 @@ snapshot-preview=1
 # Use sequential numbers instead of timestamps (boolean)
 snapshot-sequential=1
 
+# Video snapshot width (integer)
+snapshot-width=-1
+
+# Video snapshot height (integer)
+snapshot-height=-1
+
+# Video width (integer)
+width=-1
+
+# Video height (integer)
+height=-1
+
+# Video X coordinate (integer)
+video-x=0
+
+# Video Y coordinate (integer)
+video-y=0
+
+# Source aspect ratio (string)
+aspect-ratio=
+
 # Video Auto Scaling (boolean)
 autoscale=1
 
 # Video scaling factor (float)
 scale=1.000000
+
+# Zoom video (float)
+zoom=1.000000
+
+# Video output module (string)
+vout=xcb_x11
+
+# Video filter module (string)
+video-filter=
 
 # On Screen Display (boolean)
 osd=1
@@ -67,7 +222,7 @@ play-and-exit=0
 playlist-autostart=1
 
 # Pause on audio communication (boolean)
-#playlist-cork=1
+playlist-cork=1
 
 # Allow only one running instance (boolean)
 one-instance=0
@@ -78,8 +233,29 @@ one-instance-when-started-from-file=0
 # Automatically preparse files (boolean)
 auto-preparse=1
 
+# Allow metadata network access (boolean)
+metadata-network-access=0
+
 # Show advanced options (boolean)
 advanced=1
+
+# Interface interaction (boolean)
+interact=1
+
+# Fullscreen (string)
+global-key-toggle-fullscreen=
+
+# Fullscreen (string)
+key-toggle-fullscreen=f
+
+# Exit fullscreen (string)
+global-key-leave-fullscreen=
+
+# Exit fullscreen (string)
+key-leave-fullscreen=Esc
+
+# Play/Pause (string)
+global-key-play-pause=
 
 # Play/Pause (string)
 key-play-pause=c
@@ -365,6 +541,12 @@ global-key-subtitle-track=
 
 # Cycle subtitle track (string)
 key-subtitle-track=
+
+# Toggle subtitles (string)
+global-key-subtitle-toggle=
+
+# Toggle subtitles (string)
+key-subtitle-toggle=
 
 # Cycle next program Service ID (string)
 global-key-program-sid-next=
