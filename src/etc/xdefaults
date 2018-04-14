@@ -82,7 +82,10 @@
 *URxvt*perl-lib:	CONFIG_LIB/urxvt
 *URxvt*perl-ext:	default,selection-to-clipboard,clipboard,keyboard-select,font-size
 
-*URxvt*keysym*S-Insert:	perl:clipboard:paste
+*URxvt*keysym*S-Insert:	   perl:clipboard:paste
+*URxvt*clipboard*copycmd:  timeout 0.5s xclip -selection clipboard -silent -in
+*URxvt*clipboard*pastecmd: timeout 0.5s xclip -selection clipboard -silent -out
+*URxvt*clipboard*autocopy: true
 
 *URxvt*keysym*M-s:	perl:keyboard-select:activate
 

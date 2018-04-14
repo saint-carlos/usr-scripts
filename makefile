@@ -337,7 +337,7 @@ progs: # install set of progs required for this project and in general for power
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then yum install \
-		xsel		\
+		xclip		\
 		rxvt-unicode	\
 	; fi
 else
@@ -405,7 +405,7 @@ progs:
 		firefox		\
 		chromium-browser \
 		dict dictd dict-gcide \
-		xsel		\
+		xclip		\
 		rxvt-unicode	\
 	; fi
 	if ${CONFIG_MINT}; then apt-get install \
