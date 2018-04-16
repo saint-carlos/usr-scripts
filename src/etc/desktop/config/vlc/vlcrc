@@ -162,7 +162,7 @@ video-title-position=8
 mouse-hide-timeout=1000
 
 # Video snapshot directory (or filename) (string)
-snapshot-path=CONFIG_HOME_TMP_DIR
+snapshot-path=/home/CONFIG_USER_NAME/CONFIG_HOME_TMP_DIR
 
 # Video snapshot file prefix (string)
 snapshot-prefix=vlcsnap-
