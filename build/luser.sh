@@ -108,6 +108,7 @@ make_fimmutable()
 	mkdir -p "$DST" || return 1
 	touch "$DST/0" || return 1
 	echo "disabled" > "$DST/0" || return 1
+	chmod 0000 "$DST"
 	return 0
 }
 
@@ -125,6 +126,7 @@ make_fmutable()
 {
 	local DST="$1"
 	test -d "$DST" || return 0
+	chmod 0777 "$DST"
 	rm "$DST/0" || return 1
 	rmdir "$DST" || return 1
 	touch "$DST" || return 1
