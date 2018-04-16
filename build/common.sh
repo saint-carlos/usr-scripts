@@ -32,7 +32,7 @@ for_each()
 				"$@" "$X" || return 1
 			fi
 		done
-	) <<< "$LIST"
+	) <<< "${LIST}${DELIM}"
 }
 
 mkbackup()
