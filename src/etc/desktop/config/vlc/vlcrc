@@ -11,6 +11,11 @@
 # Audio output device (string)
 alsa-audio-device=pulse
 
+[avcodec] # FFmpeg audio/video decoder
+
+# Hardware decoding (string)
+avcodec-hw=none
+
 [xcb_x11] # X11 video output (XCB)
 
 [qt4] # Qt interface
