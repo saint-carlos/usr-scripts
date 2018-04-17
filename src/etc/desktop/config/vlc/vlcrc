@@ -564,7 +564,7 @@ key-program-sid-prev=
 global-key-aspect-ratio=
 
 # Cycle source aspect ratio (string)
-key-aspect-ratio=Shift+:
+key-aspect-ratio=a
 
 # Cycle video crop (string)
 global-key-crop=
