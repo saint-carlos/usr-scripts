@@ -279,6 +279,7 @@ ifneq ($(shell which yum),)
 progs: # install set of progs required for this project and in general for power users
 	yum install epel-release
 	yum install 		\
+		socat		\
 		python36 python34-pip \
 		moreutils	\
 		man-db		\
@@ -344,6 +345,7 @@ else
 ifneq ($(shell which apt-get),)
 progs:
 	apt-get install 	\
+		socat		\
 		python3.5 python3-pip \
 		moreutils	\
 		man-db		\
