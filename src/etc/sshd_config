@@ -65,9 +65,9 @@ PermitTunnel no
 AllowAgentForwarding yes
 AllowTcpForwarding yes
 GatewayPorts no
-X11Forwarding yes
+X11Forwarding CONFIG_SSH_SECURE
 X11DisplayOffset 10
-X11UseLocalhost yes
+X11UseLocalhost CONFIG_SSH_SECURE
 PrintMotd no
 PrintLastLog CONFIG_LOG_LOGINS
 TCPKeepAlive yes
