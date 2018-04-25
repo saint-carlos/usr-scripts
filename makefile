@@ -33,6 +33,7 @@ LUSER_FILES :=			\
 	bin/colsort		\
 	bin/errcho		\
 	bin/errno		\
+	bin/httpc		\
 	bin/extract		\
 	bin/ff			\
 	bin/findgrep		\
@@ -86,6 +87,7 @@ LUSER_FILES :=			\
 	etc/screenrc		\
 	etc/vimrc		\
 	etc/htoprc		\
+	share/http.db		\
 $(call srcfiles,		\
 	lib/vim/		\
 )
