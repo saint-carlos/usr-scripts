@@ -86,11 +86,12 @@ sub paste_escaped {
 	()
 }
 
-sub on_button_press {
+sub on_button_release {
 	my ($self, $event) = @_;
 
 	if ($event->{button} == 2) {
 		paste($self);
+		return 1;
 	}
 
 	()
