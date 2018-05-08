@@ -59,7 +59,6 @@ url_history_length=0
 
 [audgui]
 filebrowser_win=2527,294,700,450
-filesel_path=/data/audio/funny/CS_rap
 
 [compressor]
 target=0.5
