@@ -69,6 +69,10 @@ __USER=""
 if CONFIG_PROMPT_USERNAME; then
 	__USER='\u@'
 fi
+__HISTORY_NUM=""
+if CONFIG_PROMPT_HISTORY_NUM; then
+	__HISTORY_NUM='\! '
+fi
 
 if ! declare -F __git_ps1 > /dev/null; then
 	if [ -f /usr/lib/git-core/git-sh-prompt ]; then
@@ -154,7 +158,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__PROMPT_COLOR_SET}\\! \D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="${__PROMPT_COLOR_SET}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {

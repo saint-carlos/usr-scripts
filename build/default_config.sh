@@ -46,6 +46,8 @@ CONFIG_REPO_DIRS=""
 CONFIG_PROMPT_COLOR=$([ $UID -eq 0 ] && echo yellow || echo green)
 # spell out username in prompt?
 CONFIG_PROMPT_USERNAME=false
+# prefix prompt with next command's history number
+CONFIG_PROMPT_HISTORY_NUM=true
 # if prompt-length/terminal-width > this-percentage, abbreviate pwd in prompt
 CONFIG_PWD_SCREEN_PERCENT=30
 
