@@ -46,7 +46,8 @@ if [ -d "$GIT_DIR" ]; then
 	exit 3
 fi
 git init $INIT_ARGS || exit 1
-git commit -m "Initial empty commit" --edit --allow-empty $COMMIT_ARGS
+git commit -m "Initial empty commit" --edit --allow-empty $COMMIT_ARGS \
+	&& git tag "initial" HEAD
 if [ $? -ne 0 ]; then
 	rm -rf "$GIT_DIR"
 	exit 1
