@@ -103,7 +103,7 @@ DESKTOP_FILES :=		\
 	bin/xvim		\
 	bin/vm			\
 	bin/mvspc		\
-	bin/trans		\
+	bin/gt			\
 	etc/xdefaults		\
 	share/hebrew.txt.xz	\
 	etc/desktop/gnome2/genius \
