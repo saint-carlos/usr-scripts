@@ -76,6 +76,7 @@ LUSER_FILES :=			\
 	bin/termset		\
 	bin/timestamp		\
 	bin/vmore		\
+	bin/invim		\
 	etc/bash_completion	\
 	etc/bashrc		\
 	etc/bashrc.user		\
