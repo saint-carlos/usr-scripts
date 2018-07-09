@@ -40,7 +40,6 @@
 	brav = branch -avv
 	addpatch = add -p
 	llog = log --pretty=neat --date=short
-	gcommit = cola
 	histogram = log --stat --summary
 	stat = show --stat --summary
 	hstat = log -1 --pretty=neat --date=short --decorate=full
