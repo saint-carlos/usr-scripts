@@ -35,14 +35,6 @@ EOF
 	exit $1
 }
 
-die()
-{
-	RC=$1
-	shift
-	errcho "$*"
-	exit $RC
-}
-
 while getopts h OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
@@ -51,8 +43,4 @@ while getopts h OPTION; do
 done
 shift $((OPTIND - 1))
 
-TEMPFILE=$(mktemp)
-trap "rm $TEMPFILE" EXIT INT QUIT TERM
-curl -s "${SITE}" > "$TEMPFILE" || die $? "can't retrieve IP information"
-ADDR=$(egrep -o '[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+' "$TEMPFILE") || die 1 "IP information not found"
-head -1 <<< "$ADDR"
+curl icanhazip.com || exit 1
