@@ -1,0 +1,47 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="create tag files"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+currently creates tags using ctags and cscope.
+
+exit status:
+0	if all arguments are OK
+1	on indexing error
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+
+while getopts h OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+TOPLEVEL=$(git rev-parse --show-toplevel) && cd "$TOPLEVEL"
+
+if cmd_exists ctags; then
+	ctags -R --extra=+qf --fields=+afiklmnsSzt || exit 1
+fi
+if cmd_exists cscope; then
+	cscope -bqR || exit 1
+fi
