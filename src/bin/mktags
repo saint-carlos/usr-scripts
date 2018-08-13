@@ -37,7 +37,7 @@ while getopts h OPTION; do
 done
 shift $((OPTIND - 1))
 
-TOPLEVEL=$(git rev-parse --show-toplevel) && cd "$TOPLEVEL"
+TOPLEVEL=$(git rev-parse --show-toplevel 2> /dev/null) && cd "$TOPLEVEL"
 
 if cmd_exists ctags; then
 	ctags -R --extra=+qf --fields=+afiklmnsSzt || exit 1
