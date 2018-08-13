@@ -41,6 +41,12 @@ TOPLEVEL=$(git rev-parse --show-toplevel 2> /dev/null) && cd "$TOPLEVEL"
 
 if cmd_exists ctags; then
 	ctags -R --extra=+qf --fields=+afiklmnsSzt || exit 1
+	ctags --list-maps \
+		| sed --regexp-extended 's/ +/ /g' \
+		| cut -d' ' -f2- \
+		| tr ' ' '\n' \
+		| xargs -L1 printf '%s "%s" ' '-o -name' \
+		| xargs find . -false > cscope.files
 fi
 if cmd_exists cscope; then
 	cscope -bqR || exit 1
