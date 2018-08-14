@@ -28,14 +28,14 @@ EOF
 	exit $1
 }
 
-FLAGS=-A
+ACTION=--append
 BLOCK_INBOUND=true
 BLOCK_OUTBOUND=true
 ACTION_NAME="blocking"
 while getopts hiou OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
-		u) FLAGS=-D ; ACTION_NAME="unblocking" ;;
+		u) ACTION=--delete ; ACTION_NAME="unblocking" ;;
 		o) BLOCK_INBOUND=false ;;
 		i) BLOCK_OUTBOUND=false ;;
 		\?) usage 1 ;;
@@ -47,9 +47,18 @@ if ! $BLOCK_INBOUND && ! $BLOCK_OUTBOUND; then
 	usage 1
 fi
 
+iptables_cmd()
+{
+	local CHAIN="$1"
+	iptables --table filter \
+		$ACTION $CHAIN \
+		--source $IP \
+		--jump DROP
+}
+
 for IP in "$@"; do
 	$BLOCK_INBOUND && echo "$ACTION_NAME $IP for inbound traffic" &&
-		iptables -t filter $FLAGS INPUT -s $IP -j DROP &&
+		iptables_cmd INPUT &&
 	$BLOCK_OUTBOUND && echo "$ACTION_NAME $IP for outbound traffic" &&
-		iptables -t filter $FLAGS OUTPUT -s $IP -j DROP
+		iptables_cmd OUTPUT
 done
