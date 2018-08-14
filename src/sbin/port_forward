@@ -1,0 +1,59 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="remap a port to another pot"
+PARAMS="listening-port target-port"
+OPTIONS="[-hu]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+-u	unset: remove the port mapping.
+
+exit status:
+1	options are bad
+otherwise it is the return value of iptables
+EOF
+
+	exit $1
+}
+
+ACTION=--append
+ACTION_NAME="adding"
+while getopts hiou OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		u) ACTION=--delete ; ACTION_NAME="removing" ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+LISTENING_PORT=$1
+TARGET_PORT=$2
+
+iptables_cmd()
+{
+	local CHAIN="$1"
+	shift 1
+	iptables \
+		--table nat \
+		$ACTION $CHAIN \
+		--protocol tcp \
+		--dport $TARGET_PORT \
+		--jump REDIRECT \
+		--to-port $LISTENING_PORT \
+		"$@"
+}
+
+echo "$ACTION_NAME port forward from listening port $LISTENING_PORT" \
+	"to target port $TARGET_PORT"
+iptables_cmd PREROUTING # external
+iptables_cmd OUTPUT --out-interface lo # local
