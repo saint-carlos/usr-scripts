@@ -77,6 +77,7 @@ LUSER_FILES :=			\
 	bin/timestamp		\
 	bin/vmore		\
 	bin/invim		\
+	bin/mktags		\
 	etc/bash_completion	\
 	etc/bashrc		\
 	etc/bashrc.user		\
