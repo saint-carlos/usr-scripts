@@ -66,6 +66,8 @@ augroup bufferview
 	autocmd BufNewFile,BufRead gitconfig setfiletype gitconfig
 	autocmd BufNewFile,BufRead xdefaults,xdefaults.* setfiletype xdefaults
 	autocmd FileType log setlocal autoread nomodifiable readonly
+	autocmd InsertEnter * set timeoutlen=0 " no fancy mappings in insert mode
+	autocmd InsertLeave * set timeoutlen=1000
 augroup END
 
 " syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
