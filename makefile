@@ -108,14 +108,14 @@ DESKTOP_FILES :=		\
 	bin/gt			\
 	etc/xdefaults		\
 	share/hebrew.txt.xz	\
-	etc/desktop/gnome2/genius \
-$(call srcfiles,		\
-	etc/desktop/config/caja	\
-	etc/desktop/config/audacious \
-	etc/desktop/config/geeqie \
-	etc/desktop/config/kupfer \
-	etc/desktop/config/vlc	\
-	lib/urxvt/		\
+	etc/desktop/gnome2/genius	\
+$(call srcfiles,			\
+	etc/desktop/config/caja		\
+	etc/desktop/config/audacious	\
+	etc/desktop/config/geeqie	\
+	etc/desktop/config/kupfer	\
+	etc/desktop/config/vlc		\
+	lib/urxvt/			\
 )
 LUSER_FILES += ${DESKTOP_FILES}
 endif
