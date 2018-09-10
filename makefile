@@ -414,6 +414,13 @@ progs:
 		xclip		\
 		rxvt-unicode	\
 	; fi
+	if ${CONFIG_DESKTOP}; then \
+		rm -rf /tmp/$(PROJECT)/deb && \
+		mkdir -p /tmp/$(PROJECT)/deb && \
+		cd /tmp/$(PROJECT)/deb && \
+		wget "https://remarkableapp.github.io/files/remarkable_1.62_all.deb" && \
+		apt install ./* \
+	; fi
 	if ${CONFIG_MINT}; then apt-get install \
 		dconf-cli	\
 		mate-panel mate-panel-common \
