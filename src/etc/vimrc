@@ -152,8 +152,8 @@ vnoremap Y "+y
 " one character.
 vnoremap <leader>" <Esc>`>a"<Esc>`<i"<Esc>
 vnoremap <leader>' <Esc>`>a'<Esc>`<i'<Esc>
-vnoremap <leader>() <Esc>`>a)<Esc>`<i(<Esc>
-vnoremap <leader>[] <Esc>`>a]<Esc>`<i[<Esc>
+vnoremap <leader>( <Esc>`>a)<Esc>`<i(<Esc>
+vnoremap <leader>[ <Esc>`>a]<Esc>`<i[<Esc>
 
 " hebrew support
 noremap <silent> <F7> :setlocal rightleft! \| setlocal hkmap!<CR>
