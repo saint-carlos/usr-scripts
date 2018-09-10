@@ -111,6 +111,7 @@ DESKTOP_FILES :=		\
 	etc/xdefaults		\
 	share/hebrew.txt.xz	\
 	etc/desktop/gnome2/genius	\
+	etc/desktop/config/mimeapps.list \
 $(call srcfiles,			\
 	etc/desktop/config/caja		\
 	etc/desktop/config/audacious	\
