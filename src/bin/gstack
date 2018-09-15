@@ -5,6 +5,8 @@ DESCRIPTION="dump the stack(s) trace of a process"
 PARAMS="pid"
 OPTIONS="[-h]"
 GDB=${GDB:-/usr/bin/gdb}
+PTRACE_SCOPE=kernel.yama.ptrace_scope
+PTRACE_SCOPE_FILE=/etc/sysctl.d/10-ptrace.conf
 
 usage()
 {
@@ -25,6 +27,12 @@ exit status:
 EOF
 
     exit $1
+}
+
+ptrace_allowed()
+{
+	local PTRACE_SCOPE=$(sysctl --values $PTRACE_SCOPE)
+	test "$PTRACE_SCOPE" = 0
 }
 
 count_tasks()
@@ -64,7 +72,12 @@ TARGET_PID=$1
 [ -n "$TARGET_PID" ] || usage 2
 if [ ! -r "/proc/$TARGET_PID" ]; then
 	errcho "Process $TARGET_PID not found."
-	usage 1
+	exit 1
+fi
+
+if ! ptrace_allowed; then
+	errcho "ptrace is not allowed, see $PTRACE_SCOPE in sysctl(1), or ${PTRACE_SCOPE_FILE}."
+	exit 1
 fi
 
 # GDB doesn't allow "thread apply all bt" when the process isn't
