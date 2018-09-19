@@ -1,5 +1,5 @@
 #!/bin/bash
 
 bash --noprofile --norc -c \
-	"source $1 && declare" \
+	"source $* && declare +aAF" \
 	| grep "^CONFIG_"

@@ -4,10 +4,12 @@ BUILD 		:= ./build
 CONFIG_FILE	:= config.sh
 TMP_CFG		:= tmp/cfg
 VALID_CONFIG	:= ${TMP_CFG}/valid_config
+SED_SCRIPT	:= ${TMP_CFG}/replace_vars.sed
 DEFAULT_CONFIG_FILE	:= ${BUILD}/default_config.sh
-ALL_CONFIG_VARS		:= ${TMP_CFG}/config_vars.all.txt
+USER_CONFIG_VARS	:= ${TMP_CFG}/config_vars.user.txt
+ALL_CONFIG_VARS		:= ${TMP_CFG}/config_vars.all.sh
 
-EFFECTIVE_CONF	:= $(shell if [ -f ${CONFIG_FILE} ]; then echo ${CONFIG_FILE}; else echo ${BUILD}/default_config.sh; fi)
+EFFECTIVE_CONF	:= $(shell if [ -f ${ALL_CONFIG_VARS} ]; then echo ${ALL_CONFIG_VARS}; else echo ${BUILD}/default_config.sh; fi)
 
 CONFIG_DESKTOP	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_DESKTOP)
 CONFIG_MINT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_MINT)
@@ -137,7 +139,6 @@ DESKTOPREFRESH_FILES :=		\
 	etc/dconf_user.2.ini	\
 
 ALL_FILES := ${LUSER_FILES} ${SUPER_FILES} ${DESKTOPREFRESH_FILES}
-SED_COMMANDS = $(shell ${BUILD}/make_sed_commands.sh ${CONFIG_FILE})
 
 all: build # equivalent to build
 
@@ -150,11 +151,14 @@ config: ${VALID_CONFIG} # upgrade or create a config file from the default setti
 	@echo --------------------------------
 	@bash ${BUILD}/config_dump_vals.sh ${CONFIG_FILE}
 
+${SED_SCRIPT}: ${ALL_CONFIG_VARS}
+	${BUILD}/make_sed_commands.sh ${ALL_CONFIG_VARS} > ${SED_SCRIPT}
+
 tmpfile = $(subst tgt/,tmp/,$1)
-tgt/%: src/% ${BUILD}/make_sed_commands.sh ${ALL_CONFIG_VARS} ${CONFIG_FILE}
+tgt/%: src/% ${USER_CONFIG_VARS} ${SED_SCRIPT}
 	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
 	cp -f $< "$(call tmpfile,$@)"
-	${BUILD}/binary $@ || sed -i "${SED_COMMANDS}" "$(call tmpfile,$@)"
+	${BUILD}/binary $@ || sed -i -f ${SED_SCRIPT} "$(call tmpfile,$@)"
 	mv "$(call tmpfile,$@)" $@
 
 define mkvroot =
@@ -197,12 +201,16 @@ ${VALID_CONFIG}: ${CONFIG_FILE}
 	mkdir -p $(dir $@)
 	touch $@
 
-${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE} ${ALL_CONFIG_VARS}
+${CONFIG_FILE}: ${DEFAULT_CONFIG_FILE} ${USER_CONFIG_VARS}
 	bash ${BUILD}/touch_config.sh $@ $^ ${TMP_CFG}
 
-${ALL_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE} ${THIS_MAKEFILE}
+${USER_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE} ${THIS_MAKEFILE}
 	mkdir -p $(dir $@)
 	grep -v '+=' $< | cut -d= -f1 -s | sort -u > $@
+
+${ALL_CONFIG_VARS}: ${CONFIG_FILE}
+	bash ${BUILD}/config_dump_vals.sh \
+		${BUILD}/config_allvars.sh ${CONFIG_FILE} > $@
 
 u_suffix = $(word 2, $(subst _, ,$1))
 define mkversion =
@@ -219,50 +227,50 @@ INSTALLED_LUSER_FILES = $(addprefix ${CONFIG_VROOT}/,${LUSER_FILES})
 INSTALLED_SUPER_FILES = $(addprefix ${CONFIG_VROOT}/,${SUPER_FILES})
 INSTALLED_DESKTOPREFRESH_FILES = $(addprefix ${CONFIG_VROOT}/,${DESKTOPREFRESH_FILES})
 
-install_luser: ${CONFIG_FILE} ${INSTALLED_LUSER_FILES}
-	bash ${BUILD}/luser.sh install ${CONFIG_FILE}
+install_luser: ${ALL_CONFIG_VARS} ${INSTALLED_LUSER_FILES}
+	bash ${BUILD}/luser.sh install ${ALL_CONFIG_VARS}
 	$(mkversion)
 
-uninstall_luser: # uninstall scripts and config of current user
-	bash ${BUILD}/luser.sh uninstall ${CONFIG_FILE}
+uninstall_luser: ${ALL_CONFIG_VARS} # uninstall scripts and config of current user
+	bash ${BUILD}/luser.sh uninstall ${ALL_CONFIG_VARS}
 	rm -f ${INSTALLED_LUSER_FILES}
 	$(rmversion)
 
 upgrade_luser: uninstall_luser install_luser # install/upgrade scripts and config of current user
 
-install_super: ${CONFIG_FILE} ${INSTALLED_SUPER_FILES}
-	bash ${BUILD}/super.sh install ${CONFIG_FILE}
+install_super: ${ALL_CONFIG_VARS} ${INSTALLED_SUPER_FILES}
+	bash ${BUILD}/super.sh install ${ALL_CONFIG_VARS}
 	$(mkversion)
 
-uninstall_super: # uninstall administrative scripts and config
+uninstall_super: ${ALL_CONFIG_VARS} # uninstall administrative scripts and config
 	rm -f ${INSTALLED_SUPER_FILES}
-	bash ${BUILD}/super.sh uninstall ${CONFIG_FILE}
+	bash ${BUILD}/super.sh uninstall ${ALL_CONFIG_VARS}
 	$(rmversion)
 
 upgrade_super: uninstall_super install_super # install/upgrade administrative scripts and config
 
-install_desktoprefresh: ${CONFIG_FILE} ${INSTALLED_DESKTOPREFRESH_FILES}
-	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+install_desktoprefresh: ${ALL_CONFIG_VARS} ${INSTALLED_DESKTOPREFRESH_FILES}
+	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
 	$(mkversion)
 
-uninstall_desktoprefresh: # uninstall graphical settings, takes effect immediately
+uninstall_desktoprefresh: ${ALL_CONFIG_VARS} # uninstall graphical settings, takes effect immediately
 	rm -f ${INSTALLED_DESKTOPREFRESH_FILES}
-	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
 	$(rmversion)
 
 upgrade_desktoprefresh: uninstall_desktoprefresh install_desktoprefresh # install/upgrade graphical settings, takes effect immediately
 
-install_desktopinit: ${CONFIG_FILE} # initialize desktop-related applications, can be done only if not already initialized
-	bash ${BUILD}/luser.sh $@ ${CONFIG_FILE}
+install_desktopinit: ${ALL_CONFIG_VARS} # initialize desktop-related applications, can be done only if not already initialized
+	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
 
-mksudo: # set current user as system administrator
+mksudo: ${ALL_CONFIG_VARS} # set current user as system administrator
 	$(mkvroot)
 	@echo root password required:
-	su -c "bash ${BUILD}/super.sh $@ ${CONFIG_FILE}"
+	su -c "bash ${BUILD}/super.sh $@ ${ALL_CONFIG_VARS}"
 
-rmsudo: # unset current user as system administrator
+rmsudo: ${ALL_CONFIG_VARS} # unset current user as system administrator
 	@echo root password required:
-	su -c "bash ${BUILD}/super.sh $@ ${CONFIG_FILE}"
+	su -c "bash ${BUILD}/super.sh $@ ${ALL_CONFIG_VARS}"
 	$(rmvroot)
 
 import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
@@ -446,7 +454,7 @@ help: # this message
 		sed 's/\(^[^:]*$$\)/ :&/' |			\
 		column -s : -t
 
-test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
+test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} ${SED_SCRIPT} # dump configuration
 	@echo "luser files:"
 	@echo "${LUSER_FILES}"
 	@echo
@@ -462,8 +470,8 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} # dump configuration
 	@echo "config file:"
 	@cat ${CONFIG_FILE}
 	@echo
-	@echo "sed commands:"
-	@echo " ${SED_COMMANDS}" | tr ';' '\n'
+	@echo "sed script:"
+	@cat ${SED_SCRIPT}
 
 .PHONY: clean build all help test config mrproper
 .PHONY: install_luser uninstall_luser upgrade_luser
