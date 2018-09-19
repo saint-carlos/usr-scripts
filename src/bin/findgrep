@@ -11,6 +11,7 @@ PROGRAM=$(basename $0)
 DESCRIPTION="find text in all files in a subtree."
 PARAMS="text [directory]..."
 OPTIONS="[-hbcBwi] [-o grep-options]... [-f filename] [-t ext]..."
+USAGE2="-g text"
 SEARCHDIRS=.
 BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp' '\.\/tags' 'cscope.*'"
 
@@ -22,6 +23,7 @@ usage()
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
+$PROGRAM $USAGE2
 'text' is the text to search.
 by default, all files are searched except blacklisted files. if one or more inclusions are defined, only the inclusions which are not excluded are searched.
 'directory' is the directory subtree(s) to search within. the default is '$SEARCHDIRS'.
@@ -31,6 +33,8 @@ options:
 	help: show this help message and exit.
 -b
 	blacklist: modify the black list. the default blacklist is  "$BLACKLIST".
+-g
+	git: only grep files which are committed to the git repo.
 -o grep-options
 	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw".
 -w, -i, -x, -l, -L
@@ -54,10 +58,12 @@ EOF
 CRITERIA=""
 GREP_OPTIONS=""
 DIRECTORY=.
-while getopts hb:f:t:o:d:cwixLl OPTION; do
+GIT_GREP=false
+while getopts hb:gf:t:o:d:cwixLl OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		b) BLACKLIST=${OPTARG} ;;
+		g) GIT_GREP=true ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
 		w|i|x|L|l) GREP_OPTIONS="${GREP_OPTIONS} -${OPTION}" ;;
 		f) CRITERIA="$CRITERIA -o -name '${OPTARG}'" ;;
@@ -70,6 +76,11 @@ shift $((OPTIND - 1))
 [ $# -ge 1 ] || usage 2
 TEXT="$1"
 shift
+
+if $GIT_GREP; then
+	exec git grep -e "$TEXT"
+fi
+
 if [ $# -gt 0 ]; then
 	SEARCHDIRS=("$@")
 fi
