@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="get process info by part of its name."
 PARAMS="string ..."
-OPTIONS="[-hnd] [-o options]"
+OPTIONS="[-hndp] [-o options]"
 
 usage()
 {
@@ -23,6 +23,8 @@ options:
 	options: pass options to grep. for example: "$PROGRAM -o iw" will call "grep -iw". if more than one string is given, this option is ignored.
 -d
 	D state: list processes in state D (uninterruptible sleep)
+-p
+	pid only: only show PIDs of found processes (implies -n)
 
 exit status:
 0	all OK
@@ -35,12 +37,14 @@ EOF
 SHOW_HEADER=true
 GREP_OPTIONS=""
 DSTATE=false
-while getopts hno:d OPTION; do
+PIDS_ONLY=false
+while getopts hno:dp OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		n) SHOW_HEADER=false ;;
 		o) GREP_OPTIONS="${GREP_OPTIONS} -${OPTARG}" ;;
 		d) DSTATE=true ;;
+		p) PIDS_ONLY=true; SHOW_HEADER=false ;;
 		\?) usage 1 ;;
 	esac
 done
@@ -56,9 +60,15 @@ fi
 
 if $DSTATE; then
 	AWKCMD='{ if ($5 ~ ".*D.*") print }'
-	DSTATE_FILTER="| awk '$AWKCMD'"
+	DSTATE_FILTER="awk '$AWKCMD'"
 else
-	DSTATE_FILTER=""
+	DSTATE_FILTER="cat"
+fi
+
+if $PIDS_ONLY; then
+	COLUMN_FILTER="awk '{ print \$1 }'"
+else
+	COLUMN_FILTER="cat"
 fi
 
 filter_processes()
@@ -79,8 +89,13 @@ filter_processes()
 # are ps' process and $$.
 PS_COMMAND='ps -o pid,ppid,user,flags,stat,wchan:16,tty,start,cmd -ww'
 PROCESSES=$($PS_COMMAND -e)
-PROCESSES=$(echo "$PROCESSES" | egrep -v -e "^ *\<$$\>" -e "^[0-9]+ +\<$$\>")
-PROCESSES=$(echo "$PROCESSES" | eval tail -n +2 "$DSTATE_FILTER" | filter_processes "$@")
+PROCESSES=$(echo "$PROCESSES" \
+	| egrep -v -e "^ *\<$$\>" -e "^[0-9]+ +\<$$\>")
+PROCESSES=$(echo "$PROCESSES" \
+	| tail -n +2 \
+	| eval $DSTATE_FILTER \
+	| filter_processes "$@" \
+	| eval $COLUMN_FILTER)
 if [ -n "$PROCESSES" ]; then
 	$SHOW_HEADER && $PS_COMMAND | head -n 1
 	echo "$PROCESSES"
