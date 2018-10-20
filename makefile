@@ -80,6 +80,7 @@ LUSER_FILES :=			\
 	bin/vmore		\
 	bin/invim		\
 	bin/mktags		\
+	bin/getenv		\
 	etc/bash_completion	\
 	etc/bashrc		\
 	etc/bashrc.user		\
