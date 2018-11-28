@@ -1,0 +1,89 @@
+#!/bin/bash
+
+# AUTHOR:	(c) idank
+# VERSION:	3.0
+# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
+# REQUIRES: icedax, lame, standard.rc, interact.rc, string.rc
+# NAME:		Rip
+# DESCRIPTION:	rip cd and compress to mp3.
+
+RC_LIBRARY_PATH=.
+source "$RC_LIBRARY_PATH/standard.rc.sh"
+source "$RC_LIBRARY_PATH/interact.rc.sh"
+source "$RC_LIBRARY_PATH/string.rc.sh"
+
+INPUT_FORMAT=wav
+DEFAULT_CDDA_DEVICE=/dev/cdrom
+DEFAULT_OUTPUT_FOLDER=.
+DEFAULT_BITRATE=192
+DEFAULT_NAME=track
+
+ensureOutputFolder()
+{
+	echo -n "ensuring correct output folder... "
+	[ "$outputFolder" ] || outputFolder=$DEFAULT_OUTPUT_FOLDER
+	[ -d "$outputFolder" ] || mkdir -p "$outputFolder" || idie $EUSAGE "'$outputFolder' is not a directory" cleanup
+	cd "$outputFolder"
+	echo "output folder is \"$outputFolder\"."
+}
+
+ensureInputSource()
+{
+	echo -n "checking input source... "
+	[ -b "$inputDevice" ] || inputDevice=$DEFAULT_CDDA_DEVICE
+	[ -b "$inputDevice" ] || idie $EINVAL "'$inputDevice' is not a block device, therefore not a cd" cleanup
+	echo "input device is \"$inputDevice\"."
+}
+
+usage()
+{
+	echo "rip - rip a cd and compress it to mp3"
+	echo "usage:"
+	echo "$program [-h] [-b bitrate] [[-d] input-device] [[-o] output-folder]"
+	echo
+	echo $'-h\n\thelp: show this help message and exit.'
+	echo $'-d input-device\n\tspecify device from which to rip.'
+	echo $'-o output-folder\n\tsepcify folder to which output goes. default is current working directory.'
+	echo $'-b bitrate\n\ttarget bitrate for mp3 files.'
+	echo
+	echo $'exit status: see man page for cdda2mp3'
+	exit $1
+}
+
+while getopts d:o:hb: option; do
+	case ${option} in
+		h) usage 0 ;;
+		o) outputFolder=$OPTARG ;;
+		d) inputDevice=$OPTARG ;;
+		b) bitrate=$OPTARG ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if ! [ "$inputDevice" ] ; then inputDevice="$1" ; shift ; fi
+if ! [ "$outputFolder" ] ; then outputFolder="$1" ; shift ; fi
+outputFolder=`removeTrailingSlash <<< "$outputFolder"`
+if ! (( bitrate > 0 )) ; then bitrate=$DEFAULT_BITRATE ; fi
+
+cleanup()
+{
+	#rm "$ERROR_LOG"
+	echo "error log is $ERROR_LOG"
+}
+
+ensureOutputFolder
+ensureInputSource
+
+export CDDA_DEVICE="$inputDevice"
+export CDDA2WAV="icedax"
+export CDDA2WAV_OPTS="-H -s -x -O=$INPUT_FORMAT -paranoia -paraopts=overlap=10"
+export MP_CODER="lame"
+export MP_OPTIONS="-q 0 -b $bitrate -p -m s"
+PREFIX="$DEFAULT_NAME"
+
+cdda2mp3 "$PREFIX"
+RETURN=$?
+cleanup
+(( $RETURN != 0 )) && ! notifyError || echo "done."
+exit $RETURN

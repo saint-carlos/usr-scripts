@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ascii -x \
+	| tr ' ' '\n' \
+	| sed 's/^/0x/' \
+	| xargs base -bp \
+	| xargs printf "%08d"

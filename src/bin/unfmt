@@ -1,0 +1,10 @@
+#!/usr/bin/perl -00
+# stolen from Leah Neukirchen
+# unfmt - convert paragraphs into long lines
+
+while(<>) {
+  chomp;
+  s/(?<=\S)\r?\n(?=\S)/ /g;
+  s/\r?\n//g;
+  print "$_\n";
+}

@@ -1,0 +1,40 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="ctags for shell"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	if all arguments are OK
+1	ctags error
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+
+while getopts h OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+        \?) usage 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+ctags --list-maps | awk '{ $1="" }1' | xargs
+ctags --language-force=sh -R --extra=fq || exit 1
+exit 0

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+fold -b -w 8 \
+	| sed 's/^/0b/' \
+	| xargs base -xp \
+	| ascii -ax

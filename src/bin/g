@@ -1,0 +1,16 @@
+#!/bin/bash
+
+QUERY=$*
+NLINES=$(tput lines)
+NLINES=$((NLINES / 2))
+if [ $NLINES -lt 22 ]; then
+	NLINES=22
+fi
+NCOLS=115
+TRIM_TOP=12
+TRIM_LEFT=26
+
+links -dump -width $((NCOLS + TRIM_LEFT)) "https://www.google.com/search?q=${QUERY}" | \
+	tail -n +${TRIM_TOP} | \
+	head -n +${NLINES} | \
+	cut -c $((TRIM_LEFT + 1))-

@@ -1,0 +1,43 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="list all executables used by the command"
+PARAMS="cmd [args...]"
+OPTIONS="[-h]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+this helps script writers to figure out what dependencies they have...
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	if all arguments are OK
+1	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+
+while getopts h OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+        \?) usage 1 ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+exec strace -f -qq -e execve "$@" 2>&1 > /dev/null \
+	| sed -n 's@^.*execve("\([^"]*\)".*$@\1@p' \
+	| xargs -L 1 basename \
+	| sort -u \
+	| while read CMD; do hash $CMD &>/dev/null && echo $CMD; done
