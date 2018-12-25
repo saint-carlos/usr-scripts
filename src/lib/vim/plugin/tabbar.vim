@@ -195,6 +195,13 @@ if !exists('g:Tb_TabWrap')
 endif" %%
 
 
+" When toggling, going from no tab bar to tab bar applies Tb_MoreThanOne
+" behavior.
+if !exists('g:Tb_ToggleMoreThanOne')
+    let g:Tb_ToggleMoreThanOne = 0
+endif" %%
+
+
 " Switch buffers using Ctrl-Tab ?~~
 if !exists('g:Tb_cTabSwitchBufs')
     let g:Tb_cTabSwitchBufs = 1
@@ -462,12 +469,14 @@ function! <SID>Tb_Toggle()
         call <SID>DEBUG('ENTER: Tb_Toggle()'  ,10)
     endif
 
-    let g:Tb_AutoUpdt = 0
+    let g:Tb_AutoUpdt = g:Tb_ToggleMoreThanOne
 
     let l:winNum = <SID>Win_Find('-TabBar-')
 
     if l:winNum != -1
         call <SID>Tb_Stop(1)
+    elseif g:Tb_ToggleMoreThanOne == 1
+        call <SID>Tb_AutoUpdt(-1)
     else
         call <SID>Tb_Start(1, -1)
         wincmd p

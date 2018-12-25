@@ -253,6 +253,7 @@ else " screen wide-enough for vertical tabbar:
 	let g:Tb_MaxSize = 25
 	let g:Tb_SplitBelow = 1
 endif
+let g:Tb_ToggleMoreThanOne = 0
 
 " For TabBar plugin: prevent from opening when in diff mode.
 if &diff
