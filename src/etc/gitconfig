@@ -50,6 +50,7 @@
 	inspect = log --reverse --patch-with-stat --summary -U50
 	review = show --patch-with-stat --summary -U50
 	cmessage = log -1 --format="%s%n%n%b"
+	ss = status --short --branch
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
