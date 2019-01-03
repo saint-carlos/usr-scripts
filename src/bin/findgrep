@@ -13,7 +13,7 @@ PARAMS="text [directory]..."
 OPTIONS="[-hbcBwi] [-o grep-options]... [-f filename] [-t ext]..."
 USAGE2="-g text"
 SEARCHDIRS=.
-BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp' '\.\/tags' 'cscope.*'"
+BLACKLIST="'\.svn' '\.git' '\.cvs' '\.swp' '\.\/tags' 'cscope.*' node_modules"
 
 usage()
 {
