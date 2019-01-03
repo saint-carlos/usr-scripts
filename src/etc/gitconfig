@@ -60,6 +60,7 @@
 	tool = bc3
 	mnemonicprefix = true
 	renames = copy
+	algorithm = histogram
 [gc]
 	reflogexpire = 180
 	reflogexpireunreachable = 180
