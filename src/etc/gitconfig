@@ -3,7 +3,7 @@
 	email = CONFIG_USER_EMAIL
 
 [log]
-	decorate = full
+	decorate = short
 
 [core]
 	editor = vim
