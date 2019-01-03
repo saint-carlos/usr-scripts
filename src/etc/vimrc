@@ -109,6 +109,8 @@ endfunction
 noremap <silent> <F2> :call <SID>ToggleColorColumn()<CR>
 imap <F2> <C-o><F2>
 
+" search selected string
+vnoremap // y/<C-R>"<CR>
 
 " }}}
 
