@@ -49,6 +49,8 @@ export HISTSIZE=20000
 export HISTFILESIZE=5000
 export HISTIGNORE="exit:logout:reboot:shutdown:poweroff:return:clear:history:bg:fg:jobs:pwd:ls:ll:la:cd:ps"
 
+export TIMEFORMAT=$'---\nreal\t%3lR\nuser\t%3lU\nsys\t%3lS\ncpu\t%P%%'
+
 stty -ixon # disable ^S/^Q
 test -t 0 && stty -ctlecho
 
