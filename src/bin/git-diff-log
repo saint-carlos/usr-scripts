@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#!/bin/bash
-
 PROGRAM=$(basename $0)
 DESCRIPTION="diff between logs"
 PARAMS="revision-range revision-range [--] [path...]"
