@@ -44,7 +44,7 @@ shift $((OPTIND - 1))
 RC=1
 for TARGET in "$@"; do
 	PROCESSES="$(psgrep -n "$TARGET")"
-	PROCESSES="$(echo "$PROCESSES" | grep -v "^ *$$" | awk '{ print $1 }' | xargs kill $KILLFLAGS)"
+	echo "$PROCESSES" | grep -v "^ *$$" | awk '{ print $1 }' | xargs kill $KILLFLAGS
 	TEMP=$?
 	PROCESSES="$(psgrep -n "$TARGET")"
 	echo "$PROCESSES" | grep -v "^ *$$"
