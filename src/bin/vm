@@ -22,7 +22,7 @@ a perliminary setup (-s) is required for the script to work. if you are going to
 without any arguments, the most recent machine is ssh'd.
 
 assumptions:
-* virtual machines are described in $FILE.
+* virtual machines are described in $FILES.
 * all VMs are in stored in the same directory.
 * a machine name corresponds to its hostname
 
