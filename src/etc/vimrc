@@ -30,6 +30,7 @@ set background=dark	" bright terminal colors
 set wildmenu		" display file list when browsing files to open
 set wildmode=list:longest " bash-like file completion
 set laststatus=2	" When to show a statusline.
+set display=lastline	" display the part of last line that fits in the window
 
 set splitright
 set splitbelow
