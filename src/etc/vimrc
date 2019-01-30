@@ -117,7 +117,6 @@ vnoremap // y/<C-R>"<CR>
 
 " formatting {{{
 
-set autoindent		" indent a new line like the previous line
 set shiftwidth=8	" indentation width
 set textwidth=0         " Don't wrap words by default.
 
@@ -137,6 +136,8 @@ set undolevels=200      " Number of undo levels.
 set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode.
 set complete=k,.,w,b	" autocomplete from these places
+set autoindent		" indent a new line like the previous line
+set copyindent		" reuse current indentation for next line
 
 augroup editing
 	autocmd!
