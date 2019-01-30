@@ -9,21 +9,23 @@ __COLOR[blue]=4
 __COLOR[magenta]=5
 __COLOR[cyan]=6
 __COLOR[white]=7
-__COLOR[normal]=${__COLOR[white]}
+__COLOR[normal]=foreground
 
 case $TERM in
 	xterm*|rxvt*|screen*)
 			__color_seq()
 			{
 				[ -n "${__COLOR[$1]}" ] || set normal
-				echo -en "\033[9${__COLOR[$1]}m"
+				[ "${__COLOR[$1]}" = foreground ] && echo -en "\033[39m" && return
+				echo -en "\033[9${__COLOR[$1]}m" && return
 			}
 		;;
 	linux|*)
 			__color_seq()
 			{
 				[ -n "${__COLOR[$1]}" ] || set normal
-				tput setaf ${__COLOR[$1]}
+				[ "${__COLOR[$1]}" = foreground ] && tput sgr0 && return
+				tput setaf ${__COLOR[$1]} && return
 			}
 		;;
 esac
