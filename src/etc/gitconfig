@@ -26,9 +26,13 @@
 	ui = true
 
 [color "status"]
+	# header = white
+	branch = bold
+	nobranch = magenta bold
 	added = green bold
 	changed = blue bold
 	untracked = yellow bold
+	unmerged = magenta bold reverse
 
 [color "diff"]
 	meta = yellow bold
@@ -50,7 +54,7 @@
 	inspect = log --reverse --patch-with-stat --summary -U50
 	review = show --patch-with-stat --summary -U50
 	cmessage = log -1 --format="%s%n%n%b"
-	ss = status --short --branch
+	ss = status --short
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
