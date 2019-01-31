@@ -137,7 +137,7 @@ set gdefault            " Use 'g' flag by default with :s/foo/bar/.
 set backspace=indent,eol,start " Allow backspacing over everything in insert mode.
 set complete=k,.,w,b	" autocomplete from these places
 set autoindent		" indent a new line like the previous line
-set copyindent		" reuse current indentation for next line
+set nocopyindent	" don't reuse current indentation for next line
 
 augroup editing
 	autocmd!
