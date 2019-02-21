@@ -33,6 +33,7 @@ LUSER_FILES :=			\
 	bin/color_echo		\
 	bin/color_stderr	\
 	bin/colsort		\
+	bin/dec			\
 	bin/errcho		\
 	bin/errno		\
 	bin/httpc		\
