@@ -147,7 +147,7 @@ all: build # equivalent to build
 
 build: $(addprefix tgt/,${ALL_FILES}) # create configured scripts/config files in tgt/, ready to be installed
 
-config: ${VALID_CONFIG} # upgrade or create a config file from the default settings
+config: ${ALL_CONFIG_VARS} # upgrade or create a config file from the default settings
 	@echo --------------------------------
 	@echo config file written to '${CONFIG_FILE}'
 	@echo please review the configuration:
@@ -291,7 +291,7 @@ mrproper: clean # remove everything generate by any build target from the projec
 	rm -f config.sh tags
 
 ifneq ($(shell which yum),)
-progs: # install set of progs required for this project and in general for power users
+progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and in general for power users
 	yum install epel-release
 	yum install 		\
 		socat		\
@@ -358,7 +358,7 @@ progs: # install set of progs required for this project and in general for power
 	; fi
 else
 ifneq ($(shell which apt-get),)
-progs:
+progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
 		socat		\
 		python3.5 python3-pip \
