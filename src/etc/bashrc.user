@@ -85,9 +85,25 @@ if ! declare -F __git_ps1 > /dev/null; then
 	fi
 fi
 
+__PROMPT_NEWLINE=$'\nV '
+__set_missing_newline_fix()
+{
+	local CURPOS
+	echo -en "\E[6n" # ANSI DSR
+	read -sdR CURPOS
+	CURPOS=${CURPOS#*;}
+	if [ $CURPOS -eq 1 ]; then
+		__MISSING_NEWLINE_FIX=""
+	else
+		__MISSING_NEWLINE_FIX="$__PROMPT_NEWLINE"
+	fi
+}
+
 __set_prompt()
 {
 	__STATUS=$? # must be first line ever of this function
+
+	__set_missing_newline_fix
 
 	local PWD_MAXLEN=$((CONFIG_PWD_SCREEN_PERCENT * COLUMNS / 100))
 
@@ -159,7 +175,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__PROMPT_COLOR_SET}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="${__PROMPT_COLOR_SET}\${__MISSING_NEWLINE_FIX}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
