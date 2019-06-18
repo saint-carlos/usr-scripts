@@ -412,7 +412,6 @@ progs: ${ALL_CONFIG_VARS}
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
-		gnome-genius	\
 		geeqie		\
 		vlc		\
 		kupfer		\
@@ -424,6 +423,10 @@ progs: ${ALL_CONFIG_VARS}
 		dict dictd dict-gcide \
 		xclip		\
 		rxvt-unicode	\
+	; fi
+	if ${CONFIG_DESKTOP}; then \
+		apt-get install gnome-genius \
+		|| apt-get install genius \
 	; fi
 	if ${CONFIG_DESKTOP}; then \
 		rm -rf /tmp/$(PROJECT)/deb && \
