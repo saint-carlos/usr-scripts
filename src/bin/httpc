@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="print name and description of http error codes"
 PARAMS="{number|regex} [...]"
-OPTIONS="[-hlvH]"
+OPTIONS="[-hvlH] [-s section]"
 CODES=CONFIG_SHARE/http.db
 
 usage()
@@ -22,6 +22,7 @@ options:
 -l	list: list all error codes.
 -v	verbose: emit a more verbose explanation for codes.
 -H	no headers: do look up headers e.g. "4xx".
+-s	section: limit output to specific section e.g. "3xx".
 -h	help: show this help message and exit.
 EOF
 
@@ -47,12 +48,14 @@ no_headers()
 }
 
 LIST=false
+SECTION=".*"
 TRANSFORM=shorten
 FILTER=cat
-while getopts hlvH OPTION; do
+while getopts hlvs:H OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		l) LIST=true ;;
+		s) SECTION="${OPTARG:0:1}" ;;
 		v) TRANSFORM=cat ;;
 		H) FILTER=no_headers ;;
 		\?) usage 1 ;;
@@ -68,7 +71,7 @@ fi
 
 # Search "database" for given strings
 exec < "$CODES"
-$TRANSFORM | $FILTER | for i in "$@"; do
+$TRANSFORM | $FILTER | grep "^${SECTION}" | for i in "$@"; do
 	case "$i" in
 	[0-9]*)
 		COL=1 ;;
