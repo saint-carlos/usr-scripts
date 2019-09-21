@@ -32,10 +32,10 @@ options:
 -l	log: show the build log.
 -r	rebuild: clean before build.
 -s	serial: build serially, not in parallel.
--f	error filter: string to be used as a shell command to filter stderr.
+-f	error filter: shell command to be used as a shell command to filter stderr.
 -e	stderr: fail if something was emitted to stderr, even if make succeeded.
 
-normally stderr is not filtered even if -f is given, however even in normal operation filtering is used to count errors and therefore decide on success/failure of the build. filtering can also be used in conjunction with -p, however the same filter can be applied to '$PROGRAM' itself. in any case, be sure to properly escape/quote the filter.
+be sure to properly escape/quote the filter.
 
 exit status:
 2	some arguments are bad.
