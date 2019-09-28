@@ -268,6 +268,10 @@ install_desktoprefresh()
 			cat $CONFIG_ETC/dconf_user.monitor2.ini >> \
 				$CONFIG_ETC/dconf_user.final.ini
 		fi
+		if $CONFIG_HAS_TOUCHPAD; then
+			cat $CONFIG_ETC/dconf_user.touchpad.ini >> \
+				$CONFIG_ETC/dconf_user.final.ini
+		fi
 		# we don't reset the rest of the config, we
 		# only touch what we care about
 		dconf_sync load / < "$CONFIG_ETC/dconf_user.final.ini"

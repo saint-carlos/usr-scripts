@@ -56,6 +56,8 @@ if $CONFIG_DESKTOP && grep LinuxMint /etc/lsb-release &>/dev/null; then
 		CONFIG_DCONF_PANEL_OBJ_IDS="['m0-menu-bar', 'm0-workspace-switcher', 'm0-window-list', 'm0-multiload', 'm0-notification-area', 'm0-clock']"
 		CONFIG_DCONF_PANEL_TOPLEVEL_OBJS="['m0-bottom']"
 	fi
+
+	CONFIG_HAS_TOUCHPAD=$(if grep -q -i touchpad /proc/bus/input/devices; then echo true; else echo false; fi)
 else
 	CONFIG_MINT=false
 	CONFIG_DCONF_PANEL_OBJ_IDS="[]"
