@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if xrandr -q &> /dev/null; then
-	xrandr -q \
+	xrandr -q 2> /dev/null \
 		| grep -w connected \
 		| wc -l
 elif which nvidia-xconfig &> /dev/null; then
