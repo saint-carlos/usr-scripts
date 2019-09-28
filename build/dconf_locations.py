@@ -16,13 +16,16 @@ class City:
         self.current = current
 
 def get_city(root, name, current=False):
-    # root.find("/region/country//city/[name='{}']/../tz-hint").text
-    prefix = "./region/country//city/[name='{}']/".format(name)
-    try:
-        tz_hint = root.find(prefix + "../../tz-hint").text
-    except:
-        tz_hint = root.find(prefix + "../tz-hint").text
-    code = root.find(prefix + "location/code").text
+    for fmt in [ "./region/country//city/[name='{}']/", "./region/country//city/[_name='{}']/" ]:
+        prefix = fmt.format(name)
+        for tz_hint_loc in [ "../../tz-hint", "../tz-hint" ]:
+            try:
+                tz_hint = root.find(prefix + tz_hint_loc).text
+                code = root.find(prefix + "location/code").text
+            except:
+                continue
+    if not code:
+        raise Exception("city '{}' not found".format(name))
     latitude, longitude = root.find(prefix + "coordinates").text.split()
     return City(name, tz_hint, latitude, longitude, code, current)
 
