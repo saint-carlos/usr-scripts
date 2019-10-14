@@ -265,7 +265,7 @@ install_desktoprefresh()
 		dconf_sync dump / > "$BACKUP_FILE"
 		cp $CONFIG_ETC/dconf_user.ini $CONFIG_ETC/dconf_user.final.ini
 		if [ $CONFIG_NUM_MONITORS -ge 2 ]; then
-			cat $CONFIG_ETC/dconf_user.2.ini >> \
+			cat $CONFIG_ETC/dconf_user.monitor2.ini >> \
 				$CONFIG_ETC/dconf_user.final.ini
 		fi
 		# we don't reset the rest of the config, we
