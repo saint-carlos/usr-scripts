@@ -268,21 +268,31 @@ dconf_sync()
 
 do_install_desktoprefresh()
 {
+	CONFIG_DCONF="$CONFIG_ETC/dconf"
 	if $CONFIG_MINT; then
 		BACKUP_FILE=$(make_backup_filename $HOME/.config/dconf/user)
 		dconf_sync dump / > "$BACKUP_FILE"
-		cp $CONFIG_ETC/dconf_user.ini $CONFIG_ETC/dconf_user.final.ini
+		cp $CONFIG_DCONF/dconf_user.ini $CONFIG_DCONF/dconf_user.stage1.ini
 		if [ $CONFIG_NUM_MONITORS -ge 2 ]; then
-			cat $CONFIG_ETC/dconf_user.monitor2.ini >> \
-				$CONFIG_ETC/dconf_user.final.ini
+			cat $CONFIG_DCONF/dconf_user.monitor2.ini \
+				>> $CONFIG_DCONF/dconf_user.stage1.ini
 		fi
 		if $CONFIG_HAS_TOUCHPAD; then
-			cat $CONFIG_ETC/dconf_user.touchpad.ini >> \
-				$CONFIG_ETC/dconf_user.final.ini
+			cat $CONFIG_DCONF/dconf_user.touchpad.ini \
+				>> $CONFIG_DCONF/dconf_user.stage1.ini
+			DESKTOPREFRESH_KEYBOARD=touchpad
+		else
+			DESKTOPREFRESH_KEYBOARD=desktop
 		fi
+		cat $CONFIG_DCONF/dconf_user.stage1.ini \
+			| sed "/CONFIG_DCONF_MEDIA/r ${CONFIG_DCONF}/dconf_user.${DESKTOPREFRESH_KEYBOARD}.media.ini" \
+			| sed "/CONFIG_DCONF_WINDOWS/r ${CONFIG_DCONF}/dconf_user.${DESKTOPREFRESH_KEYBOARD}.windows.ini" \
+			| sed '/CONFIG_DCONF_MEDIA/d; /CONFIG_DCONF_WINDOWS/d' \
+			> "$CONFIG_DCONF/dconf_user.final.ini"
+
 		# we don't reset the rest of the config, we
 		# only touch what we care about
-		dconf_sync load / < "$CONFIG_ETC/dconf_user.final.ini"
+		dconf_sync load / < "$CONFIG_DCONF/dconf_user.final.ini"
 	fi
 }
 

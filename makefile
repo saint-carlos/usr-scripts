@@ -143,9 +143,14 @@ $(call srcfiles,		\
 	sbin/			\
 )
 
-DESKTOPREFRESH_FILES :=		\
-	etc/dconf_user.ini	\
-	etc/dconf_user.monitor2.ini \
+DESKTOPREFRESH_FILES :=				\
+	etc/dconf/dconf_user.touchpad.ini	\
+	etc/dconf/dconf_user.monitor2.ini	\
+	etc/dconf/dconf_user.desktop.media.ini	\
+	etc/dconf/dconf_user.desktop.windows.ini \
+	etc/dconf/dconf_user.touchpad.media.ini	\
+	etc/dconf/dconf_user.touchpad.windows.ini \
+	etc/dconf/dconf_user.ini
 
 ALL_FILES := ${LUSER_FILES} ${SUPER_FILES} ${DESKTOPREFRESH_FILES}
 
