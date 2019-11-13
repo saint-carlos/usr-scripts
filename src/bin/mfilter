@@ -1,9 +1,9 @@
 #!/bin/bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="multi filter: logical OR between greps"
-PARAMS="expression..."
-OPTIONS="[-voahi]"
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="multi filter: logical OR between greps"
+declare -r PARAMS="expression..."
+declare -r OPTIONS="[-voahi]"
 
 usage()
 {
@@ -33,15 +33,25 @@ EOF
 make_junctions()
 {
 	printf "\$0 ~ /$1/"
-	shift
+	shift 1
 	for x in "$@"; do
 		printf " ${JUNCTION_OPERATOR} \$0 ~ /$x/"
 	done
 }
 
-CRITERIA_OPERATOR=""
-JUNCTION_OPERATOR="||"
-BEGIN=""
+main()
+{
+	if [ $# -eq 0 ]; then
+		exec cat
+	else
+		AWK_SCRIPT="$BEGIN { if ( $CRITERIA_OPERATOR ( $(make_junctions "$@") ) ) print }"
+		exec awk "$AWK_SCRIPT"
+	fi
+}
+
+declare CRITERIA_OPERATOR=""
+declare JUNCTION_OPERATOR="||"
+declare BEGIN=""
 while getopts voahi OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
@@ -54,9 +64,4 @@ while getopts voahi OPTION; do
 done
 shift $((OPTIND - 1))
 
-if [ $# -eq 0 ]; then
-	exec cat
-else
-	AWK_SCRIPT="$BEGIN { if ( $CRITERIA_OPERATOR ( $(make_junctions "$@") ) ) print }"
-	exec awk "$AWK_SCRIPT"
-fi
+main "$@"
