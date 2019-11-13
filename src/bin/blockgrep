@@ -37,6 +37,14 @@ while getopts h OPTION; do
 done
 shift $((OPTIND - 1))
 
-BLOCK="$(echo "$1" | sed 's|/|\\\\/|g')"
+SCRIPT="
+function start_block() { found = 0; rec = \"\"; }
+function end_block() { if (found == 1) print rec; }
+BEGIN { start_block(); }
+length() == 0 { end_block(); start_block(); }
+/$1/ { found = 1; }
+{ rec = rec \$0 ORS }
+END { end_block(); }
+"
 shift
-exec awk "/${BLOCK}/,/^$/" $@
+exec awk "$SCRIPT" $@
