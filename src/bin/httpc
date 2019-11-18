@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="print name and description of http error codes"
-PARAMS="{number|regex} [...]"
-OPTIONS="[-hvlH] [-s section]"
-CODES=CONFIG_SHARE/http.db
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="print name and description of http error codes"
+declare -r PARAMS="{number|regex} [...]"
+declare -r OPTIONS="[-hvlH] [-s number]"
+declare -r CODES=CONFIG_SHARE/http.db
 
 usage()
 {
@@ -29,14 +29,6 @@ EOF
     exit $1
 }
 
-die()
-{
-	RC=$1
-	shift
-	errcho "$*"
-	exit $RC
-}
-
 shorten()
 {
 	cut -d: -f1 "$@"
@@ -47,38 +39,51 @@ no_headers()
 	grep -v '^[0-9]xx'
 }
 
-LIST=false
-SECTION=".*"
-TRANSFORM=shorten
-FILTER=cat
-while getopts hlvs:H OPTION; do
-	case $OPTION in
+search()
+{
+	for i in "$@"; do
+	       case "$i" in
+	       [0-9]*)
+		       COL=1 ;;
+	       *)
+		       # No number: just grep for pattern
+		       grep -i "$i"
+		       continue ;;
+	       esac
+	       awk '$'$COL' == "'$i'"'
+	done
+
+}
+
+main()
+{
+	local LIST=false
+	local SECTION=".*"
+	local TRANSFORM=shorten
+	local FILTER=cat
+
+	while getopts hlvs:H OPTION; do
+		case $OPTION in
 		h) usage 0 ;;
 		l) LIST=true ;;
 		s) SECTION="${OPTARG:0:1}" ;;
 		v) TRANSFORM=cat ;;
 		H) FILTER=no_headers ;;
 		\?) usage 1 ;;
-	esac
-done
-shift $((OPTIND - 1))
+		esac
+	done
+	shift $((OPTIND - 1))
 
-if $LIST; then
-	set -- .
-fi
+	if $LIST; then
+		set -- .
+	fi
 
-[ $# -ge 1 ] || usage 1
+	[ $# -ge 1 ] || usage 1
+	< "$CODES" \
+		$TRANSFORM \
+		| $FILTER \
+		| grep "^${SECTION}" \
+		| search "$@"
+}
 
-# Search "database" for given strings
-exec < "$CODES"
-$TRANSFORM | $FILTER | grep "^${SECTION}" | for i in "$@"; do
-	case "$i" in
-	[0-9]*)
-		COL=1 ;;
-	*)
-		# No number: just grep for pattern
-		grep -i "$i"
-		continue ;;
-	esac
-	awk '$'$COL' == "'$i'"'
-done
+main "$@"
