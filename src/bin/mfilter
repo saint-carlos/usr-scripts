@@ -30,38 +30,64 @@ EOF
 	exit $1
 }
 
-make_junctions()
+filter()
 {
-	printf "\$0 ~ /$1/"
-	shift 1
-	for x in "$@"; do
-		printf " ${JUNCTION_OPERATOR} \$0 ~ /$x/"
+	local -r POSITIVE="$1"
+	local -r DISJUNCTION="$2"
+	local -r IGNORE_CASE="$3"
+	shift 3
+
+	if [ $# -eq 0 ]; then
+		exec cat
+	fi
+
+	local SUBEXPR_PREFIX='(?=.*'
+	local SUBEXPR_SUFFIX='.*)'
+	local SUBEXPR_JOIN=''
+	local GREP_ARGS=("--perl-regexp")
+	if $DISJUNCTION; then
+		SUBEXPR_PREFIX=''
+		SUBEXPR_SUFFIX=''
+		SUBEXPR_JOIN='|'
+	fi
+	if ! $POSITIVE; then
+		GREP_ARGS+=("-v")
+	fi
+	if $IGNORE_CASE; then
+		GREP_ARGS+=("-i")
+	fi
+
+
+	local GREP_EXPR=""
+	local JOIN=""
+	local EXPR
+	for EXPR in "$@"; do
+		GREP_EXPR+="${JOIN}${SUBEXPR_PREFIX}${EXPR}${SUBEXPR_SUFFIX}"
+		JOIN="${SUBEXPR_JOIN}"
 	done
+
+	grep "${GREP_ARGS[@]}" "$GREP_EXPR"
 }
 
 main()
 {
-	if [ $# -eq 0 ]; then
-		exec cat
-	else
-		AWK_SCRIPT="$BEGIN { if ( $CRITERIA_OPERATOR ( $(make_junctions "$@") ) ) print }"
-		exec awk "$AWK_SCRIPT"
-	fi
-}
+	local POSITIVE=true
+	local DISJUNCTION=true
+	local IGNORE_CASE=false
 
-declare CRITERIA_OPERATOR=""
-declare JUNCTION_OPERATOR="||"
-declare BEGIN=""
-while getopts voahi OPTION; do
-	case $OPTION in
-		h) usage 0 ;;
-		o) JUNCTION_OPERATOR="||" ;;
-		a) JUNCTION_OPERATOR="&&" ;;
-		v) CRITERIA_OPERATOR="!" ;;
-		i) BEGIN='BEGIN { IGNORECASE=1 }' ;;
-		\?) usage 1 ;;
-	esac
-done
-shift $((OPTIND - 1))
+	while getopts voahi OPTION; do
+		case $OPTION in
+			h) usage 0 ;;
+			o) DISJUNCTION=true ;;
+			a) DISJUNCTION=false ;;
+			v) POSITIVE=false ;;
+			i) IGNORE_CASE=true ;;
+			\?) usage 1 ;;
+		esac
+	done
+	shift $((OPTIND - 1))
+
+	filter "$POSITIVE" "$DISJUNCTION" "$IGNORE_CASE" "$@"
+}
 
 main "$@"
