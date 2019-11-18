@@ -41,18 +41,16 @@ no_headers()
 
 search()
 {
-	for i in "$@"; do
-	       case "$i" in
-	       [0-9]*)
-		       COL=1 ;;
-	       *)
-		       # No number: just grep for pattern
-		       grep -i "$i"
-		       continue ;;
-	       esac
-	       awk '$'$COL' == "'$i'"'
+	local GREP_ARGS=()
+	local ARG
+	for ARG in "$@"; do
+		case "$ARG" in
+		[0-9]*) GREP_ARGS+=("-e" "^${ARG}") ;;
+		*) GREP_ARGS+=("-e" "$ARG") ;;
+		esac
 	done
 
+	grep -i "${GREP_ARGS[@]}"
 }
 
 main()
