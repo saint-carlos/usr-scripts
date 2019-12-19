@@ -213,7 +213,8 @@ ${USER_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE} ${THIS_MAKEFILE}
 
 ${ALL_CONFIG_VARS}: ${CONFIG_FILE}
 	bash ${BUILD}/config_dump_vals.sh \
-		${BUILD}/config_allvars.sh ${CONFIG_FILE} > $@
+		${BUILD}/config_allvars.sh ${CONFIG_FILE} > $@.tmp
+	mv $@.tmp $@
 
 u_suffix = $(word 2, $(subst _, ,$1))
 define mkversion =
