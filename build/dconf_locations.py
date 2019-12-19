@@ -21,9 +21,12 @@ def get_city(root, name, current=False):
         for tz_hint_loc in [ "../../tz-hint", "../tz-hint" ]:
             try:
                 tz_hint = root.find(prefix + tz_hint_loc).text
-                code = root.find(prefix + "location/code").text
+                break
             except:
                 continue
+        if tz_hint:
+            break
+    code = root.find(prefix + "location/code").text
     if not code:
         raise Exception("city '{}' not found".format(name))
     latitude, longitude = root.find(prefix + "coordinates").text.split()
@@ -80,6 +83,7 @@ try:
         cities.append(city)
 
     print(cities_to_matepanel_str(cities))
-except:
+except Exception as e:
+    eprint(e);
     eprint("make sure all named cities appear in {}.".format(LOCATIONS_FILE))
     sys.exit(1)
