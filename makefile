@@ -139,7 +139,7 @@ $(call srcfiles,		\
 
 DESKTOPREFRESH_FILES :=		\
 	etc/dconf_user.ini	\
-	etc/dconf_user.2.ini	\
+	etc/dconf_user.monitor2.ini \
 
 ALL_FILES := ${LUSER_FILES} ${SUPER_FILES} ${DESKTOPREFRESH_FILES}
 
