@@ -59,7 +59,6 @@ LUSER_FILES :=			\
 	bin/mfilter		\
 	bin/msg			\
 	bin/num2ip		\
-	bin/parallelize		\
 	bin/pig			\
 	bin/psgrep		\
 	bin/randomstr		\
