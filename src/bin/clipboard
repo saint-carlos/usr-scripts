@@ -1,0 +1,50 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="copy to/from clipboard."
+PARAMS="<store [file ...] | dump>"
+OPTIONS="[-hf]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+store: store into the clipboard (default from stdin).
+dump: print clipboard to stdout.
+
+options:
+-h	help: show this help message and exit.
+-f	filter: invoke as filter (see xclip -f).
+
+exit status:
+0	if all arguments are OK
+1	xclip error
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+declare -a XCLIP_ARGS=(-selection clipboard)
+
+while getopts hf OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		f) XCLIP_ARGS+=(-filter) ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+case "$1" in
+	dump) XCLIP_ARGS+=(-out) ;;
+	store) XCLIP_ARGS+=(-in) ;;
+	*) usage 2 ;;
+esac
+shift 1
+exec xclip "${XCLIP_ARGS[@]}" "$@"
