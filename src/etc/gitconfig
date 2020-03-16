@@ -44,11 +44,13 @@
 	brav = branch -avv
 	addpatch = add -p
 	llog = log --pretty=neat --date=short
+	clog = log --color-words=.
 	histogram = log --stat --summary
 	stat = show --stat --summary
 	hstat = log -1 --pretty=neat --date=short --decorate=full
 	vomit = commit --verbose
 	indiff = diff --cached
+	cdiff = diff --color-words=.
 	hreset = reset --hard
 	amend = commit --verbose --amend -a
 	inspect = log --reverse --patch-with-stat --summary -U50
