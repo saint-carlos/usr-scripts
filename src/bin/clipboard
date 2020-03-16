@@ -2,7 +2,7 @@
 
 PROGRAM=$(basename $0)
 DESCRIPTION="copy to/from clipboard."
-PARAMS="<store [file ...] | dump>"
+PARAMS="<dump | store [file ...] | store-direct [text...]>"
 OPTIONS="[-hf]"
 
 usage()
@@ -42,8 +42,9 @@ done
 shift $((OPTIND - 1))
 
 case "$1" in
-	dump) XCLIP_ARGS+=(-out) ;;
+	store-direct) XCLIP_ARGS+=(-in); shift 1; exec <<< "$*"; set -- ;;
 	store) XCLIP_ARGS+=(-in) ;;
+	dump) XCLIP_ARGS+=(-out) ;;
 	*) usage 2 ;;
 esac
 shift 1

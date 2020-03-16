@@ -92,7 +92,7 @@ _git_alog()
 _clipboard()
 {
 	[ "$COMP_CWORD" -eq 1 ] || return
-	COMPREPLY=( $(compgen -W "store dump" -- "${COMP_WORDS[COMP_CWORD]}") )
+	COMPREPLY=( $(compgen -W "dump store store-direct" -- "${COMP_WORDS[COMP_CWORD]}") )
 }
 complete -F _clipboard -o default clipboard
 
