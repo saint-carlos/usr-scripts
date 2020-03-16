@@ -7,7 +7,7 @@
 
 [core]
 	editor = vim
-	pager = less -FXR
+	pager = less -FXR --pattern '^(commit|diff --git)'
 	excludesfile = CONFIG_ETC/gitignore
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
 
