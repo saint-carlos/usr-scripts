@@ -7,9 +7,15 @@
 
 [core]
 	editor = vim
-	pager = less -FXR --pattern '^(commit|diff --git)'
+	pager = less -FXR
 	excludesfile = CONFIG_ETC/gitignore
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
+
+[pager]
+	log = less -cR --pattern '^(commit|diff --git)' +g
+	diff = ifne less -cR --pattern '^(commit|diff --git)' +g
+	hstat = cat
+	cmessage = cat
 
 [merge]
 	tool = bc3

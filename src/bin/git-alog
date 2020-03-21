@@ -40,4 +40,4 @@ shift $((OPTIND - 1))
 
 LINES=$(tput lines)
 N=$(($LINES * $FRACTION))
-exec git llog -$N "$@"
+GIT_PAGER="less -FXR" exec git llog -$N "$@"
