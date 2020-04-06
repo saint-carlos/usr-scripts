@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="print decimal numbers with comma"
 PARAMS="[num]..."
-OPTIONS="[-h]"
+OPTIONS="[-hs]"
 
 usage()
 {
@@ -16,6 +16,7 @@ $PROGRAM $OPTIONS $PARAMS
 
 options:
 -h	help: show this help message and exit.
+-s	short: shorten numbers to letters, e.g. 1,284,304 -> 1.3M
 
 exit status:
 0	if all arguments are OK
@@ -25,10 +26,59 @@ EOF
     exit $1
 }
 
+delineate()
+{
+	exec printf "%'ld\n" "$@"
+}
 
-while getopts h OPTION; do
+shorten_to()
+{
+	local -r SCALE="$1"
+	local -r PREFIX="$2"
+	local -r SUFFIX="$3"
+	local -r N="$4"
+	local -r SIGNIFICANT=$((N / SCALE))
+	local -r DECIMAL=$(( (N % SCALE) / (SCALE / 1000) ))
+	if (( DECIMAL >= 100 )); then
+		local NORMALIZED=$(printf "%03d\n" "$DECIMAL")
+		exec printf "%s%.1f%s\n" "$PREFIX" "${SIGNIFICANT}.${NORMALIZED}" "$SUFFIX"
+	else
+		exec printf "%s%d%s\n" "$PREFIX" "$SIGNIFICANT" "$SUFFIX"
+	fi
+}
+
+shorten()
+{
+	local N=$1
+	if ! test "$((N))" -eq "$N" &>/dev/null; then
+		errcho "$PROGRAM: $N: arithmetic overflow"
+		exit 1
+	fi
+	local CURRENT=1000
+	local PREFIX=''
+	if (( N < 0 )); then
+		PREFIX='-'
+		N=$(( -N ))
+	fi
+	if (( N < CURRENT )); then
+		exec printf "%d\n" $N
+	else
+		local SUFFIX NEXT
+		for SUFFIX in 'k' 'M' 'B' 'T' 'Qa' 'Qi'; do
+			NEXT=$((CURRENT * 1000))
+			if (( CURRENT <= N && N < NEXT )); then
+				shorten_to "$CURRENT" "$PREFIX" "$SUFFIX" "$N"
+			fi
+			CURRENT=$NEXT
+		done
+	fi
+}
+
+COMMAND=delineate
+while getopts hs OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
+		s) COMMAND=shorten ;;
 		\?) usage 1 ;;
 	esac
 done
@@ -37,4 +87,4 @@ shift $((OPTIND - 1))
 if [ $# -eq 0 ]; then
 	exit 0
 fi
-exec printf "%'ld\n" "$@"
+$COMMAND "$@"
