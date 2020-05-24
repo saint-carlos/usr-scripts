@@ -294,6 +294,7 @@ ifneq ($(shell which yum),)
 progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and in general for power users
 	yum install epel-release
 	yum install 		\
+		jq		\
 		socat		\
 		python36 python34-pip \
 		moreutils	\
@@ -360,6 +361,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
+		jq		\
 		socat		\
 		python3.5 python3-pip \
 		moreutils	\
