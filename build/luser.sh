@@ -251,6 +251,7 @@ uninstall()
 	rmsource $HOME/.bashrc
 	rmsource $HOME/.vimrc
 	rmsource $HOME/.screenrc
+	restore_backup $HOME/.inputrc
 	restore_backup $HOME/.config/htop/htoprc
 	restore_backup $HOME/.colordiffrc
 	restore_backup $HOME/.gitconfig
