@@ -13,7 +13,7 @@
 
 [pager]
 	log = less -cR --pattern '^(commit|diff --git)' +g
-	diff = ifne less -cR --pattern '^(commit|diff --git)' +g
+	diff = ifne less -cR --pattern '^(diff --git)' +g
 	hstat = cat
 	cmessage = cat
 
