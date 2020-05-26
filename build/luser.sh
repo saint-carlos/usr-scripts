@@ -192,6 +192,7 @@ install()
 
 		safe_edit $HOME/.Xdefaults \
 			mksource '#include' "\"$CONFIG_ETC/xdefaults\"" @@@ '/*' '*/'
+		xrdb -l $HOME/.Xdefaults
 
 		for_each_desktop_file \
 			install_desktop_file
