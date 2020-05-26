@@ -82,6 +82,7 @@ LUSER_FILES :=			\
 	bin/mktags		\
 	bin/getenv		\
 	etc/bash_completion	\
+	etc/inputrc		\
 	etc/bashrc		\
 	etc/bashrc.user		\
 	etc/colordiffrc		\

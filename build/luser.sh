@@ -150,6 +150,9 @@ install()
 		ln -sf "$CONFIG_ETC/colordiffrc" @@@
 	safe_replace $HOME/.config/htop/htoprc \
 		ln -sf "$CONFIG_ETC/htoprc" @@@
+	safe_replace $HOME/.inputrc \
+		ln -sf "$CONFIG_ETC/inputrc" @@@
+
 
 	safe_edit $HOME/.screenrc \
 		mksource 'source' "$CONFIG_ETC/screenrc" @@@ '#'
