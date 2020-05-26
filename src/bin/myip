@@ -10,8 +10,9 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="return my external IP"
 PARAMS=""
-OPTIONS="[-h]"
-SITE="whatsmyip.net"
+OPTIONS="[-hf]"
+DEFAULT_SITE="icanhazip.com"
+FULL_SITE="ipinfo.io"
 
 usage()
 {
@@ -23,6 +24,7 @@ usage:
 $PROGRAM $OPTIONS $PARAMS
 
 options:
+-f	full: show full IP info.
 -h	help: show this help message and exit.
 
 exit status:
@@ -35,12 +37,30 @@ EOF
 	exit $1
 }
 
-while getopts h OPTION; do
+short_ip()
+{
+	curl --silent "$DEFAULT_SITE"
+}
+
+full_ipinfo()
+{
+	curl --silent "$FULL_SITE" | jq --raw-output '
+		with_entries(.key |= ascii_upcase)
+			| to_entries
+			| .[]
+			| .key + "=" + .value'
+
+}
+
+declare OPERATION=short_ip
+while getopts hf OPTION; do
 	case $OPTION in
+		f) OPERATION=full_ipinfo ;;
 		h) usage 0 ;;
 		\?) usage 2 ;;
 	esac
 done
 shift $((OPTIND - 1))
 
-curl icanhazip.com || exit 1
+set -o pipefail
+$OPERATION || exit 1
