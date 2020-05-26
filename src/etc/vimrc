@@ -68,6 +68,9 @@ set diffopt+=context:20	" 20 context lines in diff
 
 if has("syntax")
 	syntax on
+
+	" syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
+	let g:is_posix = 1
 endif
 
 augroup bufferview
@@ -78,9 +81,6 @@ augroup bufferview
 	autocmd InsertEnter * set timeoutlen=0 " no fancy mappings in insert mode
 	autocmd InsertLeave * set timeoutlen=1000
 augroup END
-
-" syntax highlight shell scripts as per POSIX, not the original Bourne shell which very few use
-let g:is_posix = 1
 
 " }}}
 
