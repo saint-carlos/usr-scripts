@@ -12,10 +12,18 @@ set tags+=./tags;	" tell vim to find ctags even if in a subdirectory.
 let mapleader = ","
 let maplocalleader = mapleader
 
-" urxvt colors are ugly, but rxvt colors are like xterm colors
 if &g:term ==# "rxvt-unicode"
+	" urxvt colors are ugly, but rxvt colors are like xterm colors
 	set term=rxvt
+
+	" work around urxvt's Alt key issues
+	" need to map any Alt key combination we're going to use.
+	set <M-j>=j
+	set <M-k>=k
 endif
+
+nnoremap <M-j> gj
+nnoremap <M-k> gk
 
 " }}}
 

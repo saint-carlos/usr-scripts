@@ -44,6 +44,7 @@
 *URxvt*selection*pattern-1:		([[:word:]-,./?%&#:_=+@~]+)
 *URxvt*.iso14755:	false
 *URxvt*.iso14755_52:	false
+*URxvt*.meta8:		false
 
 ! RENDERING & FONT
 
