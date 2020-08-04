@@ -81,6 +81,7 @@ augroup bufferview
 	autocmd InsertEnter * set timeoutlen=0 " no fancy mappings in insert mode
 	autocmd InsertLeave * set timeoutlen=1000
 augroup END
+set ttimeoutlen=0
 
 " }}}
 

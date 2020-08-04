@@ -60,16 +60,16 @@ if ! hasmapto('1') || !hasmapto('<M-1>')
       "gui bindings containing META key, are different from terminal bindings
       if has('gui_running')
             "NORMAL mode bindings for gvim
-            noremap <unique> <script> <M-1> :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
-            noremap <unique> <script> <M-2> :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
-            noremap <unique> <script> <M-3> :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
-            noremap <unique> <script> <M-4> :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
-            noremap <unique> <script> <M-5> :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
-            noremap <unique> <script> <M-6> :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
-            noremap <unique> <script> <M-7> :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
-            noremap <unique> <script> <M-8> :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
-            noremap <unique> <script> <M-9> :call <SID>Bf_SwitchTo( 9)<CR>:<BS>
-            noremap <unique> <script> <M-0> :call <SID>Bf_SwitchTo( 10)<CR>:<BS>
+            nnoremap <unique> <script> <M-1> :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
+            nnoremap <unique> <script> <M-2> :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
+            nnoremap <unique> <script> <M-3> :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
+            nnoremap <unique> <script> <M-4> :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
+            nnoremap <unique> <script> <M-5> :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
+            nnoremap <unique> <script> <M-6> :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
+            nnoremap <unique> <script> <M-7> :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
+            nnoremap <unique> <script> <M-8> :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
+            nnoremap <unique> <script> <M-9> :call <SID>Bf_SwitchTo( 9)<CR>:<BS>
+            nnoremap <unique> <script> <M-0> :call <SID>Bf_SwitchTo( 10)<CR>:<BS>
             "INSERT mode bindings for gvim
             inoremap <unique> <script> <M-1> <esc>:call <SID>Bf_SwitchTo( 1)<CR>:<BS>a
             inoremap <unique> <script> <M-2> <esc>:call <SID>Bf_SwitchTo( 2)<CR>:<BS>a
@@ -83,26 +83,26 @@ if ! hasmapto('1') || !hasmapto('<M-1>')
             inoremap <unique> <script> <M-0> <esc>:call <SID>Bf_SwitchTo( 10)<CR>:<BS>a
       else
             "NORMAL mode bindings for vim( dos32 )
-            noremap <unique> <script> ± :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
-            noremap <unique> <script> ² :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
-            noremap <unique> <script> ³ :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
-            noremap <unique> <script> ´ :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
-            noremap <unique> <script> µ :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
-            noremap <unique> <script> ¶ :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
-            noremap <unique> <script> · :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
-            noremap <unique> <script> ¸ :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
+            "nnoremap <unique> <script> ± :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
+            "nnoremap <unique> <script> ² :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
+            "nnoremap <unique> <script> ³ :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
+            "nnoremap <unique> <script> ´ :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
+            "nnoremap <unique> <script> µ :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
+            "nnoremap <unique> <script> ¶ :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
+            "nnoremap <unique> <script> · :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
+            "nnoremap <unique> <script> ¸ :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
       "else
             "NORMAL mode bindings for vim( terminal)
-            noremap <unique> <script> 1 :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
-            noremap <unique> <script> 2 :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
-            noremap <unique> <script> 3 :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
-            noremap <unique> <script> 4 :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
-            noremap <unique> <script> 5 :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
-            noremap <unique> <script> 6 :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
-            noremap <unique> <script> 7 :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
-            noremap <unique> <script> 8 :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
-            noremap <unique> <script> 9 :call <SID>Bf_SwitchTo( 9)<CR>:<BS>
-            noremap <unique> <script> 0 :call <SID>Bf_SwitchTo( 10)<CR>:<BS>
+            nnoremap <unique> <script> 1 :call <SID>Bf_SwitchTo( 1)<CR>:<BS>
+            nnoremap <unique> <script> 2 :call <SID>Bf_SwitchTo( 2)<CR>:<BS>
+            nnoremap <unique> <script> 3 :call <SID>Bf_SwitchTo( 3)<CR>:<BS>
+            nnoremap <unique> <script> 4 :call <SID>Bf_SwitchTo( 4)<CR>:<BS>
+            nnoremap <unique> <script> 5 :call <SID>Bf_SwitchTo( 5)<CR>:<BS>
+            nnoremap <unique> <script> 6 :call <SID>Bf_SwitchTo( 6)<CR>:<BS>
+            nnoremap <unique> <script> 7 :call <SID>Bf_SwitchTo( 7)<CR>:<BS>
+            nnoremap <unique> <script> 8 :call <SID>Bf_SwitchTo( 8)<CR>:<BS>
+            nnoremap <unique> <script> 9 :call <SID>Bf_SwitchTo( 9)<CR>:<BS>
+            nnoremap <unique> <script> 0 :call <SID>Bf_SwitchTo( 10)<CR>:<BS>
             "INSERT mode bindings for vim( terminal)
             inoremap <unique> <script> 1 <esc>:call <SID>Bf_SwitchTo( 1)<CR>:<BS>a
             inoremap <unique> <script> 2 <esc>:call <SID>Bf_SwitchTo( 2)<CR>:<BS>a
@@ -119,10 +119,10 @@ endif " %%
 
 
 " TabBar <Script> internal map ~~
-noremap <unique> <script> <Plug>tbstart  :call <SID>Tb_Start(1, -1)<CR>:<BS>
-noremap <unique> <script> <Plug>tbstop   :call <SID>Tb_Stop(1)<CR>:<BS>
-noremap <unique> <script> <Plug>tbaut    :call <SID>Tb_Aup(-1)<CR>:<BS>
-noremap <unique> <script> <Plug>tbtoggle :call <SID>Tb_Toggle()<CR>:<BS>
+nnoremap <unique> <script> <Plug>tbstart  :call <SID>Tb_Start(1, -1)<CR>:<BS>
+nnoremap <unique> <script> <Plug>tbstop   :call <SID>Tb_Stop(1)<CR>:<BS>
+nnoremap <unique> <script> <Plug>tbaut    :call <SID>Tb_Aup(-1)<CR>:<BS>
+nnoremap <unique> <script> <Plug>tbtoggle :call <SID>Tb_Toggle()<CR>:<BS>
 " %%
 
 
@@ -217,16 +217,16 @@ endif" %%
 " If we have enabled <C-TAB> and <C-S-TAB> to switch buffers~~
 " in the current window then perform the remapping
 if g:Tb_cTabSwitchBufs
-    noremap <C-TAB>   :call <SID>Bf_Cycle(1)<CR>:<BS>
-    noremap <C-S-TAB> :call <SID>Bf_Cycle(0)<CR>:<BS>
+    nnoremap <C-TAB>   :call <SID>Bf_Cycle(1)<CR>:<BS>
+    nnoremap <C-S-TAB> :call <SID>Bf_Cycle(0)<CR>:<BS>
 endif "%%
 
 
 " If we have enabled <C-TAB> and <C-S-TAB> to switch windows ~~
 " then perform the remapping
 if g:Tb_cTabSwitchWindows
-    noremap <C-TAB>   <C-W>w
-    noremap <C-S-TAB> <C-W>W
+    nnoremap <C-TAB>   <C-W>w
+    nnoremap <C-S-TAB> <C-W>W
 endif "%%
 
 
