@@ -45,14 +45,14 @@ set splitbelow
 
 " status line, left side
 set statusline=
-set statusline+=%*%-3.3n%0*                    " buffer number
+set statusline+=B:%*%-3.3n%0*                  " buffer number
 set statusline+=%f                             " file name
 set statusline+=\ [%{strlen(&ft)?&ft:'none'}   " filetype
 set statusline+=%R%M]                          " flags
 " status line, right side
 set statusline+=%=                             " right align
-set statusline+=%*0x%-8B                       " current char
-set statusline+=%-16.(%l/%L(%p%%),\ %c%V%)     " location of cursor in file - line#/total(percentage), column
+set statusline+=A:%*0x%-8B                     " current char
+set statusline+=L:%-16.(%l/%L(%p%%),\ C:%c%V%) " location of cursor in file - line#/total(percentage), column
 
 " }}}
 
