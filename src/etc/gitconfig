@@ -12,8 +12,9 @@
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
 
 [pager]
-	log = less -cR --pattern '^(commit|diff --git)' +g
-	diff = ifne less -cR --pattern '^(diff --git)' +g
+	log = less -cR --pattern '^(commit|diff --git)' +1
+	diff = ifne less -cR --pattern '^(diff --git)' +1
+	llog = less -cR
 	hstat = cat
 	cmessage = cat
 
