@@ -89,12 +89,18 @@ _git_alog()
 	_git_log "$@"
 }
 
-_clipboard()
+_cb()
 {
-	[ "$COMP_CWORD" -eq 1 ] || return
-	COMPREPLY=( $(compgen -W "dump store store-direct" -- "${COMP_WORDS[COMP_CWORD]}") )
+	local CUR_WORD="${COMP_WORDS[COMP_CWORD]}"
+	if [[ "$CUR_WORD" =~ ^- ]]; then
+		COMPREPLY=( $(compgen -W "-o -i -a -x -f -h" -- "$CUR_WORD") )
+	elif [[ "${COMP_WORDS[COMP_CWORD - 1]}" =~ ^-.*x ]]; then
+		_command cb "$CUR_WORD" "${COMP_WORDS[COMP_CWORD - 1]}"
+	else
+		COMPREPLY=()
+	fi
 }
-complete -F _clipboard -o default clipboard
+complete -F _cb -o default cb
 
 __external_root_executable()
 {

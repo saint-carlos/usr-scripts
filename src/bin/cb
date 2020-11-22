@@ -1,0 +1,66 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="copy to/from clipboard."
+PARAMS="[input... | command...]"
+OPTIONS="[-hoiaxf]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+default behavior is to copy stdin to clipboard.
+
+options:
+-h	help: show this help message and exit.
+-o	stdout: paste clipboard to stdout.
+-i	stdin (default when no arguments): copy stdin to clipboard.
+-a	arguments (default if has arguments): copy command line arguments to clipboard.
+-x	execution: execution the arguments as a command and direct output to clipbard.
+-f	filter: also echo copied input to stdout (see xclip -f).
+
+exit status:
+0	if all arguments are OK
+1	xclip error
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+declare -a XCLIP_ARGS=(-selection clipboard)
+declare MODE=""
+
+while getopts hoiaxf OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		o|i|a|x) MODE=$OPTION ;;
+		f) XCLIP_ARGS+=(-filter) ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if [ -z "$MODE" ]; then
+	if [ $# -gt 0 ]; then
+		MODE=a
+	else
+		MODE=i
+	fi
+fi
+
+#printf "debug: %s: mode %s args %s\n" $PROGRAM $MODE "$*" >&2
+
+case "$MODE" in
+	o) XCLIP_ARGS+=(-out) ;;
+	i) XCLIP_ARGS+=(-in) ;;
+	a) XCLIP_ARGS+=(-in); exec <<< "$*"; set -- ;;
+	x) XCLIP_ARGS+=(-in); declare OUT=$("$@"); exec <<< "$OUT"; set -- ;;
+	*) usage 2 ;;
+esac
+exec xclip "${XCLIP_ARGS[@]}" "$@"

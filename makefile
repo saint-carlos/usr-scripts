@@ -100,6 +100,7 @@ $(call srcfiles,		\
 
 ifeq (${CONFIG_DESKTOP},true)
 DESKTOP_FILES :=		\
+	bin/cb			\
 	bin/dlookup		\
 	bin/icat		\
 	bin/gui			\
