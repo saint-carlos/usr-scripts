@@ -263,13 +263,13 @@ key-leave-fullscreen=Esc
 global-key-play-pause=
 
 # Play/Pause (string)
-key-play-pause=c
+key-play-pause=Space
 
 # Pause only (string)
 global-key-pause=
 
 # Pause only (string)
-key-pause=
+key-pause=c
 
 # Play only (string)
 global-key-play=
