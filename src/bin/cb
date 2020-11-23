@@ -59,8 +59,8 @@ fi
 case "$MODE" in
 	o) XCLIP_ARGS+=(-out) ;;
 	i) XCLIP_ARGS+=(-in) ;;
-	a) XCLIP_ARGS+=(-in); exec <<< "$*"; set -- ;;
-	x) XCLIP_ARGS+=(-in); declare OUT=$("$@"); exec <<< "$OUT"; set -- ;;
+	a) XCLIP_ARGS+=(-in); exec < <(printf "%s" "$*"); set -- ;;
+	x) XCLIP_ARGS+=(-in); declare OUT=$("$@"); exec < <(printf "%s" "$OUT"); set -- ;;
 	*) usage 2 ;;
 esac
 exec xclip "${XCLIP_ARGS[@]}" "$@"
