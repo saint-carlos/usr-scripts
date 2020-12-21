@@ -51,6 +51,7 @@
 	brav = branch -avv
 	addpatch = add -p
 	llog = log --pretty=neat --date=short
+	rlog = log --pretty=relneat --date=short
 	clog = log --color-words=.
 	histogram = log --stat --summary
 	stat = show --stat --summary
@@ -67,7 +68,7 @@
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
-
+	relneat = %C(cyan bold)%h %C(red bold)%ad %<(10,trunc)%ar %<(15,trunc)%an %Creset%s%C(cyan bold)%d
 
 [diff]
 	tool = bc3
