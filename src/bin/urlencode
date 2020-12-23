@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const decoded = process.argv.slice(-1)[0];
+const encoded = encodeURIComponent(decoded);
+process.stdout.write(encoded);
+process.stdout.write('\n');
