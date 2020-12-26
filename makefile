@@ -20,6 +20,7 @@ insrc = $(patsubst src/%, %, $1)
 srcfiles = $(call insrc,$(call findsrc,$1))
 
 LUSER_FILES :=			\
+	bin/quien		\
 	bin/allfiles		\
 	bin/ascii		\
 	bin/base		\
@@ -363,6 +364,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
+		whois		\
 		jq		\
 		socat		\
 		python3.5 python3-pip \

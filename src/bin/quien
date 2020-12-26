@@ -1,0 +1,95 @@
+#!/bin/bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="find the organization owning an IP/domain"
+PARAMS="<ip-address|domain-name>..."
+OPTIONS="[-h]"
+
+set -o pipefail -o errexit -o nounset
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+options:
+-h	help: show this help message and exit.
+
+exit status:
+0	OK
+1	query error
+2	usage error
+EOF
+
+    exit $1
+}
+
+extract_ip()
+{
+	grep "$@" -x -P '\b(?:\d{1,3}\.){3}\d{1,3}\b'
+}
+
+dig_ip()
+{
+	dig +short "$@" \
+		| tail -n 1 \
+		| extract_ip
+}
+
+is_ip()
+{
+	echo "$1" | extract_ip -q
+}
+
+get_org()
+{
+	whois "$@" | grep -i \
+		-e "^org.*name" \
+		-e "^organi[sz]ation" \
+		-e "^netname" \
+		-e "^Registrant Organization" \
+		-e "^Registrant Country"
+}
+
+dig_up()
+{
+	dig +short "$@" | sed 's/^/z: /'
+}
+
+query()
+{
+	local -r OBJECT="$1"
+	printf "z: %s\n" "$OBJECT"
+	if is_ip "$OBJECT"; then
+		get_org "$OBJECT"
+		dig_up -x "$OBJECT"
+	else
+		get_org "$OBJECT" || true
+		local IP=$(dig_ip "$@")
+		get_org "$IP"
+		dig_up "$OBJECT"
+	fi
+}
+
+while getopts h OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		\?) usage 1 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+if [ $# -eq 0 ]; then
+	usage 2
+fi
+
+for OBJECT in "$@"; do
+	query "$OBJECT"
+done \
+	| sort -u \
+	| sed 's/  */ /g' \
+	| column -s : -t
