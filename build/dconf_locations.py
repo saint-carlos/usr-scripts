@@ -16,6 +16,7 @@ class City:
         self.current = current
 
 def get_city(root, name, current=False):
+    tz_hint = None
     for fmt in [ "./region/country//city/[name='{}']/", "./region/country//city/[_name='{}']/" ]:
         prefix = fmt.format(name)
         for tz_hint_loc in [ "../../tz-hint", "../tz-hint" ]:
@@ -26,6 +27,8 @@ def get_city(root, name, current=False):
                 continue
         if tz_hint:
             break
+    if not tz_hint:
+        raise Exception("no timzeone found for city '{}'".format(name))
     code = root.find(prefix + "location/code").text
     if not code:
         raise Exception("city '{}' not found".format(name))
