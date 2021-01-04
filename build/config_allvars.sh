@@ -47,6 +47,8 @@ if $CONFIG_DESKTOP && grep LinuxMint /etc/lsb-release &>/dev/null; then
 	[ $? -eq 0 ] || exit 1
 	CONFIG_DCONF_LOCATIONS="$(sed 's/"/\\"/g' <<< "$CONFIG_DCONF_LOCATIONS")"
 
+	CONFIG_CLOCK_FORMAT="%a %b %d - %R"
+
 	NUM_MONITORS_EXEC="$(dirname $BASH_SOURCE)/count_monitors.sh"
 	CONFIG_NUM_MONITORS=$("$NUM_MONITORS_EXEC")
 	if [ $CONFIG_NUM_MONITORS -ge 2 ]; then
