@@ -73,7 +73,7 @@ if not sys.argv[1]:
     sys.exit(0)
 
 try:
-    cities = []
+    cities = [ City("GMT", "GMT", "-0.000000", "-0.000000", "-", "false") ]
     for city_name in sys.argv[1].split(':'):
         if city_name[0] == '~':
             current = True
