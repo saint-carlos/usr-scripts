@@ -159,8 +159,11 @@ config: ${ALL_CONFIG_VARS} # upgrade or create a config file from the default se
 ${SED_SCRIPT}: ${ALL_CONFIG_VARS}
 	${BUILD}/make_sed_commands.sh ${ALL_CONFIG_VARS} > ${SED_SCRIPT}
 
+tgt:
+	mkdir $@
+
 tmpfile = $(subst tgt/,tmp/,$1)
-tgt/%: src/% ${USER_CONFIG_VARS} ${SED_SCRIPT}
+tgt/%: src/% ${USER_CONFIG_VARS} ${SED_SCRIPT} tgt
 	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
 	cp -f $< "$(call tmpfile,$@)"
 	${BUILD}/binary $@ || sed -i -f ${SED_SCRIPT} "$(call tmpfile,$@)"
