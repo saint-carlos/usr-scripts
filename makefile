@@ -20,6 +20,8 @@ insrc = $(patsubst src/%, %, $1)
 srcfiles = $(call insrc,$(call findsrc,$1))
 
 LUSER_FILES :=			\
+	bin/urlencode bin/urldecode \
+	bin/pssh		\
 	bin/quien		\
 	bin/allfiles		\
 	bin/ascii		\
@@ -368,6 +370,7 @@ ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
 		whois		\
+		nodejs		\
 		jq		\
 		socat		\
 		moreutils	\
