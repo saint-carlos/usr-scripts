@@ -52,7 +52,7 @@ if $CONFIG_DESKTOP && grep LinuxMint /etc/lsb-release &>/dev/null; then
 	NUM_MONITORS_EXEC="$(dirname $BASH_SOURCE)/count_monitors.sh"
 	CONFIG_NUM_MONITORS=$("$NUM_MONITORS_EXEC")
 	if [ $CONFIG_NUM_MONITORS -ge 2 ]; then
-		CONFIG_DCONF_PANEL_OBJ_IDS="['m0-menu-bar', 'm0-workspace-switcher', 'm0-window-list', 'm0-multiload', 'm0-notification-area', 'm0-clock', 'm1-window-list']"
+		CONFIG_DCONF_PANEL_OBJ_IDS="['m0-menu-bar', 'm0-workspace-switcher', 'm0-window-list', 'm0-multiload', 'm0-notification-area', 'm0-clock', 'm1-window-list', 'm1-clock']"
 		CONFIG_DCONF_PANEL_TOPLEVEL_OBJS="['m0-bottom', 'm1-bottom']"
 	else
 		CONFIG_DCONF_PANEL_OBJ_IDS="['m0-menu-bar', 'm0-workspace-switcher', 'm0-window-list', 'm0-multiload', 'm0-notification-area', 'm0-clock']"
