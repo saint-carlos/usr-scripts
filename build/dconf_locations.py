@@ -29,9 +29,7 @@ def get_city(root, name, current=False):
             break
     if not tz_hint:
         raise Exception("no timzeone found for city '{}'".format(name))
-    code = root.find(prefix + "location/code").text
-    if not code:
-        raise Exception("city '{}' not found".format(name))
+    code = "-"
     latitude, longitude = root.find(prefix + "coordinates").text.split()
     return City(name, tz_hint, latitude, longitude, code, current)
 
