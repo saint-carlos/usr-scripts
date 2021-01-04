@@ -216,7 +216,7 @@ ${USER_CONFIG_VARS}: ${DEFAULT_CONFIG_FILE} ${THIS_MAKEFILE}
 	mkdir -p $(dir $@)
 	grep -v '+=' $< | cut -d= -f1 -s | sort -u > $@
 
-${ALL_CONFIG_VARS}: ${CONFIG_FILE}
+${ALL_CONFIG_VARS}: ${CONFIG_FILE} ${BUILD}/config_allvars.sh ${BUILD}/config_dump_vals.sh
 	bash ${BUILD}/config_dump_vals.sh \
 		${BUILD}/config_allvars.sh ${CONFIG_FILE} > $@.tmp
 	mv $@.tmp $@
