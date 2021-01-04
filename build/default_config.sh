@@ -74,6 +74,11 @@ CONFIG_LANGUAGES="us"
 CONFIG_DESKTOP_DIR=".desktop"
 # personal temporary directory, also used for downloads
 CONFIG_HOME_TMP_DIR="tmp"
+# theme
+CONFIG_WINDOW_MANAGER_THEME="ClearlooksRe"
+CONFIG_GTK_THEME="Mint-Y-Dark-Teal"
+CONFIG_ICON_THEME="menta"
+CONFIG_TITLEBAR_FONT="Sans Bold 12"
 # enable or disable specific startup applications
 # colon separated; pick from /etc/xdg/autostart and /usr/share/applications
 # unlisted applications will be left untouched
