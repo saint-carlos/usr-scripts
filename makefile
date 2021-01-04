@@ -367,7 +367,6 @@ progs: ${ALL_CONFIG_VARS}
 		whois		\
 		jq		\
 		socat		\
-		python3.5 python3-pip \
 		moreutils	\
 		man-db		\
 		htop		\
@@ -384,7 +383,7 @@ progs: ${ALL_CONFIG_VARS}
 		elfutils	\
 		binutils	\
 		dwarves		\
-		tcl8.5		\
+		tcl		\
 		curl		\
 		nmap		\
 		netcat-openbsd	\
@@ -431,6 +430,10 @@ progs: ${ALL_CONFIG_VARS}
 		rxvt-unicode	\
 	; fi
 	if ${CONFIG_DESKTOP}; then \
+		apt-get install cfv \
+		|| apt-get install cksfv \
+	; fi
+	if ${CONFIG_DESKTOP}; then \
 		apt-get install gnome-genius \
 		|| apt-get install genius \
 	; fi
@@ -438,7 +441,7 @@ progs: ${ALL_CONFIG_VARS}
 		rm -rf /tmp/$(PROJECT)/deb && \
 		mkdir -p /tmp/$(PROJECT)/deb && \
 		cd /tmp/$(PROJECT)/deb && \
-		wget "https://remarkableapp.github.io/files/remarkable_1.62_all.deb" && \
+		wget "https://remarkableapp.github.io/files/remarkable_1.87_all.deb" && \
 		apt install ./* \
 	; fi
 	if ${CONFIG_MINT}; then apt-get install \
