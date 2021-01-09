@@ -41,6 +41,6 @@ NEW_FILE="${OLD_FILE}-$(timestamp)"
 
 service rsyslog stop
 $KEEP && return
-rm ${OLD_FILE}-*
+rm ${OLD_FILE}*
 [ -e "$OLD_FILE" ] && mv "$OLD_FILE" "$NEW_FILE" && echo "message file saved to $NEW_FILE"
 service rsyslog start
