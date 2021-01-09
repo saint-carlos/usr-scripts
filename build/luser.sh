@@ -150,6 +150,8 @@ install()
 		ln -sf "$CONFIG_ETC/colordiffrc" @@@
 	safe_replace $HOME/.config/htop/htoprc \
 		ln -sf "$CONFIG_ETC/htoprc" @@@
+	safe_replace $HOME/.gdbinit \
+		ln -sf "$CONFIG_ETC/gdbinit" @@@
 	safe_replace $HOME/.inputrc \
 		ln -sf "$CONFIG_ETC/inputrc" @@@
 
@@ -252,6 +254,7 @@ uninstall()
 	rmsource $HOME/.vimrc
 	rmsource $HOME/.screenrc
 	restore_backup $HOME/.inputrc
+	restore_backup $HOME/.gdbinit
 	restore_backup $HOME/.config/htop/htoprc
 	restore_backup $HOME/.colordiffrc
 	restore_backup $HOME/.gitconfig
