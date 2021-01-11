@@ -9,13 +9,17 @@
             mousewheel_scrolls = "true" 
             open_recent_list_maxsize = "0" 
             place_dialogs_under_mouse = "false" 
+            clipboard_selection = "1" 
             save_window_positions = "true" 
             tools_restore_state = "true" 
             file_ops.enable_in_place_rename = "false" 
             file_ops.confirm_delete = "true" 
+            file_ops.confirm_move_to_trash = "true" 
             file_ops.enable_delete_key = "true" 
+            file_ops.use_system_trash = "true" 
             file_ops.safe_delete_enable = "false" 
             properties.tabs_order = "" 
+            file_ops.no_trash = "false" 
             image.zoom_mode = "1" 
             image.zoom_2pass = "true" 
             image.zoom_to_fit_allow_expand = "true" 
@@ -42,7 +46,8 @@
             thumbnails.use_exif = "false" 
             file_sort.method = "1" 
             file_sort.ascending = "true" 
-            file_sort.case_sensitive = "false" 
+            file_sort.case_sensitive = "true" 
+            file_sort.natural = "false" 
             fullscreen.screen = "-1" 
             fullscreen.clean_flip = "false" 
             fullscreen.disable_saver = "true" 
@@ -82,4 +87,38 @@
             stereo.enable_fsmode = "false" >
 
     </global>
+
+
+    <layout
+        id = "main" 
+        style = "0" 
+        order = "123" 
+        dir_view_type = "0" 
+        file_view_type = "0" 
+        show_marks = "false" 
+        show_file_filter = "false" 
+        show_thumbnails = "false" 
+        show_directory_date = "false" 
+        home_path = "" 
+        startup_path = "0" 
+
+        main_window.maximized = "true" 
+
+        properties_window.w = "0" 
+        properties_window.h = "0" 
+
+        tools_float = "false" 
+        tools_hidden = "false" 
+
+        toolbar_hidden = "true" 
+
+        bars_state.info = "false" 
+        bars_state.sort = "false" 
+        bars_state.tools_float = "false" 
+        bars_state.tools_hidden = "false" 
+        bars_state.hidden = "false" 
+
+        animate = "true" >
+
+    </layout>
 </gq>
