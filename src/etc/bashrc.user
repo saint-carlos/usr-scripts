@@ -58,6 +58,7 @@ __NOUNDERLINE="$(tput rmul)"
 __STANDOUT="$(tput smso)"
 __NOSTANDOUT="$(tput rmso)"
 __PROMPT_ERROR_COLOR="$(__color_seq red)"
+__PROMPT_NEWLINE_COLOR="$(__color_seq cyan)"
 if [ -n "${SSH_CLIENT-}" ]; then
 	__MAKE_UNDERLINE='\['"$__UNDERLINE"'\]'
 	__MAKE_NOUNDERLINE='\['"$__NOUNDERLINE"'\]'
@@ -98,10 +99,12 @@ __set_missing_newline_fix()
 	echo -en "\E[6n" # ANSI DSR
 	read -sdR CURPOS
 	CURPOS=${CURPOS#*;}
+	__PROMPT_NEWLINE_COLOR_SET=""
 	if [ $CURPOS -eq 1 ]; then
 		__MISSING_NEWLINE_FIX=""
 	else
 		__MISSING_NEWLINE_FIX="$__PROMPT_NEWLINE"
+		__PROMPT_NEWLINE_COLOR_SET="$__PROMPT_NEWLINE_COLOR"
 	fi
 }
 
@@ -181,7 +184,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="${__PROMPT_COLOR_SET}\${__MISSING_NEWLINE_FIX}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="\[\${__PROMPT_NEWLINE_COLOR_SET}\]\${__MISSING_NEWLINE_FIX}${__PROMPT_COLOR_SET}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION_ROOT}\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
