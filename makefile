@@ -423,6 +423,7 @@ progs: ${ALL_CONFIG_VARS}
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
+		retext		\
 		geeqie		\
 		vlc		\
 		kupfer		\
