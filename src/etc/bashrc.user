@@ -96,8 +96,8 @@ __PROMPT_NEWLINE=$'\nV '
 __set_missing_newline_fix()
 {
 	local CURPOS
-	echo -en "\E[6n" # ANSI DSR
-	read -sdR CURPOS
+	echo -en "\033[6n" # ANSI DSR
+	read -s -d R CURPOS
 	CURPOS=${CURPOS#*;}
 	__PROMPT_NEWLINE_COLOR_SET=""
 	if [ $CURPOS -eq 1 ]; then
