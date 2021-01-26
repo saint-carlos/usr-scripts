@@ -369,6 +369,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
+		html2text	\
 		whois		\
 		nodejs		\
 		jq		\
