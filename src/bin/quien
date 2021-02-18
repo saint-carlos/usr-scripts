@@ -59,13 +59,13 @@ get_org()
 
 dig_up()
 {
+	echo "z: $OBJECT"
 	dig +short "$@" | sed 's/^/z: /'
 }
 
 query()
 {
 	local -r OBJECT="$1"
-	printf "z: %s\n" "$OBJECT"
 	if is_ip "$OBJECT"; then
 		get_org "$OBJECT"
 		dig_up -x "$OBJECT"
