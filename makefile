@@ -426,6 +426,7 @@ progs: ${ALL_CONFIG_VARS}
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
+		id3v2		\
 		retext		\
 		geeqie		\
 		vlc		\
