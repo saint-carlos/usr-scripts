@@ -66,15 +66,18 @@ dig_up()
 query()
 {
 	local -r OBJECT="$1"
+	local RC=0
 	if is_ip "$OBJECT"; then
-		get_org "$OBJECT"
-		dig_up -x "$OBJECT"
+		get_org "$OBJECT" || RC=1
+		dig_up -x "$OBJECT" || RC=1
 	else
-		get_org "$OBJECT" || true
-		local IP=$(dig_ip "$@")
-		get_org "$IP"
-		dig_up "$OBJECT"
+		get_org "$OBJECT" || RC=1
+		local IP
+		IP=$(dig_ip "$@") || RC=1
+		get_org "$IP" || RC=1
+		dig_up "$OBJECT" || RC=1
 	fi
+	return $RC
 }
 
 while getopts h OPTION; do
