@@ -302,6 +302,7 @@ ifneq ($(shell which yum),)
 progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and in general for power users
 	yum install epel-release
 	yum install 		\
+		dos2unix	\
 		jq		\
 		socat		\
 		python36 python34-pip \
@@ -369,6 +370,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
+		dos2unix	\
 		html2text	\
 		whois		\
 		nodejs		\
