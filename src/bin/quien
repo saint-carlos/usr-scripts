@@ -62,7 +62,6 @@ get_org()
 
 dig_up()
 {
-	echo "z: $OBJECT"
 	dig +short "$@" | sed 's/^/z: /'
 }
 
@@ -70,6 +69,7 @@ query()
 {
 	local -r OBJECT="$1"
 	local RC=0
+	printf "A: %s\n" "$OBJECT"
 	if is_ip "$OBJECT"; then
 		get_org "$OBJECT" || RC=1
 		dig_up -x "$OBJECT" || RC=1
@@ -96,8 +96,8 @@ if [ $# -eq 0 ]; then
 fi
 
 for OBJECT in "$@"; do
-	query "$OBJECT"
-done \
+	query "$OBJECT" \
 	| sort -u \
 	| sed 's/  */ /g' \
 	| column -s : -t
+done
