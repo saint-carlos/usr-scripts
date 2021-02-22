@@ -36,6 +36,9 @@ bind "set match-hidden-files off"
 bind "set visible-stats on"
 bind "set completion-prefix-display-length 5"
 bind "set skip-completed-text on"
+# Alt + arrows for whitespace-separated words, Ctrl + arrows for any word
+bind '"\e[1;3C":vi-fWord'
+bind '"\e[1;3D":vi-bWord'
 
 export LESS='--LONG-PROMPT --RAW-CONTROL-CHARS --ignore-case --window=-4 --jump-target=4 -PM?f"%f":<PIPE>. | ln %lt-%lb?L/%L. | pg %db?B/%D.?e | 100\% (END):?pm | %Pm\%..'
 export GREP_COLORS="fn=35;1" # grep filename color is brighter
