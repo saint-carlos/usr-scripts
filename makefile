@@ -137,6 +137,7 @@ endif
 
 SUPER_FILES :=			\
 	etc/rsyslog.conf	\
+	etc/sudoers		\
 $(call srcfiles,		\
 	sbin/			\
 )

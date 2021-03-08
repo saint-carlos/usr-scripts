@@ -77,6 +77,9 @@ do_install()
 	# we can't link it because rsyslog is stupid
 	safe_replace /etc/rsyslog.conf \
 		cp "$CONFIG_ETC/rsyslog.conf" @@@
+
+	safe_install /etc/sudoers.d/98-${PROJECT} \
+		install -m 0440 "$CONFIG_ETC/sudoers" @@@
 }
 
 do_uninstall()
@@ -84,6 +87,7 @@ do_uninstall()
 	[ $UID -eq 0 ] || return 1
 
 	restore_backup /etc/rsyslog.conf
+	rm -f /etc/sudoers.d/98-${PROJECT}
 }
 
 do_mksudo()

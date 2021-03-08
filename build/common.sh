@@ -122,6 +122,18 @@ safe_edit()
 	rmbackup "$DST"
 }
 
+safe_install()
+{
+	local DST="$1"
+	shift
+	ensure_dir "$DST" || return 1
+	if [ -f "$DST" ]; then
+		echo "cannot install $DST" >&2
+		exit 2
+	fi
+	"${@/@@@/$DST}" || return 1
+}
+
 install_optional_dir()
 {
 	mkdir -p "$@"
