@@ -80,6 +80,10 @@ do_install()
 
 	safe_install /etc/sudoers.d/98-${PROJECT} \
 		install -m 0440 "$CONFIG_ETC/sudoers" @@@
+
+	safe_install /etc/sysctl.d/98-${PROJECT}.conf \
+		ln -sf "$CONFIG_ETC/sysctl.conf" @@@
+	sysctl --system
 }
 
 do_uninstall()
@@ -88,6 +92,9 @@ do_uninstall()
 
 	restore_backup /etc/rsyslog.conf
 	rm -f /etc/sudoers.d/98-${PROJECT}
+
+	rm -f /etc/sysctl.d/98-${PROJECT}.conf
+	sysctl --system
 }
 
 do_mksudo()
