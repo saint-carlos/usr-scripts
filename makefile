@@ -137,6 +137,7 @@ endif
 
 SUPER_FILES :=			\
 	etc/rsyslog.conf	\
+	etc/grub		\
 	etc/sudoers		\
 	etc/sysctl.conf		\
 $(call srcfiles,		\

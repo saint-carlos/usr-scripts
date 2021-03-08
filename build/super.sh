@@ -84,11 +84,18 @@ do_install()
 	safe_install /etc/sysctl.d/98-${PROJECT}.conf \
 		ln -sf "$CONFIG_ETC/sysctl.conf" @@@
 	sysctl --system
+
+	safe_replace /etc/default/grub \
+		ln -sf "$CONFIG_ETC/grub" @@@
+	update-grub
 }
 
 do_uninstall()
 {
 	[ $UID -eq 0 ] || return 1
+
+	restore_backup /etc/default/grub
+	update-grub
 
 	restore_backup /etc/rsyslog.conf
 	rm -f /etc/sudoers.d/98-${PROJECT}
