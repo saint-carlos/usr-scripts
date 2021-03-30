@@ -70,7 +70,7 @@ remove_user_from_group()
 	return 0
 }
 
-install()
+do_install()
 {
 	[ $UID -eq 0 ] || return 1
 
@@ -79,14 +79,14 @@ install()
 		cp "$CONFIG_ETC/rsyslog.conf" @@@
 }
 
-uninstall()
+do_uninstall()
 {
 	[ $UID -eq 0 ] || return 1
 
 	restore_backup /etc/rsyslog.conf
 }
 
-mksudo()
+do_mksudo()
 {
 	[ $UID -eq 0 ] || return 1
 
@@ -97,7 +97,7 @@ mksudo()
 		add_user_to_group $CONFIG_USER_NAME
 }
 
-rmsudo()
+do_rmsudo()
 {
 	[ $UID -eq 0 ] || return 1
 
@@ -107,4 +107,4 @@ rmsudo()
 	remove_user_from_group $CONFIG_USER_NAME $ADM_GROUP
 }
 
-"$FUNCTION"
+"do_${FUNCTION}"

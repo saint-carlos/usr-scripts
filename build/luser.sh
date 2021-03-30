@@ -142,7 +142,7 @@ make_dmutable()
 	return 0
 }
 
-install()
+do_install()
 {
 	safe_replace $HOME/.gitconfig \
 		ln -sf "$CONFIG_ETC/gitconfig" @@@
@@ -216,7 +216,7 @@ install()
 	install_optional_dir "$CONFIG_WORKSPACE"
 }
 
-uninstall()
+do_uninstall()
 {
 	rm -f "$CONFIG_SHARE/hebrew.txt"
 
@@ -266,7 +266,7 @@ dconf_sync()
 	dconf "$@"
 }
 
-install_desktoprefresh()
+do_install_desktoprefresh()
 {
 	if $CONFIG_MINT; then
 		BACKUP_FILE=$(make_backup_filename $HOME/.config/dconf/user)
@@ -286,7 +286,7 @@ install_desktoprefresh()
 	fi
 }
 
-uninstall_desktoprefresh()
+do_uninstall_desktoprefresh()
 {
 	if $CONFIG_MINT; then
 		BACKUP_FILE=$(make_backup_filename $HOME/.config/dconf/user)
@@ -317,7 +317,7 @@ extract()
 	popd
 }
 
-install_desktopinit()
+do_install_desktopinit()
 {
 	local DIR="tmp/desktopinit"
 	mkdir -p "$DIR" || return 1
@@ -346,4 +346,4 @@ install_desktopinit()
 	rm -rf "$DIR"
 }
 
-"$FUNCTION"
+"do_${FUNCTION}"
