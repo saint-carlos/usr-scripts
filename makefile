@@ -370,6 +370,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	apt-get install 	\
+		peco		\
 		dos2unix	\
 		html2text	\
 		whois		\
