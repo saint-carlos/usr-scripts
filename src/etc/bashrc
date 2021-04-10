@@ -27,7 +27,7 @@ alias mkdir='mkdir -p'
 
 # careful
 alias cp="cp -i $__COREUTILS_FLAGS"
-alias rm="rm -i $__COREUTILS_FLAGS"
+alias rm="rm -i $__COREUTILS_FLAGS --one-file-system --preserve-root"
 alias mv="mv -i $__COREUTILS_FLAGS"
 alias ln="ln -i $__COREUTILS_FLAGS"
 
