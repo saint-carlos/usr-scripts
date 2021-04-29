@@ -389,6 +389,7 @@ progs: ${ALL_CONFIG_VARS}
 		man-db		\
 		htop		\
 		tree		\
+		whois		\
 		tcpdump		\
 		wget		\
 		linux-tools-common \
