@@ -84,6 +84,7 @@ LUSER_FILES :=			\
 	bin/invim		\
 	bin/mktags		\
 	bin/getenv		\
+	bin/wless		\
 	etc/bash_completion	\
 	etc/inputrc		\
 	etc/bashrc		\

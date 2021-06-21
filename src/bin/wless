@@ -1,0 +1,57 @@
+#!/bin/bash
+
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="word-wrapping less"
+declare -r PARAMS=""
+declare -r OPTIONS="[-hg] | [-w width] [-- less-flags...]"
+declare -r TTY_COLUMNS="$(tput cols)"
+declare COLUMNS="$TTY_COLUMNS"
+
+set -o pipefail -o errexit -o nounset
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+folds & pages input from stdin.
+
+options:
+-h	help: show this help message and exit.
+-g	debug: print diagnostics.
+-w	width: wrap at a specific column width.
+EOF
+
+	exit $1
+}
+
+diagnostics()
+{
+	cat << EOF
+current TTY has $TTY_COLUMNS columns.
+folding by width of $COLUMNS columns.
+EOF
+}
+
+run()
+{
+	fold --spaces --width "$COLUMNS" | less "$@"
+}
+
+declare MODE=run
+while getopts hgw: OPTION; do
+	case $OPTION in
+		h) usage 0 ;;
+		w) COLUMNS="$OPTARG" ;;
+		g) MODE=diagnostics ;;
+		-) ARGS+=("-$OPTION"); if [[ -v OPTARG ]]; then ARGS+=("$OPTARG"); fi ;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+"$MODE" "$@" "${ARGS[@]}"
