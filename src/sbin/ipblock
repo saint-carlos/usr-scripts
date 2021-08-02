@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/bash -p
 
 PROGRAM=$(basename $0)
 DESCRIPTION="block or unblock an IP"
 PARAMS="IP..."
 OPTIONS="[-hu] [-i | -o]"
+
+set -o privileged
 
 usage()
 {

@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/bash -p
 
 PROGRAM=$(basename $0)
 DESCRIPTION="reset the system log file"
 PARAMS=""
 OPTIONS="[-hk]"
+
+set -o privileged
 
 usage()
 {

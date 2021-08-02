@@ -1,6 +1,8 @@
-#!/bin/bash
+#!/bin/bash -p
 
-set -xe
+set -o xtrace
+set -o errexit nounset
+set -o privileged
 
 [ $# -eq 2 ] || exit 1
 FUNCTION="$1"

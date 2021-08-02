@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/bash -p
 
 PROGRAM=$(basename $0)
 DESCRIPTION="remap a port to another pot"
 PARAMS="listening-port target-port"
 OPTIONS="[-hu]"
+
+set -o privileged
 
 usage()
 {
