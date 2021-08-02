@@ -5,6 +5,9 @@ use_dae=TRUE
 [alsa]
 mixer-element=Master
 
+[amidiplug]
+fsyn_soundfont_file=/usr/share/sounds/sf2/default-GM.sf2;/usr/share/sounds/sf2/TimGM6mb.sf2;/usr/share/sounds/sf2/FluidR3_GS.sf2;/usr/share/sounds/sf2/FluidR3_GM.sf2
+
 [audacious]
 chardet_fallback=UTF-8,ISO-8859-1
 clear_playlist=TRUE

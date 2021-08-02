@@ -436,6 +436,7 @@ progs: ${ALL_CONFIG_VARS}
 		bash		\
 		make
 	if ${CONFIG_DESKTOP}; then apt-get install \
+		fluid-soundfont-gm fluid-soundfont-gs timgm6mb-soundfont \
 		id3v2		\
 		retext		\
 		geeqie		\
