@@ -6,7 +6,7 @@ use_dae=TRUE
 mixer-element=Master
 
 [audacious]
-chardet_fallback=
+chardet_fallback=UTF-8,ISO-8859-1
 clear_playlist=TRUE
 close_dialog_open=TRUE
 close_jtf_dialog=TRUE
