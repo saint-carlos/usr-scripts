@@ -77,10 +77,11 @@ query()
 		dig_up -x "$OBJECT" || RC=1
 	else
 		get_org "$OBJECT" || RC=1
+		dig_up "$OBJECT" || RC=1
 		local IP
 		IP=$(dig_ip "$@") || RC=1
 		get_org "$IP" || RC=1
-		dig_up "$OBJECT" || RC=1
+		dig_up -x "$IP" || RC=1
 	fi
 	return $RC
 }
