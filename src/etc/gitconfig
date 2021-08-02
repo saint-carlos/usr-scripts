@@ -58,7 +58,7 @@
 	hstat = log -1 --pretty=neat --date=short --decorate=full
 	vomit = commit --verbose
 	indiff = diff --cached
-	cdiff = diff --color-words=.
+	cdiff = diff --color-words="([a-zA-Z0-9]+)|."
 	hreset = reset --hard
 	amend = commit --verbose --amend -a
 	inspect = log --reverse --patch-with-stat --summary -U50
