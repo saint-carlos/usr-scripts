@@ -15,8 +15,8 @@
 	log = wless -- -cR --pattern '^(commit|diff --git)' +1
 	diff = ifne wless -- -cR --pattern '^(diff --git)' +1
 	llog = wless -- -cR
-	hstat = false
-	cmessage = false
+	hstat = true
+	cmessage = true
 
 [merge]
 	tool = bc3
