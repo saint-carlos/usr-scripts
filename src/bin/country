@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="map between country and country code"
+declare -r PARAMS="search-term..."
+declare -r OPTIONS="[-ahl]"
+declare -r DB=CONFIG_SHARE/countries.csv
+declare -r SEARCH_ALL=false
+declare -r PERL_REGEXP=$(if grep --version | grep -q GNU; then /bin/echo --perl-regexp; else /bin/echo -E; fi)
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+any two-letter search term is used as a country code to search, unless -a is given.
+the search is case-insensitive.
+
+the data base is found in:
+$DB
+and is sourced from:
+https://pkgstore.datahub.io/core/country-list/data_csv/data/d7c9d7cfb42cb69f4422dec222dbbaa8/data_csv.csv
+
+options:
+-a	all: search either a country name or a code, even if the code is just 2 letters.
+-h	help: show this help message and exit.
+-l	list: just list all countries.
+
+exit status:
+0	if all arguments are OK
+1	if no country was not found
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+process_db()
+{
+	# the first 'tr' is a poor man's dos2unix(1), which we want to avoid
+	# depending on since it's not installed by default on MacOS
+	cat "$DB" \
+		| tr -d "\r" \
+		| sed 's/\(.*\),\([A-Z][A-Z]\)$/\2: \1/' \
+		| tr -d '"' \
+		| tail -n +2
+}
+
+list()
+{
+	process_db
+}
+
+main()
+{
+	if [ $# -eq 0 ]; then
+		return 0
+	fi
+	local PATTERN=""
+	local OR=""
+	for ARG in "$@"; do
+		if [[ "$ARG" =~ ^[A-Z][A-Z]$ ]]; then
+		    PATTERN+="${OR}(^${ARG}:)"
+		elif ! $SEARCH_ALL && [[ "$ARG" =~ ^[a-z][a-z]$ ]]; then
+		    PATTERN+="${OR}(^$(echo "$ARG" | tr a-z A-Z):)"
+		else
+		    PATTERN+="${OR}((?i)${ARG})"
+		fi
+		OR='|'
+	done
+	process_db | grep $PERL_REGEXP "$PATTERN"
+}
+
+while getopts ahl OPTION; do
+	case $OPTION in
+		a) SEARCH_ALL=true ;;
+		h) usage 0 ;;
+		l) list; exit $?;;
+		\?) usage 2 ;;
+	esac
+done
+shift $((OPTIND - 1))
+
+main "$@"

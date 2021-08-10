@@ -39,6 +39,7 @@ LUSER_FILES :=			\
 	bin/dec			\
 	bin/errcho		\
 	bin/errno		\
+	bin/country		\
 	bin/httpc		\
 	bin/extract		\
 	bin/ff			\
@@ -97,6 +98,7 @@ LUSER_FILES :=			\
 	etc/screenrc		\
 	etc/vimrc		\
 	etc/htoprc		\
+	share/countries.csv	\
 	share/http.db		\
 $(call srcfiles,		\
 	lib/vim/		\
