@@ -1,17 +1,12 @@
 #!/bin/bash
 
-# AUTHOR:	(c) idank
-# VERSION:	1.0
-# LICENSE:	GPL (http://www.gnu.org/licenses/gpl.html)
-# REQUIRES: none
-# NAME:		color
-# DESCRIPTION: output stdin to stdout, in color
+set -o pipefail -o errexit -o nounset
 
-PROGRAM=$(basename $0)
-DESCRIPTION="output stdin to stdout, in color."
-PARAMS="color"
-OPTIONS="[-h]"
-ETC=CONFIG_ETC
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="output stdin to stdout, in color."
+declare -r PARAMS="color"
+declare -r OPTIONS="[-hls]"
+declare -r ETC=CONFIG_ETC
 
 usage()
 {
@@ -23,33 +18,72 @@ usage:
 $PROGRAM $OPTIONS $PARAMS
 printing is line-buffered.
 
+to use the terminal's normal color, use "normal", "" (empty string), or no argument at all.
+
 options:
+-s	switch: switch the terminal to a certain color and exit.
+-l	list: list available colors.
 -h	help: show this help message and exit.
 
 exit status:
-255	bad arguments
+2	bad arguments
 otherwise it is the same as the given command.
 EOF
 
 	exit $1
 }
 
-while getopts h OPTION; do
-	case OPTION in
+list_colors()
+{
+	printf "%s\n" "${!__COLOR[@]}"
+}
+
+get_color()
+{
+	if [ $# -gt 1 ]; then
+		return 1
+	elif [ "${1:-}" = "" ]; then
+		echo normal
+	elif list_colors | grep -qx --fixed-strings "$1"; then
+		echo "$1"
+	else
+		return 1
+	fi
+}
+
+switch_tty_color()
+{
+	__color_seq "$1"
+}
+
+color_filter()
+{
+	# the simplistic implementation would be
+	# __color_seq <color>; cat; __color_seq normal
+	# however, we only want to colorize one stream - our stdout. other streams may
+	# be intermingled and multiplexed to the terminal. nothing sophisticated is
+	# implemented at the moment, but a good approximation is that every line
+	# belongs to one stream, so we color our output line-by-line.
+	sed "s/^.*$/$(__color_seq "$1")&$(__color_seq normal)/"
+}
+
+declare MODE=""
+while getopts hls OPTION; do
+	case "$OPTION" in
+		s|l) MODE="$OPTION" ;;
 		h) usage 0 ;;
-		\?) usage 255 ;;
+		\?) usage 2 ;;
 	esac
 done
 shift $((OPTIND - 1))
 
-[ $# -eq 1 ] || usage 255
-
+declare COLOR
 source "$ETC/colorsrc"
+COLOR=$(get_color "$@") || usage 2
 
-# the simplistic implementation would be
-# __color_seq <color>; cat; __color_seq normal
-# however, we only want to colorize one stream - our stdout. other streams may
-# be intermingled and multiplexed to the terminal. nothing sophisticated is
-# implemented at the moment, but a good approximation is that every line
-# belongs to one stream, so we color our output line-by-line.
-sed "s/^.*$/$(__color_seq "$1")&$(__color_seq normal)/"
+case "$MODE" in
+	s) switch_tty_color "$COLOR" ;;
+	l) list_colors ;;
+	"") color_filter "$COLOR" ;;
+	*) usage 2 ;;
+esac
