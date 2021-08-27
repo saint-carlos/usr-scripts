@@ -49,7 +49,6 @@ get_org()
 {
 	{ whois "$@" || whois -I "$@"; } | grep -i \
 		-e "^org.*name" \
-		-e "^orgid" \
 		-e "^organi[sz]ation" \
 		-e "^netname" \
 		-e "^descr" \
@@ -59,7 +58,8 @@ get_org()
 		-e "^ownerid" \
 		-e "^Registrant Name" \
 		-e "^Registrant Organization" \
-		-e "^Registrant Country"
+		-e "^Registrant Country" \
+		| tr -d '\r'
 }
 
 dig_up()
