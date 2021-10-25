@@ -47,7 +47,7 @@ is_ip()
 
 get_org()
 {
-	{ whois "$@" || whois -I "$@"; } | grep -i \
+	{ whois -I "$@" || whois "$@"; } | grep -i \
 		-e "^org.*name" \
 		-e "^organi[sz]ation" \
 		-e "^netname" \
