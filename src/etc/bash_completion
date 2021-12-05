@@ -135,3 +135,12 @@ _vbox()
 	COMPREPLY=( $(compgen -W "$(vm -l)" -- "$2") )
 }
 complete -F _vbox vm
+
+_mw()
+{
+	if [ "${#2}" -lt 3 ]; then
+		return
+	fi
+	COMPREPLY=( $(compgen -W "$(grep "^${2}" CONFIG_LTR_DICTIONARIES)" -- "$2") )
+}
+complete -F _mw mw
