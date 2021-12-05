@@ -12,7 +12,7 @@ set tags+=./tags;	" tell vim to find ctags even if in a subdirectory.
 let mapleader = ","
 let maplocalleader = mapleader
 
-if &g:term ==# "rxvt-unicode"
+if &g:term =~# "rxvt-unicode"
 	" urxvt colors are ugly, but rxvt colors are like xterm colors
 	set term=rxvt
 
