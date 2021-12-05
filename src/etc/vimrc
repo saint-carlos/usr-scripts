@@ -13,9 +13,6 @@ let mapleader = ","
 let maplocalleader = mapleader
 
 if &g:term =~# "rxvt-unicode"
-	" urxvt colors are ugly, but rxvt colors are like xterm colors
-	set term=rxvt
-
 	" work around urxvt's Alt key issues
 	" need to map any Alt key combination we're going to use.
 	set <M-j>=j
