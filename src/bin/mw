@@ -34,4 +34,4 @@ while getopts h OPTION; do
 done
 shift $((OPTIND - 1))
 
-dict "$*" | colorit | less
+dict "$*" | colorit | less --quit-if-one-screen
