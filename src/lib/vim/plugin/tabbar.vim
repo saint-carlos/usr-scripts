@@ -383,7 +383,7 @@ function! <SID>Tb_Start(sticky, delBufNum)
         syn match Tb_Normal             '\[[^\]]*\]'
         syn match Tb_Changed            '\[[^\]]*\]+'
         syn match Tb_VisibleNormal      '\[[^\]]*\]\*'
-        syn match Tb_VisibleChanged     '\[[^\]]*\]&'
+        syn match Tb_VisibleNormal      '\[[^\]]*\]&'
 
         if !exists("g:did_tabbar_syntax_inits")
             let g:did_tabbar_syntax_inits = 1
