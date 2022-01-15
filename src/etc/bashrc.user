@@ -69,7 +69,7 @@ else
 	__MAKE_UNDERLINE=""
 	__MAKE_NOUNDERLINE=""
 fi
-if [ "$TERM" = "screen" ]; then
+if [[ "$TERM" =~ "screen" ]]; then
 	__MAKE_STANDOUT='\['"$__STANDOUT"'\]'
 	__MAKE_NOSTANDOUT='\['"$__NOSTANDOUT"'\]'
 else
