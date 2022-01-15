@@ -25,7 +25,7 @@ fi
 
 gopen()
 {
-	local -r FILE="$(readlink -f "$1")"
+	local -r FILE="$(realpath --no-symlinks "$1")"
 	gui xdg-open "file://$FILE"
 }
 
