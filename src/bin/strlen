@@ -1,9 +1,9 @@
 #!/bin/bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="return the length, in characters, of the argument"
-PARAMS=""
-OPTIONS="[-h]"
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="return the length, in characters, of the argument"
+declare -r PARAMS="text..."
+declare -r OPTIONS="[-hm]"
 
 usage()
 {
@@ -15,6 +15,7 @@ usage:
 $PROGRAM $OPTIONS $PARAMS
 
 options:
+-m	multiple: treat every argument as a separate string.
 -h	help: show this help message and exit.
 
 exit status:
@@ -25,13 +26,22 @@ EOF
 	exit $1
 }
 
-while getopts h OPTION; do
+declare MULTI=false
+while getopts hm OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
+		m) MULTI=true ;;
 		\?) usage 2 ;;
 	esac
 done
 shift $((OPTIND - 1))
-[ $# -eq 1 ] || usage 2
 
-echo -n "$1" | wc -c
+if $MULTI; then
+	while [ $# -gt 0 ]; do
+		printf "%d %s\n" "${#1}" "$1"
+		shift 1
+	done
+else
+	declare ARG="$*"
+	printf "%d\n" "${#ARG}"
+fi
