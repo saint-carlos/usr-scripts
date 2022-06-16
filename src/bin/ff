@@ -1,9 +1,9 @@
 #!/bin/bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="find a file by name pattern"
-PARAMS="name-pattern [where...]"
-OPTIONS="[-he0]"
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="find a file by name pattern"
+declare -r PARAMS="name-pattern [where...]"
+declare -r OPTIONS="[-hea0]"
 
 usage()
 {
@@ -17,6 +17,7 @@ $PROGRAM $OPTIONS $PARAMS
 options:
 -h	help: show this help message and exit.
 -e	exact: search for exact file name.
+-a	absolute: print absolute path.
 -0	null: terminate results with null instead of newline
 
 exit status:
@@ -24,21 +25,34 @@ exit status:
 otherwise, it is the exit status of 'find'.
 EOF
 
-    exit $1
+	exit $1
 }
 
-TEST=iname DECORATION="*"
-PRINT=""
-while getopts he0 OPTION; do
+declare TEST=iname
+declare DECORATION="*"
+declare NULL=false
+declare ABSOLUTE=false
+while getopts hea0 OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		e) TEST=name DECORATION="" ;;
-		0) PRINT="-print0" ;;
+		a) ABSOLUTE=true ;;
+		0) NULL=true ;;
 		\?) usage 255 ;;
 	esac
 done
 shift $((OPTIND - 1))
-WHAT="$1"
+if $NULL && $ABSOLUTE; then
+	declare -r PRINT="-exec readlink --zero -f {} ;"
+elif $ABSOLUTE; then
+	declare -r PRINT="-exec readlink -f {} ;"
+elif $NULL; then
+	declare -r PRINT="-print0"
+else
+	declare -r PRINT="-print"
+fi
+
+declare -r WHAT="$1"
 shift
 if [ $# -eq 0 ]; then
 	set .
