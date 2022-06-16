@@ -1,11 +1,17 @@
 #!/bin/bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="find the organization owning an IP/domain"
-PARAMS="<ip-address|domain-name>..."
-OPTIONS="[-h]"
-
 set -o pipefail -o errexit -o nounset
+
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="find the organization owning an IP/domain"
+declare -r PARAMS="<ip-address|domain-name>..."
+declare -r OPTIONS="[-h]"
+
+if [ "$(uname -s)" = 'Darwin' ]; then
+	WHOIS_ARGS=("-R")
+else
+	WHOIS_ARGS=()
+fi
 
 usage()
 {
@@ -25,7 +31,7 @@ exit status:
 2	usage error
 EOF
 
-    exit $1
+	exit $1
 }
 
 extract_ip()
@@ -35,7 +41,8 @@ extract_ip()
 
 dig_ip()
 {
-	dig +short "$@" \
+	[ "$1" != "" ] || return 1
+	timeout 3s dig +short "$@" \
 		| tail -n 1 \
 		| extract_ip
 }
@@ -45,44 +52,126 @@ is_ip()
 	echo "$1" | extract_ip -q
 }
 
-get_org()
+is_hostname()
 {
-	{ whois -I "$@" || whois "$@"; } | grep -i \
-		-e "^org.*name" \
-		-e "^organi[sz]ation" \
-		-e "^netname" \
-		-e "^descr" \
-		-e "^country" \
-		-e "^aut-num" \
-		-e "^owner" \
-		-e "^ownerid" \
-		-e "^Registrant Name" \
-		-e "^Registrant Organization" \
-		-e "^Registrant Country" \
+	[[ "$*" =~ \. ]]
+}
+
+ungrep_i()
+{
+	awk "
+		BEGIN	{ IGNORECASE=1; FOUND=0; }
+		/$1/	{ FOUND=1 }
+			{ print }
+		END	{ exit FOUND }
+	"
+}
+
+whois_exec()
+{
+	timeout 3s whois "${WHOIS_ARGS[@]}" "$@" 2>/dev/null | ungrep_i "no match"
+}
+
+get_registration()
+{
+	whois_exec "$@" \
+		| grep -i \
+			-e "^org.*name" \
+			-e "^organi[sz]ation" \
+			-e "^netname" \
+			-e "^descr" \
+			-e "^country" \
+			-e "^aut-num" \
+			-e "^owner" \
+			-e "^ownerid" \
+			-e "^Registrant Name" \
+			-e "^Registrant Organization" \
+			-e "^Registrant Country" \
 		| tr -d '\r'
 }
 
-dig_up()
+get_certificate()
 {
-	dig +short "$@" | sed 's/^/z: /'
+	timeout 3s openssl s_client \
+		-showcerts \
+		-servername "$DOMAIN" \
+		-connect "${DOMAIN}:443" \
+		-brief \
+		</dev/null 2>&1 \
+		| grep '^Peer certificate:' \
+		| grep -E -o \
+			-e '\<O = (("[^"]*")|([^,]*))' \
+			-e '\<CN = (("[^"]*")|([^,]*))' \
+			-e '\<C = (("[^"]*")|([^,]*))' \
+			-e '\<ST = (("[^"]*")|([^,]*))' \
+			-e '\<L = (("[^"]*")|([^,]*))' \
+			-e '\<businessCategory = (("[^"]*")|([^,]*))' \
+			-e '\<jurisdictionC = (("[^"]*")|([^,]*))' \
+			-e '\<jurisdictionST = (("[^"]*")|([^,]*))' \
+		| sed 's/ = /: /'
+}
+
+expand_domain()
+{
+	cut -d . -f 2- <<< "$1"
+}
+
+get_domain_org()
+{
+	local DOMAIN="$1"
+	local HAS_REGISTRATION=false HAS_CERTIFICATE=false HAS_IP=false
+	local RRC=3 RC
+	while is_hostname "$DOMAIN" && [ $RRC -gt 0 ]; do
+		if ! $HAS_REGISTRATION; then
+			RC=0
+			get_registration "$DOMAIN" | sed 's/:/: whois: /' || RC=1
+			if [ $RC -eq 0 ]; then
+				((RRC--))
+				HAS_REGISTRATION=true
+			fi
+		fi
+		if ! $HAS_IP; then
+			RC=0
+			dig +short "$DOMAIN" | sed 's/^/z: dns: /' || RC=1
+			if [ $RC -eq 0 ]; then
+				((RRC--))
+				HAS_IP=true
+			fi
+		fi
+		if ! $HAS_CERTIFICATE && $HAS_IP; then
+			RC=0
+			get_certificate "$DOMAIN" | sed 's/:/: cert: /' || RC=1
+			if [ $RC -eq 0 ]; then
+				((RRC--))
+				HAS_CERTIFICATE=true
+			fi
+
+		fi
+		DOMAIN=$(expand_domain "$DOMAIN")
+	done
+	return $RRC
+}
+
+reverse_dns()
+{
+	dig +short -x "$@"
 }
 
 query()
 {
 	local -r OBJECT="$1"
 	local RC=0
-	printf "A: %s\n" "$OBJECT"
+	printf "A: arg: %s\n" "$OBJECT"
 	if is_ip "$OBJECT"; then
-		get_org "$OBJECT" || RC=1
-		dig_up -x "$OBJECT" || RC=1
+		local -r IP="$OBJECT"
 	else
-		get_org "$OBJECT" || RC=1
-		dig_up "$OBJECT" || RC=1
+		local DOMAIN="$OBJECT"
+		get_domain_org "$DOMAIN" || RC=1
 		local IP
 		IP=$(dig_ip "$@") || RC=1
-		get_org "$IP" || RC=1
-		dig_up -x "$IP" || RC=1
 	fi
+	get_registration "$IP" | sed 's/:/: whois: /' || RC=1
+	reverse_dns "$IP" | sed 's/^/hostname: rdns: /' || RC=1
 	return $RC
 }
 
