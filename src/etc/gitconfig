@@ -49,7 +49,7 @@
 
 [alias]
 	brav = branch -avv
-	addpatch = add -p
+	addpatch = add --patch
 	llog = log --pretty=neat --date=short
 	rlog = log --pretty=relneat --date=short
 	clog = log --color-words=.
@@ -60,7 +60,7 @@
 	indiff = diff --cached
 	cdiff = diff --color-words="([a-zA-Z0-9]+)|."
 	hreset = reset --hard
-	amend = commit --verbose --amend -a
+	amend = commit --verbose --amend --all
 	inspect = log --reverse --patch-with-stat --summary -U50
 	review = show --patch-with-stat --summary -U50
 	cmessage = log -1 --format="%s%n%n%b"
