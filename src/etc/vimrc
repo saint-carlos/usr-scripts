@@ -286,6 +286,7 @@ nnoremap <S-Tab> :Tbbp<CR>
 "	FSwitch {{{
 
 let g:fsnonewfiles = 1
+let g:fsfullsearch = 1
 augroup FSwitch
 	autocmd!
 	autocmd Filetype c,cpp,h,hpp noremap <buffer> <C-h> :FSHere<CR>

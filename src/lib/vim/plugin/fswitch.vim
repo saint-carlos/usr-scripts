@@ -33,6 +33,12 @@ let s:os_slash = &ssl == 0 && (has("win16") || has("win32") || has("win64")) ? '
 " Default locations - appended to buffer locations unless otherwise specified
 let s:fswitch_global_locs = '.' . s:os_slash
 
+if exists("b:fsfullsearch") || exists("g:fsfullsearch")
+    let g:fswitchreg = 'reg:|.*|\*\*|'
+else
+    let g:fswitchreg = 'reg:|.*|\*|'
+endif
+
 "
 " s:SetVariables
 "
@@ -277,8 +283,8 @@ endfunction
 "
 augroup fswitch_au_group
     au!
-    au BufEnter *.h,*.hpp call s:SetVariables('c,cpp,cc', 'reg:|.*|\*\*|')
-    au BufEnter *.c,*.cpp,*.cc call s:SetVariables('h,hpp', 'reg:|.*|\*\*|')
+    au BufEnter *.h,*.hpp call s:SetVariables('c,cpp,cc', g:fswitchreg)
+    au BufEnter *.c,*.cpp,*.cc call s:SetVariables('h,hpp', g:fswitchreg)
 augroup END
 
 "
