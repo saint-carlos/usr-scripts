@@ -52,7 +52,7 @@
 	addpatch = add --patch
 	llog = log --pretty=neat --date=short
 	rlog = log --pretty=relneat --date=short
-	clog = log --color-words=.
+	clog = log --patch --color-words="([a-zA-Z0-9]+)|."
 	histogram = log --stat --summary
 	stat = show --stat --summary
 	hstat = log -1 --pretty=neat --date=short --decorate=full
