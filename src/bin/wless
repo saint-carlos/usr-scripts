@@ -39,7 +39,8 @@ EOF
 
 run()
 {
-	fold --spaces --width "$COLUMNS" | less "$@"
+	export LESSOPEN="$LESSOPEN | fold --spaces --width $COLUMNS"
+	exec less "$@"
 }
 
 declare MODE=run

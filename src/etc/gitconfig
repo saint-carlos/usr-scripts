@@ -7,16 +7,18 @@
 
 [core]
 	editor = vim
-	pager = wless -- -FXR
+	pager = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen
 	excludesfile = CONFIG_ETC/gitignore
 	whitespace = trailing-space,space-before-tab,indent-with-non-tab
 
 [pager]
-	log = wless -- -cR --pattern '^(commit|diff --git)' +1
-	diff = ifne wless -- -cR --pattern '^(diff --git)' +1
-	llog = wless -- -cR
-	hstat = true
-	cmessage = true
+	llog = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen
+	rlog = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen
+	siftlog = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen --pattern '^(commit|diff --git)' +1
+	siftdiff = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen --pattern '^(diff --git)' +1
+	stat = false
+	hstat = exec less --quit-if-one-screen --RAW-CONTROL-CHARS -+--no-init
+	cmessage = false
 
 [merge]
 	tool = bc3
@@ -65,6 +67,8 @@
 	review = show --patch-with-stat --summary -U50
 	cmessage = log -1 --format="%s%n%n%b"
 	ss = status --short
+	siftlog = log
+	siftdiff = diff
 
 [pretty]
 	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
