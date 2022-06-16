@@ -3,7 +3,7 @@
 PROGRAM=$(basename $0)
 DESCRIPTION="copy to/from clipboard."
 PARAMS="[input... | command...]"
-OPTIONS="[-hoiaxf]"
+OPTIONS="[-hoiaxfl]"
 
 usage()
 {
@@ -23,6 +23,7 @@ options:
 -a	arguments (default if has arguments): copy command line arguments to clipboard.
 -x	execution: execution the arguments as a command and direct output to clipbard.
 -f	filter: also echo copied input to stdout (see xclip -f).
+-l	line: put everything in one line and remove trailing newline.
 
 exit status:
 0	if all arguments are OK
@@ -30,17 +31,19 @@ exit status:
 2	if some arguments are bad
 EOF
 
-    exit $1
+	exit $1
 }
 
 declare -a XCLIP_ARGS=(-selection clipboard)
 declare MODE=""
+declare LINE=false
 
-while getopts hoiaxf OPTION; do
+while getopts hoiaxfl OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
 		o|i|a|x) MODE=$OPTION ;;
 		f) XCLIP_ARGS+=(-filter) ;;
+		l) LINE=true ;;
 		\?) usage 2 ;;
 	esac
 done
@@ -63,4 +66,7 @@ case "$MODE" in
 	x) XCLIP_ARGS+=(-in); declare OUT=$("$@"); exec < <(printf "%s" "$OUT"); set -- ;;
 	*) usage 2 ;;
 esac
+if "$LINE"; then
+	exec < <(xargs -d '\n' | tr -d '\n')
+fi
 exec xclip "${XCLIP_ARGS[@]}" "$@"
