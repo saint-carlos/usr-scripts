@@ -21,7 +21,7 @@
 	cmessage = false
 
 [merge]
-	tool = bc3
+	tool = vimdiff
 
 [mergetool "bc3"]
 	keepBackup = false
@@ -75,7 +75,7 @@
 	relneat = %C(cyan bold)%h %C(red bold)%ad %<(10,trunc)%ar %<(15,trunc)%an %Creset%s%C(cyan bold)%d
 
 [diff]
-	tool = bc3
+	tool = vimdiff
 	mnemonicprefix = true
 	renames = copy
 	algorithm = histogram
