@@ -19,6 +19,8 @@
 	stat = false
 	hstat = exec less --quit-if-one-screen --RAW-CONTROL-CHARS -+--no-init
 	cmessage = false
+	branch = exec ifne wless -- --RAW-CONTROL-CHARS --quit-if-one-screen -+--no-init
+	show-branch = true
 
 [merge]
 	tool = vimdiff
