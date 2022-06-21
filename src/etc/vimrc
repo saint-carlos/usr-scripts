@@ -29,6 +29,7 @@ nnoremap <M-k> gk
 set showcmd             " Show (partial) command in status line.
 set cmdheight=2		" height of the command line
 set number		" show line numbers
+set signcolumn=number	" if something uses the gutter, reuse the number column
 set showmode            " Show current mode.
 set nomodeline          " turns out to be very annoying
 set background=dark	" bright terminal colors
@@ -176,7 +177,14 @@ noremap <silent> <F7> :setlocal rightleft! \| setlocal hkmap!<CR>
 imap <F7> <C-o><F7>
 
 " interaction with other terminals
-noremap <silent> <F8> :setlocal paste! \| setlocal number!<CR>:TbToggle<CR>
+function GutterToggle()
+	if &signcolumn ==# "number"
+		set signcolumn=no
+	elseif &signcolumn ==# "no"
+		set signcolumn=number
+	endif
+endfunction
+noremap <silent> <F8> :setlocal paste! \| setlocal number!<CR>:TbToggle<CR>:call GutterToggle()<CR>
 imap <F8> <C-o><F8>
 
 " default readline bindings
