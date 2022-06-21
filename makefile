@@ -476,11 +476,15 @@ else
 ifneq ($(shell which brew),)
 progs: ${ALL_CONFIG_VARS}
 	brew install 	\
+		whois		\
+		openssl@1.1	\
+		tcptraceroute	\
+		watch		\
 		dos2unix	\
 		html2text	\
 		node		\
 		python		\
-		jq		\
+		jq yq		\
 		socat		\
 		grep		\
 		moreutils	\
@@ -500,7 +504,9 @@ progs: ${ALL_CONFIG_VARS}
 		screen		\
 		gcc		\
 		gawk		\
-		gsed		\
+		gnu-sed		\
+		gnu-tar		\
+		gnu-time	\
 		bc		\
 		p7zip		\
 		xz		\
@@ -511,6 +517,7 @@ progs: ${ALL_CONFIG_VARS}
 		ctags		\
 		colordiff	\
 		diffutils	\
+		gpatch		\
 		less lesspipe	\
 		findutils	\
 		vim		\
