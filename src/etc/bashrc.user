@@ -63,15 +63,15 @@ __NOSTANDOUT="$(tput rmso)"
 __PROMPT_ERROR_COLOR="$(__color_seq red)"
 __PROMPT_NEWLINE_COLOR="$(__color_seq cyan)"
 if [ -n "${SSH_CLIENT-}" ]; then
-	__MAKE_UNDERLINE="$__UNDERLINE"
-	__MAKE_NOUNDERLINE="$__NOUNDERLINE"
+	__MAKE_UNDERLINE='\['"$__UNDERLINE"'\]'
+	__MAKE_NOUNDERLINE='\['"$__NOUNDERLINE"'\]'
 else
 	__MAKE_UNDERLINE=""
 	__MAKE_NOUNDERLINE=""
 fi
 if [[ "$TERM" =~ "screen" ]]; then
-	__MAKE_STANDOUT="$__STANDOUT"
-	__MAKE_NOSTANDOUT="$__NOSTANDOUT"
+	__MAKE_STANDOUT='\['"$__STANDOUT"'\]'
+	__MAKE_NOSTANDOUT='\['"$__NOSTANDOUT"'\]'
 else
 	__MAKE_STANDOUT=""
 	__MAKE_NOSTANDOUT=""
