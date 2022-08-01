@@ -2,7 +2,7 @@
 
 declare -r PROGRAM=$(basename $0)
 declare -r DESCRIPTION="word-wrapping less"
-declare -r PARAMS=""
+declare -r PARAMS="[less-args...]"
 declare -r OPTIONS="[-hg] | [-w width] [-- less-flags...]"
 declare -r TTY_COLUMNS="$(tput cols)"
 declare WRAP_COLUMNS="$TTY_COLUMNS"
@@ -23,7 +23,7 @@ folds & pages input from stdin.
 options:
 -h	help: show this help message and exit.
 -g	debug: print diagnostics.
--w	width: wrap at a specific column width.
+-w	width: wrap at a specific column width. 0 means don't wrap.
 EOF
 
 	exit $1
@@ -31,24 +31,55 @@ EOF
 
 diagnostics()
 {
-	cat << EOF
-current TTY has $TTY_COLUMNS columns.
-folding by width of $WRAP_COLUMNS columns.
-EOF
+	echo "current TTY has $TTY_COLUMNS columns."
+	if cmd_exists lesspipe; then
+		echo "lesspipe: '$(command -v lesspipe)'."
+	else
+		echo "lesspipe not present."
+	fi
+	if [ "${WRAP_COLUMNS}" -gt 0 ]; then
+		echo "folding by width of $WRAP_COLUMNS columns."
+	else
+		echo "not folding."
+	fi
+}
+
+pipe()
+{
+	if [ -r "$1" ] && cmd_exists lesspipe; then
+		lesspipe "$@" | ifne -n cat "$@"
+	else
+		cat "$@"
+	fi
+}
+
+wrap()
+{
+	if [ "${WRAP_COLUMNS}" -gt 0 ]; then
+		fold --spaces --width $WRAP_COLUMNS "$@"
+	else
+		cat "$@"
+	fi
+}
+
+lessopen()
+{
+	pipe "$@" | wrap
 }
 
 run()
 {
-	export LESSOPEN="$LESSOPEN | fold --spaces --width $WRAP_COLUMNS"
+	export LESSOPEN="||- bash $0 -L -w $WRAP_COLUMNS %s"
 	exec less "$@"
 }
 
 declare MODE=run
-while getopts hgw: OPTION; do
+while getopts hgw:L OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
-		w) WRAP_COLUMNS="$OPTARG" ;;
 		g) MODE=diagnostics ;;
+		w) WRAP_COLUMNS="$OPTARG" ;;
+		L) MODE=lessopen ;;
 		-) ARGS+=("-$OPTION"); if [[ -v OPTARG ]]; then ARGS+=("$OPTARG"); fi ;;
 		\?) usage 2 ;;
 	esac
