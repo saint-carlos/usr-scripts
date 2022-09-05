@@ -259,7 +259,9 @@ uninstall_luser: ${ALL_CONFIG_VARS} # uninstall scripts and config of current us
 	rm -f ${INSTALLED_LUSER_FILES}
 	$(rmversion)
 
-upgrade_luser: uninstall_luser install_luser # install/upgrade scripts and config of current user
+upgrade_luser: # install/upgrade scripts and config of current user
+	$(MAKE) uninstall_luser
+	$(MAKE) install_luser
 
 install_super: ${ALL_CONFIG_VARS} ${INSTALLED_SUPER_FILES}
 	bash ${BUILD}/super.sh install ${ALL_CONFIG_VARS}
@@ -270,7 +272,9 @@ uninstall_super: ${ALL_CONFIG_VARS} # uninstall administrative scripts and confi
 	bash ${BUILD}/super.sh uninstall ${ALL_CONFIG_VARS}
 	$(rmversion)
 
-upgrade_super: uninstall_super install_super # install/upgrade administrative scripts and config
+upgrade_super: # install/upgrade administrative scripts and config
+	$(MAKE) uninstall_super
+	$(MAKE) install_super
 
 install_desktoprefresh: ${ALL_CONFIG_VARS} ${INSTALLED_DESKTOPREFRESH_FILES}
 	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
@@ -281,7 +285,9 @@ uninstall_desktoprefresh: ${ALL_CONFIG_VARS} # uninstall graphical settings, tak
 	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
 	$(rmversion)
 
-upgrade_desktoprefresh: uninstall_desktoprefresh install_desktoprefresh # install/upgrade graphical settings, takes effect immediately
+upgrade_desktoprefresh: # install/upgrade graphical settings, takes effect immediately
+	$(MAKE) uninstall_desktoprefresh
+	$(MAKE) install_desktoprefresh
 
 install_desktopinit: ${ALL_CONFIG_VARS} # initialize desktop-related applications, can be done only if not already initialized
 	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
