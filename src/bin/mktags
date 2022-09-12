@@ -5,7 +5,7 @@ set -o pipefail -o errexit -o nounset
 declare -r PROGRAM=$(basename $0)
 declare -r DESCRIPTION="create tag files"
 declare -r PARAMS=""
-declare -r OPTIONS="[-hr]"
+declare -r OPTIONS="[-hrs]"
 
 usage()
 {
@@ -19,6 +19,7 @@ ${PROGRAM} ${OPTIONS} ${PARAMS}
 options:
 -h	help: show this help message and exit.
 -r	recreate: remove existing tag databases.
+-s	shell: assume this is a shell project.
 
 currently creates tags using ctags and cscope.
 
@@ -36,10 +37,11 @@ main()
 
 	declare CLEAN=false
 	declare FORCE_SHELL=false
-	while getopts hr OPTION; do
+	while getopts hrs OPTION; do
 	    case "${OPTION}" in
 		h) usage 0 ;;
 		r) CLEAN=true ;;
+		s) FORCE_SHELL=true ;;
 		*) usage 2 ;;
 	    esac
 	done
@@ -52,17 +54,23 @@ main()
 		rm -f tags cscope.*
 	fi
 	if cmd_exists ctags; then
-		ctags -R \
-			--extra=+qf \
-			--fields=+afiklmnsSzt
-		ctags --list-maps \
-			| sed --regexp-extended 's/ +/ /g' \
-			| cut -d' ' -f2- \
-			| tr ' ' '\n' \
-			| xargs -L1 printf '%s "%s" ' '-o -name' \
-			| xargs find . -false > cscope.files
+		if "${FORCE_SHELL}"; then
+			ctags --language-force=sh -R \
+				--extra=+f \
+				--fields=+klmnzt
+		else
+			ctags -R \
+				--extra=+qf \
+				--fields=+afiklmnsSzt
+			ctags --list-maps \
+				| sed --regexp-extended 's/ +/ /g' \
+				| cut -d' ' -f2- \
+				| tr ' ' '\n' \
+				| xargs -L1 printf '%s "%s" ' '-o -name' \
+				| xargs find . -false > cscope.files
+		fi
 	fi
-	if cmd_exists cscope; then
+	if ! "${FORCE_SHELL}" && cmd_exists cscope; then
 		cscope -bqR || exit 1
 	fi
 }
