@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PROGRAM=$(basename $0)
 DESCRIPTION="print the name of the user (the computer from which the user logged in to the local machine)"

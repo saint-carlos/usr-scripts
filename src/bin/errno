@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##########################################################################
 # Title      :	errno - show messages to system errors
 # Author     :	Heiner Steven <heiner.steven@odn.de>

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PROGRAM=$(basename $0)
 DESCRIPTION="dump the stack(s) trace of a process"

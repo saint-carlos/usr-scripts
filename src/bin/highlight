@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 PROGRAM=$(basename $0)
 DESCRIPTION="highlight a given string from stdin"

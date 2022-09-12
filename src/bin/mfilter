@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 declare -r PROGRAM=$(basename $0)
 declare -r DESCRIPTION="multi filter: logical OR between greps"

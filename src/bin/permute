@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##########################################################################
 # Title      :	permute - print permutations
 # Author     :	Heiner Steven <heiner.steven@odn.de>

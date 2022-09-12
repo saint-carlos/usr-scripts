@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 declare -r PROGRAM=$(basename $0)
 declare -r DESCRIPTION="return the length, in characters, of the argument"

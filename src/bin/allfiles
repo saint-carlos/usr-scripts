@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##########################################################################
 # Shellscript:	allfiles - apply command to all files in all subdirectories
 # Author     :	Heiner Steven <heiner.steven@odn.de>

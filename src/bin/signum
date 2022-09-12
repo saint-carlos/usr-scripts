@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##########################################################################
 # Title      :	signal - show messages to system signals
 # Author     :	Heiner Steven <heiner.steven@odn.de>

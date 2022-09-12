@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 ##########################################################################
 # Title      :	base.sh - print number to different bases
 # Author     :	Heiner Steven (stv). Improved by idank.

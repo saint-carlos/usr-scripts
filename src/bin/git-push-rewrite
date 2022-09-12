@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/usr/bin/env bash -e
 
 PROGRAM=$(basename $0)
 DESCRIPTION="push a rewritten branch"
