@@ -56,7 +56,6 @@ set statusline+=L:%-16.(%l/%L(%p%%),\ C:%c%V%) " location of cursor in file - li
 
 " buffer view {{{
 
-set tabstop=8		" tab width
 set linebreak		" wrap on words, not characters
 set showmatch           " Show matching brackets.
 set matchpairs+=<:>	" '<' and '>' are considered matching brackets
@@ -124,8 +123,8 @@ vnoremap // y/<C-R>"<CR>
 
 " formatting {{{
 
-set shiftwidth=8	" indentation width
-set textwidth=0         " Don't wrap words by default.
+set shiftwidth=0	" indentation width: same as tab
+set softtabstop=-1	" tab stop: same as shift width
 
 filetype plugin indent on
 
