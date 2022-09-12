@@ -318,6 +318,7 @@ progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and i
 	yum install epel-release
 	yum install 		\
 		dos2unix	\
+		yq		\
 		jq		\
 		socat		\
 		python36 python34-pip \
@@ -390,6 +391,7 @@ progs: ${ALL_CONFIG_VARS}
 		html2text	\
 		whois		\
 		nodejs		\
+		yq		\
 		jq		\
 		socat		\
 		moreutils	\
@@ -436,6 +438,7 @@ progs: ${ALL_CONFIG_VARS}
 		diffutils	\
 		patch		\
 		less		\
+		procps		\
 		util-linux	\
 		vim		\
 		git		\
