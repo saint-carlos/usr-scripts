@@ -46,7 +46,7 @@ export GREP_COLORS="fn=35;1" # grep filename color is brighter
 unset MAIL MAILCHECK MAILPATH # don't check mail
 
 # more informative trace when debugging bash scripts
-export PS4='+ ${BASHPID}:${BASH_SOURCE##*/}:${BASH_LINENO}:${FUNCNAME-global}:${LINENO}: '
+export PS4='+ $(printf "%(%y-%m-%d/%H:%M:%S)T" -1)/${BASHPID}/${BASH_SOURCE##*/}:${BASH_LINENO}/${FUNCNAME-global}:${LINENO}: '
 
 WORKSPACE=CONFIG_WORKSPACE
 for REPO_ROOT in "$WORKSPACE" CONFIG_REPO_DIRS; do
