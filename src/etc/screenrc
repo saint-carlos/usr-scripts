@@ -13,6 +13,9 @@ defscrollback CONFIG_TERMINAL_SCROLLBACK
 # SCREEN KEYBINDINGS
 # ------------------------------------------------------------------------------
 
+# The default escape interferes with regular line editing (e.g. Ctrl+A)
+escape ^\4
+
 # Remove some stupid / dangerous key bindings
 bind ^k
 bind ^\
