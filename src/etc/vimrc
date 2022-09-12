@@ -313,6 +313,43 @@ runtime ftplugin/man.vim
 
 "	}}}
 
+"	YouCompleteMe {{{
+
+let g:ycm_always_populate_location_list = 1
+let g:ycm_min_num_of_chars_for_completion = 2
+let g:ycm_autoclose_preview_window_after_completion = 1
+let g:ycm_autoclose_preview_window_after_insertion = 1
+let g:ycm_show_detailed_diag_in_popup = 1
+
+" Let clangd fully control completion.
+" let g:ycm_clangd_uses_ycmd_caching = 0
+" Pass some custom options to clangd.
+let g:ycm_clangd_args = ["-j=1", "-malloc-trim", "-pch-storage=disk", "-clang-tidy", "-log=verbose", "-pretty", "-limit-results=0"]
+
+let g:ycm_auto_hover = ""
+let s:ycm_hover_popup = -1
+function s:YcmDocPopup()
+  if s:ycm_hover_popup != -1
+    call popup_hide( s:ycm_hover_popup )
+    let s:ycm_hover_popup = -1
+  endif
+  let response = youcompleteme#GetCommandResponse('GetDoc')
+  if response == ''
+    return
+  endif
+
+  call popup_hide(s:ycm_hover_popup)
+  let s:ycm_hover_popup = popup_atcursor(balloon_split(response), {})
+endfunction
+
+nnoremap <silent> <leader>s :call <SID>YcmDocPopup()<CR>
+nnoremap <silent> <leader>d :YcmCompleter GoToDefinition<CR>
+nnoremap <silent> <leader>e :YcmShowDetailedDiagnostic<CR>
+nnoremap <silent> <leader>N :lnext<CR>
+nnoremap <silent> <leader>P :lprev<CR>
+
+"	}}}
+
 " }}}
 
 " Correct typos {{{
