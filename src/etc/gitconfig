@@ -108,7 +108,7 @@
 	enabled = true
 
 [http]
-	sslVerify = false
+	sslVerify = CONFIG_SECURE
 [credential]
 	# cache for 12 hours
 	helper = cache --timeout=43200
