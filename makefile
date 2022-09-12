@@ -289,9 +289,6 @@ upgrade_desktoprefresh: # install/upgrade graphical settings, takes effect immed
 	$(MAKE) uninstall_desktoprefresh
 	$(MAKE) install_desktoprefresh
 
-install_desktopinit: ${ALL_CONFIG_VARS} # initialize desktop-related applications, can be done only if not already initialized
-	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
-
 mksudo: ${ALL_CONFIG_VARS} # set current user as system administrator
 	$(mkvroot)
 	@echo root password required:
@@ -524,4 +521,3 @@ test: ${CONFIG_FILE} ${ALL_CONFIG_VARS} ${SED_SCRIPT} # dump configuration
 .PHONY: install_luser uninstall_luser upgrade_luser
 .PHONY: install_super uninstall_super upgrade_super mksudo rmsudo
 .PHONY: install_desktoprefresh uninstall_desktoprefresh upgrade_desktoprefresh
-.PHONY: install_desktopinit
