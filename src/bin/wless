@@ -5,7 +5,7 @@ declare -r DESCRIPTION="word-wrapping less"
 declare -r PARAMS=""
 declare -r OPTIONS="[-hg] | [-w width] [-- less-flags...]"
 declare -r TTY_COLUMNS="$(tput cols)"
-declare COLUMNS="$TTY_COLUMNS"
+declare WRAP_COLUMNS="$TTY_COLUMNS"
 
 set -o pipefail -o errexit -o nounset
 
@@ -33,13 +33,13 @@ diagnostics()
 {
 	cat << EOF
 current TTY has $TTY_COLUMNS columns.
-folding by width of $COLUMNS columns.
+folding by width of $WRAP_COLUMNS columns.
 EOF
 }
 
 run()
 {
-	export LESSOPEN="$LESSOPEN | fold --spaces --width $COLUMNS"
+	export LESSOPEN="$LESSOPEN | fold --spaces --width $WRAP_COLUMNS"
 	exec less "$@"
 }
 
@@ -47,7 +47,7 @@ declare MODE=run
 while getopts hgw: OPTION; do
 	case $OPTION in
 		h) usage 0 ;;
-		w) COLUMNS="$OPTARG" ;;
+		w) WRAP_COLUMNS="$OPTARG" ;;
 		g) MODE=diagnostics ;;
 		-) ARGS+=("-$OPTION"); if [[ -v OPTARG ]]; then ARGS+=("$OPTARG"); fi ;;
 		\?) usage 2 ;;
