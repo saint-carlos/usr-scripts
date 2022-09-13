@@ -433,7 +433,7 @@ progs: ${ALL_CONFIG_VARS}
 		tar		\
 		openssh-client openssh-server \
 		cscope		\
-		exuberant-ctags	\
+		universal-ctags	\
 		colordiff	\
 		diffutils	\
 		patch		\
