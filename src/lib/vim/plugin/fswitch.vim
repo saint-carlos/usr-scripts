@@ -33,7 +33,7 @@ let s:os_slash = &ssl == 0 && (has("win16") || has("win32") || has("win64")) ? '
 " Default locations - appended to buffer locations unless otherwise specified
 let s:fswitch_global_locs = '.' . s:os_slash
 
-if exists("b:fsfullsearch") || exists("g:fsfullsearch")
+if exists("g:fsfullsearch") && g:fsfullsearch == 1
     let g:fswitchreg = 'reg:|.*|\*\*|'
 else
     let g:fswitchreg = 'reg:|.*|\*|'
