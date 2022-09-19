@@ -300,8 +300,8 @@ mrproper: clean # remove everything generate by any build target from the projec
 
 ifneq ($(shell which yum),)
 progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and in general for power users
-	yum install epel-release
-	yum install 		\
+	sudo yum install epel-release
+	sudo yum install 	\
 		dos2unix	\
 		yq		\
 		jq		\
@@ -363,14 +363,14 @@ progs: ${ALL_CONFIG_VARS} # install set of progs required for this project and i
 		bash-completion	bash-completion-extras \
 		bash		\
 		make
-	if ${CONFIG_DESKTOP}; then yum install \
+	if ${CONFIG_DESKTOP}; then sudo yum install \
 		xclip		\
 		rxvt-unicode	\
 	; fi
 else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
-	apt-get install 	\
+	sudo apt-get install 	\
 		peco		\
 		dos2unix	\
 		html2text	\
@@ -431,7 +431,7 @@ progs: ${ALL_CONFIG_VARS}
 		bash-completion	\
 		bash		\
 		make
-	if ${CONFIG_DESKTOP}; then apt-get install \
+	if ${CONFIG_DESKTOP}; then sudo apt-get install \
 		fluid-soundfont-gm fluid-soundfont-gs timgm6mb-soundfont \
 		id3v2		\
 		retext		\
@@ -452,12 +452,12 @@ progs: ${ALL_CONFIG_VARS}
 		chromium-browser \
 	; fi
 	if ${CONFIG_DESKTOP}; then \
-		apt-get install cfv \
-		|| apt-get install cksfv \
+		sudo apt-get install cfv \
+		|| sudo apt-get install cksfv \
 	; fi
 	if ${CONFIG_DESKTOP}; then \
-		apt-get install gnome-genius \
-		|| apt-get install genius \
+		sudo apt-get install gnome-genius \
+		|| sudo apt-get install genius \
 	; fi
 	if ${CONFIG_DESKTOP}; then \
 		rm -rf /tmp/$(PROJECT)/deb && \
@@ -466,7 +466,7 @@ progs: ${ALL_CONFIG_VARS}
 		wget "https://remarkableapp.github.io/files/remarkable_1.87_all.deb" && \
 		apt install ./* \
 	; fi
-	if ${CONFIG_MINT}; then apt-get install \
+	if ${CONFIG_MINT}; then sudo apt-get install \
 		dconf-cli	\
 		mate-panel mate-panel-common \
 		mate-applets mate-applets-common \
