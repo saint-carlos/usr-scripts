@@ -64,6 +64,7 @@
 	vomit = commit --verbose
 	indiff = diff --cached
 	cdiff = diff --color-words="([a-zA-Z0-9]+)|."
+	cshow = show --color-words="([a-zA-Z0-9]+)|."
 	hreset = reset --hard
 	amend = commit --verbose --amend --all
 	inspect = log --reverse --patch-with-stat --summary -U50
