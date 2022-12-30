@@ -72,5 +72,8 @@ export TIMEFORMAT=$'---\nreal\t%3lR\nuser\t%3lU\nsys\t%3lS\ncpu\t%P%%'
 stty -ixon # disable ^S/^Q
 test -t 0 && stty -ctlecho
 
+export EDITOR=vim
+export VISUAL=vim
+
 unset ETC BIN SBIN USER_PROMPT_COLOR ROOT_PROMPT_COLOR
 true # so that sourcing the file won't return error
