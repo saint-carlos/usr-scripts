@@ -73,8 +73,8 @@
 	siftdiff = diff
 
 [pretty]
-	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d
-	relneat = %C(cyan bold)%h %C(red bold)%ad %<(10,trunc)%ar %<(15,trunc)%an %Creset%s%C(cyan bold)%d
+	neat = %C(cyan bold)%h %C(red bold)%ad %<(15,trunc)%an %Creset%s%C(cyan bold)%d%Creset
+	relneat = %C(cyan bold)%h %C(red bold)%ad %<(10,trunc)%ar %<(15,trunc)%an %Creset%s%C(cyan bold)%d%Creset
 
 [diff]
 	tool = vimdiff
