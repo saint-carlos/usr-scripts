@@ -197,6 +197,31 @@ __set_prompt_location_field()
 
 }
 
+# PS0 takes the first 0 bytes of PS1, and is therefore empty.
+# it's just a sneaky way to get the current time before executing the command,
+# and using sneaky global variable assignment to during the dereference of PS1.
+PS0='${PS1:$((__PS0_TIME=\D{%s}, 0)):0}\]'
+
+__set_prompt_last_cmd_time()
+{
+	local -r NOW="$(printf "%(%s)T" -1)"
+	: ${__PS0_TIME:=${NOW}}
+	local -r PS0_TIMESTAMP="$(printf "%(%y-%m-%d-%H:%M:%S)T" "$__PS0_TIME")"
+	local -r TOTAL_SECS=$((NOW - __PS0_TIME))
+	__PS0_TIME='' # a subsequent blank command wouldn't run PS0
+	local TOTAL_TIMESTAMP_SHORT=''
+	local HOURS=$((TOTAL_SECS / 3600))
+	if ((HOURS > 0)); then
+		TOTAL_TIMESTAMP_SHORT+="${HOURS}h"
+	fi
+	local MINUTES=$(((TOTAL_SECS / 60) % 60))
+	if ((MINUTES > 0)); then
+		TOTAL_TIMESTAMP_SHORT+="${MINUTES}m"
+	fi
+	TOTAL_TIMESTAMP_SHORT+="$((TOTAL_SECS % 60))s"
+	__LAST_CMD_TIME="^${PS0_TIMESTAMP}+${TOTAL_TIMESTAMP_SHORT} "
+}
+
 __set_prompt_last_cmd_status()
 {
 	__PROMPT_ERROR_COLOR_SET=""
@@ -232,6 +257,7 @@ __set_prompt()
 
 	__set_prompt_missing_newline_fix
 	__set_prompt_location_field
+	__set_prompt_last_cmd_time
 	__set_prompt_last_cmd_status
 	__set_prompt_job_status
 
@@ -240,7 +266,7 @@ __set_prompt()
 	return $__STATUS
 }
 PROMPT_COMMAND=__set_prompt
-PS1="\[\${__PROMPT_NEWLINE_COLOR_SET}\]\${__MISSING_NEWLINE_FIX}${__PROMPT_COLOR_SET}${__HISTORY_NUM}\D{%y-%m-%d %T} ${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
+PS1="\[\${__PROMPT_NEWLINE_COLOR_SET}\]\${__MISSING_NEWLINE_FIX}${__PROMPT_COLOR_SET}${__HISTORY_NUM}\${__LAST_CMD_TIME}${__USER}${__MAKE_UNDERLINE}${__MAKE_STANDOUT}\h${__MAKE_NOSTANDOUT}${__MAKE_NOUNDERLINE}:\${__LOCATION:-\w}\[\${__PROMPT_ERROR_COLOR_SET}\]\${__PROMPT_STATUS_DESC}${__PROMPT_COLOR_SET}\[\${__PROMPT_BG_JOBS_SET}\]\\\$\[\${__PROMPT_BG_JOBS_RESET}\]${__PROMPT_COLOR_RESET} "
 
 __get_working_copy()
 {
