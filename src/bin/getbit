@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import argparse
 
@@ -14,6 +14,6 @@ num = args.number
 i = 0
 while num:
     if num & 0b1:
-        print i
+        print(i)
     i += 1
     num = num >> 1
