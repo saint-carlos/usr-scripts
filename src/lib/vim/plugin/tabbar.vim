@@ -1099,7 +1099,6 @@ function! <SID>Bf_BuildList(delBufNum, updateBufList)
 
     let l:NBuffers = bufnr('$')     " Get the number of the last buffer.
     let l:i = 0                     " Set the buffer index to zero.
-    let l:y = 0                     " Displayed buffers: more sugestive
     let l:fileNames = ''
     let l:maxTabWidth = 0
     call <SID>Map_Clear()
@@ -1125,9 +1124,8 @@ function! <SID>Bf_BuildList(delBufNum, updateBufList)
                         " Get filename & Remove []'s & ()'s
                         let l:shortBufName = fnamemodify(l:BufName, ":t")
                         let l:shortBufName = substitute(l:shortBufName, '[][()]', '', 'g')
-                        let l:y =l:y +1
-                        let g:Tb_BufferMap=g:Tb_BufferMap . l:y . "-" . l:i . "\r"
-                        let l:tab = '['.l:y.':'.l:shortBufName."]"
+                        let g:Tb_BufferMap=g:Tb_BufferMap . l:i . "-" . l:i . "\r"
+                        let l:tab = '['.l:i.':'.l:shortBufName."]"
                         let l:open = 0
 
                         " If the buffer is open in a window mark it
@@ -1394,7 +1392,7 @@ function! <SID>Map_Get_idx( key )
     let l:i=matchstr( g:Tb_BufferMap, "[0-9]*-" , a:key."\r" )
     let l:x=substitute (l:i , "-".a:key, "","")
     let l:x=substitute (l:x , "\r", "","")
-    return l:x
+    return l:x + 0
 endfunction
 
 

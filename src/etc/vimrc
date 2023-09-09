@@ -43,7 +43,7 @@ set splitbelow
 
 " status line, left side
 set statusline=
-set statusline+=B:%*%-3.3n%0*                  " buffer number
+set statusline+=B:%*%-4.4n%0*                  " buffer number
 set statusline+=%f                             " file name
 set statusline+=\ [%{strlen(&ft)?&ft:'none'}   " filetype
 set statusline+=%R%M]                          " flags
