@@ -28,7 +28,7 @@ EOF
 
 delineate()
 {
-	exec printf "%'ld\n" "$@"
+	exec printf "%'lld\n" "$@"
 }
 
 shorten_to()
