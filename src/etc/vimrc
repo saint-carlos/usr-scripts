@@ -316,11 +316,25 @@ runtime ftplugin/man.vim
 
 "	YouCompleteMe {{{
 
+if &diff
+        let g:loaded_youcompleteme = 1
+endif
+
 let g:ycm_always_populate_location_list = 1
 let g:ycm_min_num_of_chars_for_completion = 2
 let g:ycm_autoclose_preview_window_after_completion = 1
 let g:ycm_autoclose_preview_window_after_insertion = 1
 let g:ycm_show_detailed_diag_in_popup = 1
+let g:ycm_update_diagnostics_in_insert_mode = 0
+let g:ycm_complete_in_strings = 0
+
+let g:ycm_show_diagnostics_ui = 0
+let g:ycm_auto_trigger = 0
+augroup ycm
+        autocmd!
+        autocmd FileType cpp,py let g:ycm_show_diagnostics_ui = 1
+        autocmd FileType cpp,py let g:ycm_auto_trigger = 1
+augroup END
 
 " Let clangd fully control completion.
 " let g:ycm_clangd_uses_ycmd_caching = 0
