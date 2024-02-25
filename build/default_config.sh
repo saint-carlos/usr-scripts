@@ -35,6 +35,7 @@ CONFIG_DISABLE_CACHE_DIRS=""
 CONFIG_DISABLE_CACHE_DIRS+=":.thumbnails"
 CONFIG_DISABLE_CACHE_DIRS+=":.kde/share/apps/RecentDocuments"
 CONFIG_DISABLE_CACHE_DIRS+=":.icedtea/cache"
+CONFIG_DISABLE_CACHE_DIRS+=":.local/share/geeqie/metadata"
 
 # main working directory, for the 'j' command
 CONFIG_WORKSPACE="$HOME/workspace"
