@@ -101,7 +101,7 @@ LUSER_FILES :=			\
 	share/countries.csv	\
 	share/http.db		\
 $(call srcfiles,		\
-	lib/vim/		\
+	lib/vim			\
 )
 
 ifeq (${CONFIG_DESKTOP},true)
@@ -170,7 +170,7 @@ config: ${CONFIG_FILE} ${BUILD}/config_dump_vals.sh ${ALL_CONFIG_VARS} # upgrade
 	@echo --------------------------------
 	@bash ${BUILD}/config_dump_vals.sh ${CONFIG_FILE}
 
-${SED_SCRIPT}: ${ALL_CONFIG_VARS}
+${SED_SCRIPT}: ${ALL_CONFIG_VARS} ${BUILD}/make_sed_commands.sh
 	${BUILD}/make_sed_commands.sh ${ALL_CONFIG_VARS} > ${SED_SCRIPT}
 
 tgt:
@@ -439,6 +439,7 @@ progs: ${ALL_CONFIG_VARS}
 		patch		\
 		less		\
 		procps		\
+		findutils	\
 		util-linux	\
 		vim		\
 		git		\
