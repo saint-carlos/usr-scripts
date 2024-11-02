@@ -2,7 +2,8 @@ instructions:
 
 - make config
 - edit config.sh
-- make progs
+- make config (again)
+- make progs (sudo if needed)
 - make
 - make upgrade_luser (will install the scripts and configuration)
 - make help for other options

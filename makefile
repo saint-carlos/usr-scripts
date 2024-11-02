@@ -163,7 +163,7 @@ all: build # equivalent to build
 
 build: $(addprefix tgt/,${ALL_FILES}) # create configured scripts/config files in tgt/, ready to be installed
 
-config: ${CONFIG_FILE} ${BUILD}/config_dump_vals.sh # upgrade or create a config file from the default settings
+config: ${CONFIG_FILE} ${BUILD}/config_dump_vals.sh ${ALL_CONFIG_VARS} # upgrade or create a config file from the default settings
 	@echo --------------------------------
 	@echo config file written to '${CONFIG_FILE}'
 	@echo please review the configuration:

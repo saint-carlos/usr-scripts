@@ -2,7 +2,6 @@
 # you can run advanced assignment constructs
 # or shell commands to generate values for variables
 # better not run commands with side effects!
-# replace relative variables like $HOME and $USER, otherwise it doesn't work with sudo
 
 # where everything is installed
 CONFIG_VROOT="$HOME/vroot"
