@@ -183,11 +183,15 @@ ${SED_SCRIPT}: ${ALL_CONFIG_VARS} ${BUILD}/make_sed_commands.sh
 tgt:
 	mkdir $@
 
+# mac note: the sed script is coupled with the specific version of sed that is
+# bundled with the OS, so if we're e.g. in upgrade_luser, 'sed' that's in the
+# path may be the one we just installed, rather than the bundled one, so we must
+# explicitly ask for the bundled one.
 tmpfile = $(subst tgt/,tmp/,$1)
 tgt/%: src/% ${USER_CONFIG_VARS} ${SED_SCRIPT} tgt
 	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
 	cp -f $< "$(call tmpfile,$@)"
-	${BUILD}/binary $@ || sed -i.bak -f ${SED_SCRIPT} "$(call tmpfile,$@)"
+	${BUILD}/binary $@ || /usr/bin/sed -i.bak -f ${SED_SCRIPT} "$(call tmpfile,$@)"
 	mv "$(call tmpfile,$@)" $@
 
 ${CONFIG_VROOT}:
