@@ -46,6 +46,8 @@ mkbackup()
 	if [ -f "$FILE" ]; then
 		cp "$FILE" "$BACKUP_FILE" || return 1
 		chmod --reference="$FILE" "$BACKUP_FILE" || return 1
+	else
+		echo 'MISSING' > "${BACKUP_FILE}" || return 1
 	fi
 }
 
@@ -62,6 +64,9 @@ restore_backup()
 	local BACKUP_FILE=$(make_backup_filename $FILE)
 	if [ -f "$BACKUP_FILE" ]; then
 		mv -f "$BACKUP_FILE" "$FILE" || return 1
+		if [ "$(cat "${FILE}")" = 'MISSING' ]; then
+			unlink "${FILE}" || return 1
+		fi
 	fi
 }
 
