@@ -11,6 +11,22 @@ if [ $UID -eq 0 ]; then
 	export PATH="${SBIN}:${PATH}"
 fi
 
+if [ "CONFIG_OS" = 'mac' ]; then
+	PATH="/opt/homebrew/opt/binutils/bin:${PATH}"
+	PATH="/opt/homebrew/opt/lsof/bin:${PATH}"
+	PATH="/opt/homebrew/opt/bzip2/bin:${PATH}"
+	PATH="/opt/homebrew/opt/curl/bin:${PATH}"
+	PATH="/opt/homebrew/opt/bc/bin:${PATH}"
+	PATH="/opt/homebrew/opt/make/libexec/gnubin:${PATH}"
+	PATH="/opt/homebrew/opt/gawk/libexec/gnubin:${PATH}"
+	PATH="/opt/homebrew/opt/gnu-sed/libexec/gnubin:${PATH}"
+	PATH="/opt/homebrew/opt/coreutils/libexec/gnubin:${PATH}"
+
+	if [ -z "${LESSOPEN}" ]; then
+		export LESSOPEN="|/opt/homebrew/bin/lesspipe.sh %s"
+	fi
+fi
+
 source $ETC/bash_completion
 shopt -s no_empty_cmd_completion
 shopt -s hostcomplete

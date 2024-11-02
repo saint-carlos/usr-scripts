@@ -45,5 +45,5 @@ shift `expr $OPTIND - 1`
 test $# -eq 1 || usage 2
 FILE="$1"
 test -f ${FILE} || exit 3
-CHARSET=`file -bi "${FILE}" | cut -d= -f2`
+CHARSET=`file -b --mime "${FILE}" | cut -d= -f2`
 test "${CHARSET}" = binary

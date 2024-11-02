@@ -1,0 +1,17 @@
+#!/bin/bash
+# mac note: this should just be a 'define' in the makefile
+
+TYPE="$1"
+SOURCE="$2"
+TARGET="$3"
+mkdir -p "$(dirname "${TARGET}")"
+
+if [ "${TYPE}" = exec ]; then
+	MODE=755
+elif [ "${TYPE}" = data ]; then
+	MODE=644
+else
+	echo "invalid type '${TYPE}'"
+	exit 1
+fi
+install -m "${MODE}" "${SOURCE}" "${TARGET}"

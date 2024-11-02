@@ -25,6 +25,16 @@ allvars_list_has()
 	tr "$DELIM" '\n' <<< "$LIST" | grep -q --fixed-string "$SUBJ"
 }
 
+if which brew &>/dev/null; then
+	CONFIG_OS=mac
+elif which yum &>/dev/null; then
+	CONFIG_OS=linux.redhat
+elif which apt-get &>/dev/null; then
+	CONFIG_OS=linux.ubuntu
+else
+	CONFIG_OS=unknown.os
+fi
+
 CONFIG_ETC=$CONFIG_VROOT/etc
 CONFIG_BIN=$CONFIG_VROOT/bin
 CONFIG_SBIN=$CONFIG_VROOT/sbin
@@ -73,5 +83,15 @@ if ! [ -f "$CONFIG_SYSLOG_FILE" ]; then
 fi
 
 CONFIG_DCONF_KEYBOARD_LAYOUTS="$(allvars_make_dconf_list "$CONFIG_LANGUAGES" ':')"
+
+CONFIG_INSTALL_FIREFOX=true
+if which firefox &>/dev/null || [ -e "/Applications/Firefox.app" ]; then
+	CONFIG_INSTALL_FIREFOX=false
+fi
+
+CONFIG_INSTALL_CHROMIUM=true
+if which chrome &>/dev/null || which chromium-browser &>/dev/null || [ -e "/Applications/Chrome.app" ]; then
+	CONFIG_INSTALL_CHROMIUM=false
+fi
 
 unset allvars_make_dconf_list allvars_list_has

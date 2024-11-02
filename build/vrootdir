@@ -1,0 +1,33 @@
+#!/bin/bash
+# mac note: this should just be a 'define' in the makefile
+
+TYPE="$1"
+VROOT="$2"
+
+target_suffix()
+{
+	echo "$1" | awk -F '_' '{ print $NF }'
+}
+
+if [ "${TYPE}" = mk ]; then
+	mkdir -p "${VROOT}"
+elif [ "${TYPE}" = rm ]; then
+	[ ! -d "${VROOT}" ] || find "${VROOT}" -type d -empty -delete
+elif [ "${TYPE}" = mkversion ]; then
+	MAKE_TARGET_NAME="$3"
+	FILE_SUFFIX="$(target_suffix ${MAKE_TARGET_NAME})"
+	CONFIG_FILE="$4"
+
+	cp ${CONFIG_FILE} "${VROOT}/config-${FILE_SUFFIX}"
+	git rev-parse HEAD > "${VROOT}/version-${FILE_SUFFIX}"
+elif [ "${TYPE}" = rmversion ]; then
+	MAKE_TARGET_NAME="$3"
+	FILE_SUFFIX="$(target_suffix ${MAKE_TARGET_NAME})"
+
+	rm -f "${VROOT}/version-${FILE_SUFFIX}"
+	rm -f "${VROOT}/config-${FILE_SUFFIX}"
+	"$0" rm ${CONFIG_VROOT}
+else
+	echo "invalid type '${TYPE}'"
+	exit 1
+fi

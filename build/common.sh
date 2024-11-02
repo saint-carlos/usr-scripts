@@ -45,7 +45,13 @@ mkbackup()
 	fi
 	if [ -f "$FILE" ]; then
 		cp "$FILE" "$BACKUP_FILE" || return 1
-		chmod --reference="$FILE" "$BACKUP_FILE" || return 1
+		# mac note: can't use chmod --reference
+		local MODE="$(python3 -c "
+import os;
+mode = os.stat('${FILE}').st_mode & 0o777
+print('0' + oct(mode)[2:])
+")"
+		chmod "${MODE}" "$BACKUP_FILE" || return 1
 	else
 		echo 'MISSING' > "${BACKUP_FILE}" || return 1
 	fi

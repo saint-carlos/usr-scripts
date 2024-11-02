@@ -1,3 +1,8 @@
+# at some point, your workplace WILL force you to work on a mac.
+# the mac has OLD unix utils.
+# make sure the build & install process can work with these old unit utils,
+# so that they can automatically install modern unix utils.
+
 export PROJECT	:= usr_scripts
 THIS_MAKEFILE	:= $(firstword ${MAKEFILE_LIST})
 BUILD 		:= ./build
@@ -14,6 +19,8 @@ EFFECTIVE_CONF	:= $(shell if [ -f ${CONFIG_FILE} ]; then echo ${CONFIG_FILE}; el
 CONFIG_DESKTOP	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_DESKTOP)
 CONFIG_MINT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_MINT)
 CONFIG_VROOT	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_VROOT)
+CONFIG_INSTALL_FIREFOX	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_INSTALL_FIREFOX)
+CONFIG_INSTALL_CHROMIUM	:= $(shell ${BUILD}/config_query.sh ${EFFECTIVE_CONF} CONFIG_INSTALL_CHROMIUM)
 
 findsrc = $(shell find $(addprefix src/,$1) -type f)
 insrc = $(patsubst src/%, %, $1)
@@ -180,42 +187,26 @@ tmpfile = $(subst tgt/,tmp/,$1)
 tgt/%: src/% ${USER_CONFIG_VARS} ${SED_SCRIPT} tgt
 	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
 	cp -f $< "$(call tmpfile,$@)"
-	${BUILD}/binary $@ || sed -i -f ${SED_SCRIPT} "$(call tmpfile,$@)"
+	${BUILD}/binary $@ || sed -i.bak -f ${SED_SCRIPT} "$(call tmpfile,$@)"
 	mv "$(call tmpfile,$@)" $@
-
-define mkvroot =
-	mkdir -p ${CONFIG_VROOT}
-endef
-define rmvroot =
-	[ ! -d "${CONFIG_VROOT}" ] || find "${CONFIG_VROOT}" -type d -empty -delete
-endef
-
-define installexec =
-	mkdir -p $(dir $@)
-	install -m 755 -D $< $@
-endef
-define installdata =
-	mkdir -p $(dir $@)
-	install -m 644 -D $< $@
-endef
 
 ${CONFIG_VROOT}:
 	mkdir $@
 
 ${CONFIG_VROOT}/bin/%: tgt/bin/% ${CONFIG_VROOT}
-	$(installexec)
+	${BUILD}/install1 exec $< $@
 
 ${CONFIG_VROOT}/sbin/%: tgt/sbin/% ${CONFIG_VROOT}
-	$(installexec)
+	${BUILD}/install1 exec $< $@
 
 ${CONFIG_VROOT}/etc/%: tgt/etc/% ${CONFIG_VROOT}
-	$(installdata)
+	${BUILD}/install1 data $< $@
 
 ${CONFIG_VROOT}/lib/%: tgt/lib/% ${CONFIG_VROOT}
-	$(installdata)
+	${BUILD}/install1 data $< $@
 
 ${CONFIG_VROOT}/share/%: tgt/share/% ${CONFIG_VROOT}
-	$(installdata)
+	${BUILD}/install1 data $< $@
 
 ${VALID_CONFIG}: ${CONFIG_FILE}
 	rm -rf tgt tmp
@@ -236,28 +227,18 @@ ${ALL_CONFIG_VARS}: ${CONFIG_FILE} ${BUILD}/config_allvars.sh ${BUILD}/config_du
 	mv $@.tmp $@
 
 u_suffix = $(word 2, $(subst _, ,$1))
-define mkversion =
-	cp ${CONFIG_FILE} "${CONFIG_VROOT}/config-$(call u_suffix,$@)"
-	git rev-parse HEAD > "${CONFIG_VROOT}/version-$(call u_suffix,$@)"
-endef
-define rmversion =
-	rm -f "${CONFIG_VROOT}/version-$(call u_suffix,$@)"
-	rm -f "${CONFIG_VROOT}/config-$(call u_suffix,$@)"
-	$(rmvroot)
-endef
-
 INSTALLED_LUSER_FILES = $(addprefix ${CONFIG_VROOT}/,${LUSER_FILES})
 INSTALLED_SUPER_FILES = $(addprefix ${CONFIG_VROOT}/,${SUPER_FILES})
 INSTALLED_DESKTOPREFRESH_FILES = $(addprefix ${CONFIG_VROOT}/,${DESKTOPREFRESH_FILES})
 
 install_luser: ${ALL_CONFIG_VARS} ${INSTALLED_LUSER_FILES}
 	bash ${BUILD}/luser.sh install ${ALL_CONFIG_VARS}
-	$(mkversion)
+	${BUILD}/vrootdir mkversion ${CONFIG_VROOT} $@ ${CONFIG_FILE}
 
 uninstall_luser: ${ALL_CONFIG_VARS} # uninstall scripts and config of current user
 	bash ${BUILD}/luser.sh uninstall ${ALL_CONFIG_VARS}
 	rm -f ${INSTALLED_LUSER_FILES}
-	$(rmversion)
+	${BUILD}/vrootdir rmversion ${CONFIG_VROOT} $@
 
 upgrade_luser: # install/upgrade scripts and config of current user
 	$(MAKE) uninstall_luser
@@ -265,12 +246,12 @@ upgrade_luser: # install/upgrade scripts and config of current user
 
 install_super: ${ALL_CONFIG_VARS} ${INSTALLED_SUPER_FILES}
 	bash ${BUILD}/super.sh install ${ALL_CONFIG_VARS}
-	$(mkversion)
+	${BUILD}/vrootdir mkversion ${CONFIG_VROOT} $@ ${CONFIG_FILE}
 
 uninstall_super: ${ALL_CONFIG_VARS} # uninstall administrative scripts and config
 	rm -f ${INSTALLED_SUPER_FILES}
 	bash ${BUILD}/super.sh uninstall ${ALL_CONFIG_VARS}
-	$(rmversion)
+	${BUILD}/vrootdir rmversion ${CONFIG_VROOT} $@
 
 upgrade_super: # install/upgrade administrative scripts and config
 	$(MAKE) uninstall_super
@@ -278,26 +259,26 @@ upgrade_super: # install/upgrade administrative scripts and config
 
 install_desktoprefresh: ${ALL_CONFIG_VARS} ${INSTALLED_DESKTOPREFRESH_FILES}
 	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
-	$(mkversion)
+	${BUILD}/vrootdir mkversion ${CONFIG_VROOT} $@ ${CONFIG_FILE}
 
 uninstall_desktoprefresh: ${ALL_CONFIG_VARS} # uninstall graphical settings, takes effect immediately
 	rm -f ${INSTALLED_DESKTOPREFRESH_FILES}
 	bash ${BUILD}/luser.sh $@ ${ALL_CONFIG_VARS}
-	$(rmversion)
+	${BUILD}/vrootdir rmversion ${CONFIG_VROOT} $@
 
 upgrade_desktoprefresh: # install/upgrade graphical settings, takes effect immediately
 	$(MAKE) uninstall_desktoprefresh
 	$(MAKE) install_desktoprefresh
 
 mksudo: ${ALL_CONFIG_VARS} # set current user as system administrator
-	$(mkvroot)
+	${BUILD}/vrootdir mk ${CONFIG_VROOT}
 	@echo root password required:
 	su -c "bash ${BUILD}/super.sh $@ ${ALL_CONFIG_VARS}"
 
 rmsudo: ${ALL_CONFIG_VARS} # unset current user as system administrator
 	@echo root password required:
 	su -c "bash ${BUILD}/super.sh $@ ${ALL_CONFIG_VARS}"
-	$(rmvroot)
+	${BUILD}/vrootdir rm ${CONFIG_VROOT}
 
 import: ${CONFIG_FILE} tgt build # import changes to the currently installed scripts/config files into the repository
 	# do it in reverse order such that it's easier to patch
@@ -456,11 +437,15 @@ progs: ${ALL_CONFIG_VARS}
 		audacious	\
 		easytag		\
 		vim-gtk		\
-		firefox		\
-		chromium-browser \
 		dict dictd dict-gcide \
 		xclip		\
 		rxvt-unicode	\
+	; fi
+	if ${CONFIG_DESKTOP} && ${CONFIG_INSTALL_FIREFOX}; then apt-get install \
+		firefox		\
+	; fi
+	if ${CONFIG_DESKTOP} && ${CONFIG_INSTALL_CHROMIUM}; then apt-get install \
+		chromium-browser \
 	; fi
 	if ${CONFIG_DESKTOP}; then \
 		apt-get install cfv \
@@ -483,6 +468,61 @@ progs: ${ALL_CONFIG_VARS}
 		mate-applets mate-applets-common \
 		mintmenu	\
 	; fi
+else
+ifneq ($(shell which brew),)
+progs: ${ALL_CONFIG_VARS}
+	brew install 	\
+		dos2unix	\
+		html2text	\
+		node		\
+		python		\
+		jq		\
+		socat		\
+		moreutils	\
+		coreutils	\
+		htop		\
+		tree		\
+		tcpdump		\
+		wget		\
+		lsof		\
+		pstree		\
+		cloc		\
+		binutils	\
+		tcl-tk		\
+		curl		\
+		nmap		\
+		netcat		\
+		screen		\
+		gcc		\
+		gawk		\
+		gsed		\
+		bc		\
+		p7zip		\
+		xz		\
+		bzip2		\
+		gzip		\
+		openssh 	\
+		cscope		\
+		ctags		\
+		colordiff	\
+		diffutils	\
+		less lesspipe	\
+		findutils	\
+		vim		\
+		git		\
+		bash-completion	\
+		bash-git-prompt \
+		bash		\
+		make		\
+		xclip		\
+		iterm2
+	if ${CONFIG_INSTALL_FIREFOX}; then brew install \
+		firefox	\
+	; fi
+	if ${CONFIG_INSTALL_CHROMIUM}; then brew install \
+		chromium	\
+	; fi
+endif
 endif
 endif
 
