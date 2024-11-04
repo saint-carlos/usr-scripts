@@ -482,6 +482,7 @@ progs: ${ALL_CONFIG_VARS}
 		python		\
 		jq		\
 		socat		\
+		grep		\
 		moreutils	\
 		coreutils	\
 		htop		\
