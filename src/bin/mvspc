@@ -50,14 +50,18 @@ done
 shift $((OPTIND - 1))
     
 # main execution
-for A in "$@"; do
-	NEWF=${A// /_}
-	if [ "$A" = "$NEWF" ];then
+for F in "$@"; do
+	DIRNAME="$(dirname "${F}")"
+	BASENAME="$(basename "${F}")"
+	NEW_BASENAME="${BASENAME// /_}"
+	if [ "${NEW_BASENAME}" = "${BASENAME}" ]; then
 		continue # no spaces in file name
-	elif [ -f "$NEWF" ] || [ -d "$NEWF" ]; then
-		errcho "${NAME_}: not renaming '$A' - '$NEWF' already exist" && continue
+	fi
+	NEWF="${DIRNAME}/${NEW_BASENAME}"
+	if [ -e "$NEWF" ]; then
+		errcho "${NAME_}: not renaming '$F' - '$NEWF' already exist" && continue
 	else
-		$VERBOSE && echo "renaming: '$A' -> '$NEWF'"
-		mv -- "$A" "$NEWF"
+		$VERBOSE && echo "renaming: '$F' -> '$NEWF'"
+		mv -- "$F" "$NEWF"
 	fi
 done
