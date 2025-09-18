@@ -29,6 +29,7 @@ LUSER_FILES :=			\
 	bin/quien		\
 	bin/allfiles		\
 	bin/ascii		\
+	bin/ascii.py		\
 	bin/base		\
 	bin/binary		\
 	bin/blockgrep		\
