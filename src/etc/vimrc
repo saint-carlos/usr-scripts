@@ -89,6 +89,8 @@ set ignorecase          " Case insensitive matching.
 set smartcase		" If search contains capitals, search exact case.
 set incsearch           " Incremental search.
 set hlsearch            " Highlight search matches.
+set shortmess-=S        " Show number of search results.
+set shortmess-=T        " Don't truncate message.
 
 highlight Normal guifg=White guibg=Black
 
