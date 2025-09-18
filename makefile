@@ -86,6 +86,8 @@ LUSER_FILES :=			\
 	bin/system_platform	\
 	bin/system_user		\
 	bin/system_version	\
+	bin/bin2ascii		\
+	bin/ascii2bin		\
 	bin/termset		\
 	bin/timestamp		\
 	bin/vmore		\

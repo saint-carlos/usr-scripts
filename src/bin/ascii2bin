@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="convert stdin of ASCII characters to 0s and 1s"
+PARAMS=""
+OPTIONS="[-h]"
+
+usage()
+{
+    [ $1 -ne 0 ] && exec >&2
+
+    cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+example:
+
+echo -n abc | $PROGRAM
+output: 011000010110001001100011
+
+any character other than 0 and 1 is ignored.
+
+options:
+-h  help: show this help message and exit.
+
+exit status:
+0   no usage error
+2   if some arguments are bad
+EOF
+
+    exit $1
+}
+
+while getopts h OPTION; do
+    case $OPTION in
+        h) usage 0 ;;
+        \?) usage 2 ;;
+    esac
+done
+[ $# -eq 0 ] || usage 2
+
+ascii -x \
+    | tr ' ' '\n' \
+    | sed 's/^/0x/' \
+    | xargs base -bp \
+    | xargs printf "%08d"
+    echo
