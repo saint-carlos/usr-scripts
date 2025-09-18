@@ -93,7 +93,7 @@ _cb()
 {
 	local CUR_WORD="${COMP_WORDS[COMP_CWORD]}"
 	if [[ "$CUR_WORD" =~ ^- ]]; then
-		COMPREPLY=( $(compgen -W "-o -i -a -x -f -h" -- "$CUR_WORD") )
+		COMPREPLY=( $(compgen -W "-o -i -a -x -f -h -l" -- "$CUR_WORD") )
 	elif [[ "${COMP_WORDS[COMP_CWORD - 1]}" =~ ^-.*x ]]; then
 		_command cb "$CUR_WORD" "${COMP_WORDS[COMP_CWORD - 1]}"
 	else
