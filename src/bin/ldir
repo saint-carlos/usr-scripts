@@ -1,21 +1,31 @@
 #!/usr/bin/env bash
 
-PROGRAM=$(basename $0)
-DESCRIPTION="list only directories."
-PARAMS="[file ...]"
-OPTIONS="[-h]"
+set -o pipefail -o errexit -o nounset
+
+declare -r PROGRAM=$(basename $0)
+declare -r DESCRIPTION="directory lister"
+declare -r PARAMS="[path ...]"
+declare -r OPTIONS="[-hcs]"
+
+declare SHORT=false
 
 usage()
 {
-	[ $1 -ne 0 ] && exec >&2
+    [ $1 -ne 0 ] && exec >&2
 
-	cat << EOF
+    cat << EOF
 $PROGRAM - $DESCRIPTION
 usage:
 $PROGRAM $OPTIONS $PARAMS
 
+by default, for each path in the arguments, if the path is a directory,
+${PROGRAM} lists the subdirectories directly under it, in the same format
+as ls -l.
+
 options:
 -h	help: show this help message and exit.
+-c	count: instead of listing subdirectories, count number of files.
+-s	short: where applicable, print short format.
 
 exit status:
 if ls returned an error, this error is returned.
@@ -25,12 +35,46 @@ EOF
     exit $1
 }
 
-while getopts h OPTION; do
-	case $OPTION in
-		h) usage 0 ;;
-		\?) usage 1 ;;
-	esac
-done
-shift $((OPTIND - 1))
+list_subdirs()
+{
+    ls -l "$@" | mfilter ':$' '^total' '^d' '^$'
+}
 
-{ ls -l "$@" || exit $?; } | mfilter ':$' '^total' '^d' '^$'
+count()
+{
+    local NARGS=$#
+    local RC=0
+    local DIR COUNT
+    for DIR in "$@"; do
+        if ! [ -d "${DIR}" ]; then
+            echo 2>&1 "${PROGRAM}: '${DIR}' is not a directory, skipping"
+            RC=1
+            continue
+        fi
+        COUNT=$(ls -A -1 -b "${DIR}" | wc -l)
+        if ${SHORT} && [ ${NARGS} -le 1 ]; then
+            echo "${COUNT}"
+        else
+            echo "${COUNT} ${DIR}"
+        fi
+    done
+    return ${RC}
+}
+
+main()
+{
+    CMD=list_subdirs
+    while getopts hcs OPTION; do
+        case $OPTION in
+            h) usage 0 ;;
+            c) CMD=count ;;
+            s) SHORT=true ;;
+            \?) usage 1 ;;
+        esac
+    done
+    shift $((OPTIND - 1))
+
+    "${CMD}" "$@"
+}
+
+main "$@"
