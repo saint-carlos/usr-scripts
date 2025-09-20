@@ -66,12 +66,24 @@ rmbackup()
 
 restore_backup()
 {
-	local FILE=$1
+	local FILE="$1"
 	local BACKUP_FILE=$(make_backup_filename $FILE)
 	if [ -f "$BACKUP_FILE" ]; then
-		mv -f "$BACKUP_FILE" "$FILE" || return 1
-		if [ "$(cat "${FILE}")" = 'MISSING' ]; then
-			unlink "${FILE}" || return 1
+		local HEADER
+		# for a file like .gitconfig, the first line is
+		# something like "[user]". if we drop the base64, then
+		# we get HEADER=[user].
+		# due to some bug in bash, when -x is set, this
+		# in the following error:
+		#   bash: [: 2cnteger expression expected
+		# this error is seend when running upgrade_luser.
+		# so we work around it by converting to base64.
+		HEADER="$(head -n 1 "${FILE}" | base64)" || return 1
+		MISSING="$(echo 'MISSING' | base64)" || return 1
+		if [ "${HEADER}" = "${MISSING}" ]; then
+			unlink "${BACKUP_FILE}" || return 1
+		else
+			mv -f "${BACKUP_FILE}" "${FILE}" || return 1
 		fi
 	fi
 }
