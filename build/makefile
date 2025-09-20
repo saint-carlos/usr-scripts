@@ -176,7 +176,7 @@ ${PREFIX}/tgt:
 # path may be the one we just installed, rather than the bundled one, so we must
 # explicitly ask for the bundled one.
 tmpfile = $(subst /tgt/,/tmp/,$1)
-${PREFIX}/tgt/%: ${PREFIX}/src/% ${PREFIX}/tgt ${SED_SCRIPT}
+${PREFIX}/tgt/%: ${PREFIX}/src/% ${SED_SCRIPT}
 	mkdir -p $(dir $@) $(dir $(call tmpfile,$@))
 	cp -f $< "$(call tmpfile,$@)"
 	${BUILD}/binary $@ || /usr/bin/sed -i.bak -f ${SED_SCRIPT} "$(call tmpfile,$@)"
