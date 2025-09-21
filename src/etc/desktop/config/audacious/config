@@ -6,16 +6,16 @@ use_dae=TRUE
 mixer-element=Master
 
 [amidiplug]
-fsyn_soundfont_file=/usr/share/sounds/sf2/default-GM.sf2;/usr/share/sounds/sf2/TimGM6mb.sf2;/usr/share/sounds/sf2/FluidR3_GS.sf2;/usr/share/sounds/sf2/FluidR3_GM.sf2
+fsyn_soundfont_file=/usr/share/sounds/sf2/default-GM.sf2;/usr/share/sounds/sf2/FluidR3_GS.sf2;/usr/share/sounds/sf2/FluidR3_GM.sf2;/usr/share/sounds/sf2/TimGM6mb.sf2
 
 [audacious]
-chardet_fallback=UTF-8,ISO-8859-1
+chardet_fallback=ISO-8859-,UTF-8
 clear_playlist=TRUE
 close_dialog_open=TRUE
 close_jtf_dialog=TRUE
 cover_name_include=
 default_gain=0
-enable_clipping_prevention=TRUE
+enable_clipping_prevention=FALSE
 enable_replay_gain=FALSE
 equalizer_active=TRUE
 equalizer_autoload=FALSE
@@ -29,8 +29,8 @@ equalizer_band6=5
 equalizer_band7=8
 equalizer_band8=12
 equalizer_band9=12
-equalizer_bands=4,2,-1,-4,-1,2,4,5,6,7
-equalizer_preamp=-5
+equalizer_bands=2,1,0,-1,0,1,1,1,1,1
+equalizer_preamp=2
 equalizer_visible=TRUE
 filepopup_delay=20
 filepopup_pixelsize=150
@@ -39,10 +39,8 @@ iface_number=0
 iface_path=/usr/lib/audacious/General/gtkui.so
 leading_zero=TRUE
 no_confirm_playlist_delete=FALSE
-no_playlist_advance=FALSE
 open_to_temporary=FALSE
 output_bit_depth=32
-output_buffer_size=300
 output_number=0
 output_path=/usr/lib/audacious/Output/alsa.so
 player_visible=TRUE
@@ -50,6 +48,7 @@ playlist_manager_close_on_activate=FALSE
 playlist_visible=TRUE
 remember_jtf_entry=TRUE
 replay_gain_album=FALSE
+replay_gain_mode=2
 replay_gain_preamp=0
 replay_gain_track=TRUE
 resume_playback_on_startup=FALSE
@@ -61,7 +60,14 @@ titlestring_preset=6
 url_history_length=0
 
 [audgui]
-filebrowser_win=2527,294,700,450
+close_dialog_add=TRUE
+eq_preset_win=728,373,288,220
+equalizer_win=1264,402,288,288
+filebrowser_win=574,290,700,450
+filesel_path=/data/audio/music
+info_win=790,274,563,368
+playlist_export_win=2486,221,780,585
+url_opener_win=764,489,384,170
 
 [compressor]
 target=0.5
@@ -103,12 +109,13 @@ NumHotkeys=8
 
 [gtkui]
 column_expand=0,1,0,1,0,1,0
-column_widths=68,700,464,44,497,175,55,100,36,68,275,275,275,10
+column_widths=68,676,464,44,497,175,55,100,36,68,275,275,275,10,275
 entry_count_visible=TRUE
 multi_column_view=FALSE
-player_height=1034
-player_width=1920
-player_x=1920
+player_height=1122
+player_maximized=TRUE
+player_width=1912
+player_x=0
 player_y=0
 playlist_columns=number artist track title year album length
 playlist_visible=TRUE
@@ -119,10 +126,15 @@ vis_position=3
 [gtkui-layout]
 item0_name=Search Tool
 item0_pos=0,-1,-1,231,923
-item_count=1
+item1_name=Playlist Manager
+item1_pos=-1,1920,16,244,148
+item_count=2
 
 [sndstretch]
 speed=0.707107
+
+[speed-pitch]
+speed=1.09
 
 [statusicon]
 rclick_menu=1
