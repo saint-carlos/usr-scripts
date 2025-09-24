@@ -338,6 +338,7 @@ else
 ifneq ($(shell which apt-get),)
 progs: ${ALL_CONFIG_VARS}
 	sudo apt-get install 	\
+		athena-jot	\
 		peco		\
 		dos2unix	\
 		html2text	\
