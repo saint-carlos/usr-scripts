@@ -84,12 +84,12 @@ fi
 
 CONFIG_DCONF_KEYBOARD_LAYOUTS="$(allvars_make_dconf_list "$CONFIG_LANGUAGES" ':')"
 
-CONFIG_INSTALL_FIREFOX=true
+CONFIG_INSTALL_FIREFOX="${CONFIG_DESKTOP}"
 if which firefox &>/dev/null || [ -e "/Applications/Firefox.app" ]; then
 	CONFIG_INSTALL_FIREFOX=false
 fi
 
-CONFIG_INSTALL_CHROMIUM=true
+CONFIG_INSTALL_CHROMIUM="${CONFIG_DESKTOP}"
 if which chrome &>/dev/null || which chromium-browser &>/dev/null || [ -e "/Applications/Chrome.app" ]; then
 	CONFIG_INSTALL_CHROMIUM=false
 fi
