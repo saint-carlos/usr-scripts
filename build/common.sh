@@ -53,6 +53,7 @@ print('0' + oct(mode)[2:])
 ")"
 		chmod "${MODE}" "$BACKUP_FILE" || return 1
 	else
+		ensure_dir "$FILE" || return 1
 		echo 'MISSING' > "${BACKUP_FILE}" || return 1
 	fi
 }
