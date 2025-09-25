@@ -64,7 +64,7 @@ shopt -s cmdhist
 export HISTTIMEFORMAT='%F %T '
 export HISTCONTROL=ignorespace:ignoredups
 export HISTSIZE=20000
-export HISTFILESIZE=5000
+export HISTFILESIZE="${HISTSIZE}"
 export HISTIGNORE="exit:logout:reboot:shutdown:poweroff:return:clear:history:bg:fg:jobs:pwd:ls:ll:la:cd:ps"
 
 export TIMEFORMAT=$'---\nreal\t%3lR\nuser\t%3lU\nsys\t%3lS\ncpu\t%P%%'
