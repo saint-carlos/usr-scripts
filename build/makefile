@@ -136,6 +136,7 @@ $(call srcfiles,			\
 	etc/desktop/config/kupfer	\
 	etc/desktop/config/vlc		\
 	lib/urxvt/			\
+	lib/xset_dpms.sh		\
 )
 LUSER_FILES += ${DESKTOP_FILES}
 endif
