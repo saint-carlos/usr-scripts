@@ -243,8 +243,8 @@ rmsudo: ${ALL_CONFIG_VARS}
 
 import: ${PREFIX}/tgt build
 	# do it in reverse order such that it's easier to patch
-	-(cd tgt && diff -ur ${CONFIG_VROOT} .) > tmp/$@.patch
-	patch --directory=src --reverse -p0 --merge < tmp/$@.patch
+	-(cd $(call dirpivot,tgt) && diff -ur ${CONFIG_VROOT} .) > $(call dirpivot,tmp/$@.patch)
+	patch --directory=$(call dirpivot,src) --reverse -p0 --merge < $(call dirpivot,tmp/$@.patch)
 
 test:
 	@echo "luser files:"
