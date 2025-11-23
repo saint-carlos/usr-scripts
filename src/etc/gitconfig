@@ -17,6 +17,7 @@
 	siftlog = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen --pattern '^(commit|diff --git)' +1
 	siftdiff = exec ifne wless -- --RAW-CONTROL-CHARS -+--no-init -+--quit-if-one-screen --pattern '^(diff --git)' +1
 	stat = false
+	nstat = false
 	hstat = exec less --quit-if-one-screen --RAW-CONTROL-CHARS -+--no-init
 	cmessage = false
 	branch = exec ifne wless -- --RAW-CONTROL-CHARS --quit-if-one-screen -+--no-init
@@ -58,8 +59,10 @@
 	llog = log --pretty=neat --date=short
 	rlog = log --pretty=relneat --date=short
 	clog = log --patch --color-words="([a-zA-Z0-9]+)|."
-	histogram = log --stat --summary
+	histogram = log --stat
+	nistogram = log --numstat --summary
 	stat = show --stat --summary
+	nstat = show --numstat --summary
 	hstat = log -1 --pretty=neat --date=short --decorate=full
 	vomit = commit --verbose
 	indiff = diff --cached
