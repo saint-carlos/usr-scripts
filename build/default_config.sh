@@ -76,8 +76,9 @@ CONFIG_DESKTOP_DIR=".desktop"
 CONFIG_HOME_TMP_DIR="tmp"
 # theme
 CONFIG_WINDOW_MANAGER_THEME="ClearlooksRe"
-CONFIG_GTK_THEME="Mint-Y-Dark-Teal"
+CONFIG_GTK_THEME="Mint-L-Dark-Teal"
 CONFIG_ICON_THEME="menta"
+CONFIG_MOUSE_THEME="DMZ-White"
 CONFIG_TITLEBAR_FONT="Sans Bold 12"
 # enable or disable specific startup applications
 # colon separated; pick from /etc/xdg/autostart and /usr/share/applications
