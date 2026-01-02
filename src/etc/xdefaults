@@ -82,9 +82,10 @@ URxvt.keysym.M-f:       searchable-scrollback:start
 ! with CLIPBOARD.
 
 URxvt*perl-lib:         CONFIG_LIB/urxvt
-URxvt*perl-ext-common:  default,selection-to-clipboard,clipboard,keyboard-select,font-size,-confirm-paste
+URxvt*perl-ext-common:  default,selection-to-clipboard,keyboard-select,font-size,-confirm-paste
 
 URxvt*keysym*S-Insert:    eval:paste_clipboard
+URxvt.keysym.M-Button2:   eval:paste_clipboard
 URxvt*selection*autocopy: true
 
 URxvt*keysym*M-s:       perl:keyboard-select:activate
