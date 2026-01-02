@@ -116,6 +116,7 @@ DESKTOP_FILES :=		\
 	bin/cb			\
 	bin/mw			\
 	bin/dlookup		\
+	bin/alarm		\
 	bin/icat		\
 	bin/gui			\
 	bin/myip		\

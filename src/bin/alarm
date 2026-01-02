@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+
+PROGRAM=$(basename $0)
+DESCRIPTION="set an alarm"
+PARAMS="[duration]"
+OPTIONS="[-hd]"
+
+usage()
+{
+	[ $1 -ne 0 ] && exec >&2
+
+	cat << EOF
+$PROGRAM - $DESCRIPTION
+usage:
+$PROGRAM $OPTIONS $PARAMS
+
+if not in dump mode, creates an alarm. multiple alarms cannot coexist.
+if an alarm already exists, the duration is ignored and the existing alarm is
+canceled.
+
+the duration argument is the same as for sleep(1).
+
+options:
+-h	help: show this help message and exit.
+-d	dump: dump the PID file for the alarm, if set.
+
+exit status:
+0	success
+1       if dumping a nonexistent alarm
+2	if some arguments are bad
+EOF
+
+    exit $1
+}
+
+declare -r PID_FILE="/tmp/$(basename $0).pid"
+declare -r SOUND=CONFIG_ALARM_SOUND
+
+dump_pid_file()
+{
+    grep -H . "${PID_FILE}"
+}
+
+stop_alarm()
+{
+    dump_pid_file
+    local P="$(head -n 1 "${PID_FILE}")"
+    ps -f --pid "${P}"
+    kill "${P}"
+    rm "${PID_FILE}"
+    echo "Alarm stopped."
+}
+
+play_alarm()
+{
+    echo "Playing alarm..."
+    while true; do
+        paplay "$SOUND"
+        sleep 1
+    done
+}
+
+estimate_duration()
+{
+    local COUNT=${1%?}
+    local u=${1: -1}
+    case $u in
+        s) echo $((COUNT*1));;
+        m) echo $((COUNT*60));;
+        h) echo $((COUNT*60*60));;
+        d) echo $((COUNT*60*60*24));;
+        *) echo $((COUNT + 0));
+    esac
+}
+
+create_alarm()
+{
+    local -r IDURATION="$1"
+    shift 1
+
+    DURATION=$(estimate_duration "${IDURATION}")
+    NOW=$(date)
+    DEADLINE=$(date -d "now + ${DURATION} seconds")
+    INFO_STR="$(printf "%-9s: %s\n%-9s: %s\n%-9s: %s\n" \
+        start "${NOW}" \
+        end "${DEADLINE}" \
+        duration "${IDURATION} (${DURATION}s)")"
+
+    (
+        (sleep "${IDURATION}" && play_alarm) &
+        printf "%s\n%s\n" $! "${INFO_STR}" > "${PID_FILE}"
+        dump_pid_file
+    ) &
+    echo "Running in background."
+}
+
+main()
+{
+    declare DUMP=false
+    while getopts hd OPTION; do
+            case $OPTION in
+                    h) usage 0 ;;
+                    d) DUMP=true ;;
+                    \?) usage 2 ;;
+            esac
+    done
+    shift $((OPTIND - 1))
+
+    if "${DUMP}"; then
+        if [ -f "${PID_FILE}" ]; then
+            dump_pid_file
+            exit 0
+        else
+            exit 1
+        fi
+    fi
+
+    IDURATION="$1"
+    shift 1
+
+    if [ -f ${PID_FILE} ]; then
+        stop_alarm
+        exit 0
+    elif [ -z "${IDURATION}" ]; then
+        usage 2
+    fi
+
+    create_alarm "${IDURATION}" "$@"
+}
+
+main "$@"

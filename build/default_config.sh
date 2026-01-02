@@ -74,6 +74,8 @@ CONFIG_LANGUAGES="us"
 CONFIG_DESKTOP_DIR=".desktop"
 # personal temporary directory, also used for downloads
 CONFIG_HOME_TMP_DIR="tmp"
+# alarm sound
+CONFIG_ALARM_SOUND="/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga"
 # theme
 CONFIG_WINDOW_MANAGER_THEME="ClearlooksRe"
 CONFIG_GTK_THEME="Mint-L-Dark-Teal"
